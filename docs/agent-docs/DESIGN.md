@@ -23,28 +23,28 @@ Palette:      Mañana de Otoño  — terracotta, moss, cream, golden accents
 ## Colors
 
 ```
-primary:            terracotta  oklch(0.55 0.15 38)     #c65d3b
-primary-light:      clay-light  oklch(0.68 0.16 42)     #e08a5e
-primary-dark:       clay-dark   oklch(0.42 0.12 35)     #8e3a25
-primary-foreground: parchment   oklch(0.97 0.02 80)     #fdf6ec
+primary:            terracotta  oklch(0.55 0.15 38)     #c2572e
+primary-light:      clay-light  oklch(0.68 0.16 42)     #e07a4d
+primary-dark:       clay-dark   oklch(0.42 0.12 35)     #8c2b17
+primary-foreground: parchment   oklch(0.97 0.02 80)     #fdfaf5
 
-secondary:          moss        oklch(0.52 0.11 140)    #5c7a3e
-secondary-light:    moss-light  oklch(0.65 0.12 138)    #7fa056
-secondary-dark:     moss-dark   oklch(0.40 0.09 135)    #3d5528
+secondary:          moss        oklch(0.52 0.11 140)    #527a34
+secondary-light:    moss-light  oklch(0.65 0.12 138)    #7b9a4f
+secondary-dark:     moss-dark   oklch(0.40 0.09 135)    #3a4f24
 
-background:         parchment   oklch(0.97 0.02 80)     #fdf6ec
-surface:            linen       oklch(0.95 0.02 75)     #f5edde
-surface-elevated:   linen-deep  oklch(0.93 0.02 72)     #efe3d0
+background:         parchment   oklch(0.97 0.02 80)     #fdfaf5
+surface:            linen       oklch(0.95 0.02 75)     #f8f0e2
+surface-elevated:   linen-deep  oklch(0.93 0.02 72)     #efe3cc
 
-text-primary:       espresso    oklch(0.25 0.03 50)     #3d2b1f
-text-secondary:     warm-brown  oklch(0.45 0.03 55)     #7a6b5d
-text-muted:         muted-brown oklch(0.60 0.03 58)     #a6988a
+text-primary:       espresso    oklch(0.20 0.03 45)     #2c1a10
+text-secondary:     warm-brown  oklch(0.45 0.03 55)     #665448
+text-muted:         muted-brown oklch(0.60 0.03 58)     #8a7e72
 
-accent:             golden      oklch(0.72 0.16 75)     #e8a838
-accent-foreground:  espresso    oklch(0.25 0.03 50)
+accent:             golden      oklch(0.72 0.16 75)     #e8a020
+accent-foreground:  espresso    oklch(0.20 0.03 45)
 
-success: deep-moss               #4a7c3f     error: brick      #b84c3b
-warning: golden-amber            #d4992a     info: dusty-blue   #5b7fa5
+success: deep-moss               #457a38     error: brick      #b5452e
+warning: golden-amber            #d49224     info: dusty-blue   #4e769e
 ```
 
 ## Order Status → Color
@@ -190,7 +190,7 @@ KDS (32", dark theme, full-screen):
 ## KDS Theme Tokens
 
 ```
-bg:       espresso-black  oklch(0.10 0.02 40)
+bg:       espresso-black  oklch(0.08 0.01 40)
 surface:  warm-dark-card  oklch(0.15 0.02 38)
 text:     warm-cream      oklch(0.90 0.02 80)
 accent:   terracotta-glow oklch(0.70 0.18 38)
@@ -253,8 +253,8 @@ CRITICAL ANTI-SLOP RULES:
   NEVER "No data found"         → Use poetic empty states
   NEVER "Something went wrong"  → Use human error messages
   NEVER generic spinner         → Use textile shimmer skeleton
-  NEVER black (#000) anywhere   → Use espresso (#3d2b1f)
-  NEVER white (#fff) background → Use parchment (#fdf6ec)
+  NEVER black (#000) anywhere   → Use espresso (#2c1a10)
+  NEVER white (#fff) background → Use parchment (#fdfaf5)
   NEVER uniform 8px radii       → Variable: 4px controls, 16px cards, 24px modals, full chips
   NEVER system-ui for headings  → Space Grotesk Bold required
   NEVER cards without rotation  → 1-2° rotations on mesero card grids

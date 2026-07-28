@@ -1,199 +1,418 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOR — KDS Cocina</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary:  '#c65d3b',
-            'primary-light': '#d97a5a',
-            accent:   '#e8a838',
-            success:  '#4a7c3f',
-            error:    '#b84c3b',
-            warning:  '#d4992a',
-            kds: {
-              bg:      '#1a1410',
-              surface: '#2a2218',
-              text:    '#f5edde',
-              muted:   '#7a6b5d',
-            },
-          },
-        },
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COCINA — KDS</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        kds: {
+          board: '#17241b',
+          ticket: '#f5efe0',
+          'ticket-text': '#2c1a10',
+          pin: '#8c2b17',
+          chalk: '#d8d4c8',
+          'chalk-green': '#7a9e6e',
+          'chalk-amber': '#d4a44a',
+          'chalk-red': '#c4553b',
+        }
       },
+      fontFamily: {
+        kitchen: ['"Space Grotesk"', 'sans-serif'],
+      }
     }
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Space Grotesk', sans-serif;
-      cursor: none;
+  }
+}
+</script>
+<style>
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    min-height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    background-color: #17241b;
+  }
+  .board-texture {
+    background-color: #17241b;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.008) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.006) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 80%, rgba(200,200,180,0.01) 0%, transparent 50%);
+  }
+  .chalk-title {
+    color: #d8d4c8;
+    text-shadow:
+      0 0 2px rgba(216,212,200,0.6),
+      0 0 6px rgba(216,212,200,0.15);
+    letter-spacing: 0.12em;
+    filter: url(#chalk-texture);
+  }
+
+  @keyframes hang-in {
+    0% {
+      opacity: 0;
+      transform: translateY(-120%) rotate(-3deg);
     }
-    @keyframes pulse-border {
-      0%, 100% { border-color: #b84c3b; }
-      50% { border-color: #8e3a25; }
+    60% {
+      opacity: 1;
+      transform: translateY(0%) rotate(1.5deg);
     }
-    .pulse-border { animation: pulse-border 1.5s ease-in-out infinite; }
-    .text-kds-sm { font-size: 1.5rem; line-height: 1.2; }
-    .text-kds-base { font-size: 1.875rem; line-height: 1.3; }
-    .text-kds-lg { font-size: 2.5rem; line-height: 1.2; }
-    .text-kds-xl { font-size: 3.5rem; line-height: 1.1; }
-  </style>
+    80% {
+      transform: translateY(0%) rotate(-0.3deg);
+    }
+    100% {
+      transform: translateY(0%) rotate(var(--ticket-rotate, 1deg));
+    }
+  }
+
+  @keyframes pulse-border {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  @keyframes pulse-border-red {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 0 3px #c4553b, 0 0 12px rgba(196,85,59,0.5);
+    }
+    50% {
+      opacity: 0.5;
+      box-shadow: 0 0 0 6px #c4553b, 0 0 20px rgba(196,85,59,0.7);
+    }
+  }
+
+  @keyframes stamp {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.3) rotate(-20deg);
+    }
+    60% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.3) rotate(2deg);
+    }
+    80% {
+      transform: translate(-50%, -50%) scale(0.9) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+  }
+
+  @keyframes stamp-hold {
+    0%, 70% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+  }
+
+  @keyframes tick-clock {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  .ticket {
+    animation: hang-in 500ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    position: relative;
+  }
+  .ticket-card {
+    background-color: #f5efe0;
+    color: #2c1a10;
+    border-radius: 6px;
+    box-shadow:
+      2px 3px 8px rgba(0,0,0,0.5),
+      0 1px 2px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .ticket-pin {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle at 40% 35%, #b3471e, #8c2b17 60%, #5a1a0e);
+    border-radius: 50%;
+    box-shadow:
+      0 2px 3px rgba(0,0,0,0.5),
+      inset 0 1px 1px rgba(255,255,255,0.25);
+    z-index: 2;
+  }
+  .chalk-circle {
+    border-radius: 50%;
+    border-width: 3px;
+    border-style: solid;
+    box-shadow: 0 0 4px currentColor;
+  }
+  .chalk-circle-normal {
+    border-color: #7a9e6e;
+    color: #7a9e6e;
+  }
+  .chalk-circle-attention {
+    border-color: #d4a44a;
+    color: #d4a44a;
+    animation: pulse-border 1.4s ease-in-out infinite;
+  }
+  .chalk-circle-warning {
+    border-color: #c4553b;
+    color: #c4553b;
+    animation: pulse-border 1.0s ease-in-out infinite;
+  }
+  .chalk-circle-critical {
+    border-color: #c4553b;
+    color: #c4553b;
+    border-width: 4px;
+    animation: pulse-border 0.7s ease-in-out infinite;
+  }
+  .stamp-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 72px;
+    color: #7a9e6e;
+    opacity: 0.85;
+    pointer-events: none;
+    z-index: 5;
+    animation: stamp-hold 4s ease-out 6s forwards;
+  }
+</style>
 </head>
-<body class="min-h-screen bg-kds-bg text-kds-text flex flex-col overflow-hidden">
-  <!-- Header -->
-  <header class="h-20 bg-kds-surface border-b border-kds-muted/20 flex items-center justify-between px-8 shrink-0">
-    <h1 class="text-kds-lg font-bold">COCINA</h1>
-    <div class="flex items-center gap-8">
-      <span id="clock" class="text-kds-base text-kds-muted">15:42</span>
-      <span class="text-kds-base text-accent">6 Activas</span>
-      <span class="text-kds-base text-success">23 Completadas</span>
+<body class="board-texture">
+
+<!-- Chalk texture SVG filter -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="chalk-texture">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="flex flex-col h-screen p-5">
+  <!-- HEADER -->
+  <header class="flex items-center justify-between shrink-0 pb-3 mb-2 border-b-2 border-kds-chalk/15">
+    <!-- Title -->
+    <h1 class="chalk-title text-[52px] leading-none tracking-widest select-none">COCINA</h1>
+
+    <!-- Clock -->
+    <div class="flex flex-col items-center">
+      <span id="clock" class="text-kds-chalk text-[44px] leading-none tracking-wider font-kitchen">14:32</span>
+      <span class="text-kds-chalk/40 text-[16px] tracking-[0.2em] uppercase font-kitchen">Martes 28 Jul</span>
+    </div>
+
+    <!-- Counts -->
+    <div class="flex gap-8 text-kds-chalk text-[28px]">
+      <div class="flex flex-col items-center">
+        <span class="text-kds-chalk-amber text-[42px] leading-none font-kitchen">6</span>
+        <span class="text-[16px] tracking-widest uppercase font-kitchen text-kds-chalk/50">Activos</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <span class="text-kds-chalk-green text-[42px] leading-none font-kitchen">14</span>
+        <span class="text-[16px] tracking-widest uppercase font-kitchen text-kds-chalk/50">Completados</span>
+      </div>
     </div>
   </header>
 
-  <!-- Order Grid -->
-  <main class="flex-1 p-4 overflow-y-auto">
-    <div class="grid grid-cols-4 gap-4 auto-rows-fr h-full">
-      <!-- Card 1: Normal aging -->
-      <div class="bg-kds-surface border-2 border-kds-muted/20 rounded-xl p-6 flex flex-col justify-between min-h-[300px]">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-kds-lg font-bold">#42</span>
-            <span class="text-kds-sm text-kds-muted">MESA 5</span>
-          </div>
-          <div class="text-kds-sm text-accent mb-3" data-age="3">⏱ 3 min</div>
-          <ul class="space-y-2">
-            <li class="text-kds-base">
-              <span class="font-semibold">2x</span> Hamburguesa
-              <span class="text-kds-sm text-accent/60 block">- sin cebolla</span>
-            </li>
-            <li class="text-kds-base"><span class="font-semibold">1x</span> Coca-Cola</li>
-            <li class="text-kds-base"><span class="font-semibold">1x</span> Papas Fritas</li>
-          </ul>
-        </div>
-        <button class="mt-4 w-full bg-primary hover:bg-primary-light text-white rounded-xl py-3 text-kds-sm font-bold active:scale-95 transition-transform">
-          <span class="text-kds-lg mr-2">&#10003;</span> LISTA
-        </button>
-      </div>
+  <!-- TICKET GRID -->
+  <main class="flex-1 grid grid-cols-4 auto-rows-max gap-4 content-start overflow-hidden">
 
-      <!-- Card 2: Attention (5-10 min) -->
-      <div class="bg-kds-surface border-2 border-accent rounded-xl p-6 flex flex-col justify-between min-h-[300px]">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-kds-lg font-bold">#43</span>
-            <span class="text-kds-sm text-kds-muted">MESA 8</span>
-          </div>
-          <div class="text-kds-sm text-accent mb-3" data-age="7">⏱ 7 min</div>
-          <ul class="space-y-2">
-            <li class="text-kds-base">
-              <span class="font-semibold">1x</span> Pasta Alfredo
-              <span class="text-kds-sm text-accent/60 block">+ extra queso</span>
-            </li>
-          </ul>
-        </div>
-        <button class="mt-4 w-full bg-primary hover:bg-primary-light text-white rounded-xl py-3 text-kds-sm font-bold active:scale-95 transition-transform">
-          <span class="text-kds-lg mr-2">&#10003;</span> LISTA
-        </button>
-      </div>
+    <!-- TICKET 1: NORMAL — Huevos Rancheros, <5 min -->
+    <div class="ticket" style="--ticket-rotate: 0.8deg">
+      <div class="ticket-card p-5 pt-6 relative">
+        <div class="ticket-pin"></div>
 
-      <!-- Card 3: Normal -->
-      <div class="bg-kds-surface border-2 border-kds-muted/20 rounded-xl p-6 flex flex-col justify-between min-h-[300px]">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-kds-lg font-bold">#44</span>
-            <span class="text-kds-sm text-kds-muted">MESA 2</span>
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <span class="text-[28px] font-kitchen">#108</span>
+            <span class="text-[20px] text-kds-ticket-text/50 ml-2 font-kitchen">Mesa 3</span>
           </div>
-          <div class="text-kds-sm text-accent mb-3" data-age="1">⏱ 1 min</div>
-          <ul class="space-y-2">
-            <li class="text-kds-base"><span class="font-semibold">3x</span> Tacos al Pastor</li>
-            <li class="text-kds-base"><span class="font-semibold">2x</span> Agua de Horchata</li>
-          </ul>
+          <div class="chalk-circle chalk-circle-normal w-[52px] h-[52px] flex items-center justify-center text-[24px] leading-none">
+            3m
+          </div>
         </div>
-        <button class="mt-4 w-full bg-primary hover:bg-primary-light text-white rounded-xl py-3 text-kds-sm font-bold active:scale-95 transition-transform">
-          <span class="text-kds-lg mr-2">&#10003;</span> LISTA
-        </button>
-      </div>
 
-      <!-- Card 4: Warning (10-15 min) -->
-      <div class="bg-kds-surface border-2 border-warning rounded-xl p-6 flex flex-col justify-between min-h-[300px] animate-pulse">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-kds-lg font-bold">#45</span>
-            <span class="text-kds-sm text-kds-muted">MESA 11</span>
-          </div>
-          <div class="text-kds-sm text-warning mb-3" data-age="12">⏱ 12 min</div>
-          <ul class="space-y-2">
-            <li class="text-kds-base"><span class="font-semibold">1x</span> Parrillada Mixta</li>
-            <li class="text-kds-base"><span class="font-semibold">2x</span> Cerveza Artesanal</li>
-            <li class="text-kds-base"><span class="font-semibold">1x</span> Guacamole</li>
-          </ul>
+        <div class="space-y-1.5">
+          <div class="text-[24px] font-kitchen">Huevos Rancheros</div>
+          <div class="text-[20px] text-kds-ticket-text/55 font-kitchen">× 2</div>
+          <div class="mt-2 text-[18px] text-kds-ticket-text/45 font-kitchen leading-tight">Salsa verde / Sin cebolla</div>
         </div>
-        <button class="mt-4 w-full bg-primary hover:bg-primary-light text-white rounded-xl py-3 text-kds-sm font-bold active:scale-95 transition-transform">
-          <span class="text-kds-lg mr-2">&#10003;</span> LISTA
-        </button>
-      </div>
 
-      <!-- Card 5: Normal -->
-      <div class="bg-kds-surface border-2 border-kds-muted/20 rounded-xl p-6 flex flex-col justify-between min-h-[300px]">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-kds-lg font-bold">#46</span>
-            <span class="text-kds-sm text-kds-muted">MESA 3</span>
-          </div>
-          <div class="text-kds-sm text-accent mb-3" data-age="4">⏱ 4 min</div>
-          <ul class="space-y-2">
-            <li class="text-kds-base"><span class="font-semibold">4x</span> Pizza Margarita</li>
-            <li class="text-kds-base"><span class="font-semibold">2x</span> Agua Mineral</li>
-          </ul>
-        </div>
-        <button class="mt-4 w-full bg-primary hover:bg-primary-light text-white rounded-xl py-3 text-kds-sm font-bold active:scale-95 transition-transform">
-          <span class="text-kds-lg mr-2">&#10003;</span> LISTA
-        </button>
-      </div>
-
-      <!-- Card 6: Critical (>15 min) -->
-      <div class="bg-kds-surface border-2 border-error rounded-xl p-6 flex flex-col justify-between min-h-[300px] pulse-border">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-kds-lg font-bold">#47</span>
-            <span class="text-kds-sm text-kds-muted">MESA 7</span>
-          </div>
-          <div class="text-kds-sm text-error mb-3 flex items-center gap-2" data-age="18">
-            <span class="text-kds-xl">&#9888;</span> ⏱ 18 min
-          </div>
-          <ul class="space-y-2">
-            <li class="text-kds-base"><span class="font-semibold">2x</span> Ensalada Caesar</li>
-          </ul>
-        </div>
-        <button class="mt-4 w-full bg-error hover:bg-error/80 text-white rounded-xl py-3 text-kds-sm font-bold active:scale-95 transition-transform">
-          <span class="text-kds-lg mr-2">&#10003;</span> LISTA
-        </button>
+        <div class="mt-3 text-[16px] text-kds-ticket-text/35 font-kitchen tracking-wider">14:28</div>
       </div>
     </div>
+
+    <!-- TICKET 2: ATTENTION — Tacos al Pastor, 7 min -->
+    <div class="ticket" style="--ticket-rotate: -1.1deg; animation-delay: 0.1s;">
+      <div class="ticket-card p-5 pt-6 relative">
+        <div class="ticket-pin"></div>
+
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <span class="text-[28px] font-kitchen">#105</span>
+            <span class="text-[20px] text-kds-ticket-text/50 ml-2 font-kitchen">Barra</span>
+          </div>
+          <div class="chalk-circle chalk-circle-attention w-[52px] h-[52px] flex items-center justify-center text-[24px] leading-none">
+            7m
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="text-[24px] font-kitchen">Tacos al Pastor</div>
+          <div class="text-[20px] text-kds-ticket-text/55 font-kitchen">× 4</div>
+          <div class="mt-2 text-[18px] text-kds-ticket-text/45 font-kitchen leading-tight">Piña extra / Salsa habanero</div>
+        </div>
+
+        <div class="mt-3 text-[16px] text-kds-ticket-text/35 font-kitchen tracking-wider">14:24</div>
+      </div>
+    </div>
+
+    <!-- TICKET 3: WARNING — Enchiladas Suizas, 12 min -->
+    <div class="ticket" style="--ticket-rotate: 1.5deg; animation-delay: 0.2s;">
+      <div class="ticket-card p-5 pt-6 relative">
+        <div class="ticket-pin"></div>
+
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <span class="text-[28px] font-kitchen">#097</span>
+            <span class="text-[20px] text-kds-ticket-text/50 ml-2 font-kitchen">Mesa 7</span>
+          </div>
+          <div class="chalk-circle chalk-circle-warning w-[52px] h-[52px] flex items-center justify-center text-[24px] leading-none">
+            12m
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="text-[24px] font-kitchen">Enchiladas Suizas</div>
+          <div class="text-[20px] text-kds-ticket-text/55 font-kitchen">× 3</div>
+          <div class="mt-2 text-[18px] text-kds-ticket-text/45 font-kitchen leading-tight">Pollo / Crema extra</div>
+        </div>
+
+        <div class="mt-3 text-[16px] text-kds-ticket-text/35 font-kitchen tracking-wider">14:19</div>
+      </div>
+    </div>
+
+    <!-- TICKET 4: CRITICAL — Chiles en Nogada, 18 min -->
+    <div class="ticket" style="--ticket-rotate: -0.5deg; animation-delay: 0.05s;">
+      <div class="ticket-card p-5 pt-6 relative">
+        <div class="ticket-pin"></div>
+
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <span class="text-[28px] font-kitchen">#084</span>
+            <span class="text-[20px] text-kds-ticket-text/50 ml-2 font-kitchen">Mesa 12</span>
+          </div>
+          <div class="chalk-circle chalk-circle-critical w-[52px] h-[52px] flex items-center justify-center text-[24px] leading-none relative">
+            18m
+            <span class="absolute text-kds-chalk-red text-[32px] font-kitchen" style="top: -6px; right: -14px;">!</span>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="text-[24px] font-kitchen">Chiles en Nogada</div>
+          <div class="text-[20px] text-kds-ticket-text/55 font-kitchen">× 2</div>
+          <div class="mt-2 text-[18px] text-kds-ticket-text/45 font-kitchen leading-tight">Capeado al momento</div>
+        </div>
+
+        <div class="mt-3 text-[16px] text-kds-ticket-text/35 font-kitchen tracking-wider">14:13</div>
+      </div>
+    </div>
+
+    <!-- TICKET 5: NORMAL — Guacamole con Totopos, 2 min -->
+    <div class="ticket" style="--ticket-rotate: 1.8deg; animation-delay: 0.15s;">
+      <div class="ticket-card p-5 pt-6 relative">
+        <div class="ticket-pin"></div>
+
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <span class="text-[28px] font-kitchen">#112</span>
+            <span class="text-[20px] text-kds-ticket-text/50 ml-2 font-kitchen">Mesa 5</span>
+          </div>
+          <div class="chalk-circle chalk-circle-normal w-[52px] h-[52px] flex items-center justify-center text-[24px] leading-none">
+            2m
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="text-[24px] font-kitchen">Guacamole</div>
+          <div class="text-[20px] text-kds-ticket-text/55 font-kitchen">× 1</div>
+          <div class="mt-2 text-[18px] text-kds-ticket-text/45 font-kitchen leading-tight">Totopos extra / Pico de gallo</div>
+        </div>
+
+        <div class="mt-3 text-[16px] text-kds-ticket-text/35 font-kitchen tracking-wider">14:29</div>
+      </div>
+    </div>
+
+    <!-- TICKET 6: COMPLETED — Quesadillas de Huitlacoche -->
+    <div class="ticket" style="--ticket-rotate: -1.6deg; animation-delay: 0.25s;">
+      <div class="ticket-card p-5 pt-6 relative overflow-hidden">
+        <div class="ticket-pin"></div>
+
+        <!-- Completed stamp overlay -->
+        <div class="stamp-overlay font-kitchen">✓</div>
+
+        <div class="opacity-40">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <span class="text-[28px] font-kitchen">#091</span>
+              <span class="text-[20px] text-kds-ticket-text/50 ml-2 font-kitchen">Mesa 9</span>
+            </div>
+            <div class="w-[52px] h-[52px] flex items-center justify-center text-[24px] leading-none text-kds-chalk-green">
+              9m
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="text-[24px] font-kitchen">Quesadillas Huitlacoche</div>
+            <div class="text-[20px] text-kds-ticket-text/55 font-kitchen">× 3</div>
+            <div class="mt-2 text-[18px] text-kds-ticket-text/45 font-kitchen leading-tight">Queso Oaxaca / Epazote</div>
+          </div>
+
+          <div class="mt-3 text-[16px] text-kds-ticket-text/35 font-kitchen tracking-wider">14:22</div>
+        </div>
+      </div>
+    </div>
+
   </main>
+</div>
 
-  <script>
-    function updateClock() {
-      var now = new Date();
-      document.getElementById('clock').textContent =
-        String(now.getHours()).padStart(2, '0') + ':' +
-        String(now.getMinutes()).padStart(2, '0');
-    }
-    updateClock();
-    setInterval(updateClock, 30000);
+<script>
+(function() {
+  function tick() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2, '0');
+    var m = String(now.getMinutes()).padStart(2, '0');
+    var s = String(now.getSeconds()).padStart(2, '0');
+    var el = document.getElementById('clock');
+    if (el) el.textContent = h + ':' + m;
+    var sep = el ? el.querySelector('.colon') : null;
+  }
+  tick();
+  setInterval(tick, 10000);
+})();
+</script>
 
-    // Increment timers every 15s (simulated)
-    setInterval(function() {
-      document.querySelectorAll('[data-age]').forEach(function(el) {
-        var newAge = parseInt(el.dataset.age) + 1;
-        el.dataset.age = newAge;
-        el.textContent = '\u23F1 ' + newAge + ' min';
-      });
-    }, 15000);
-  </script>
 </body>
 </html>

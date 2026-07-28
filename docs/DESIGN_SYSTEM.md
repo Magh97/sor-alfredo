@@ -22,36 +22,36 @@
 ```css
 @theme {
   /* === Brand === */
-  --color-primary: oklch(0.55 0.15 38);              /* terracotta    #c65d3b */
-  --color-primary-light: oklch(0.68 0.16 42);         /* clay-light    #e08a5e */
-  --color-primary-dark: oklch(0.42 0.12 35);          /* clay-dark     #8e3a25 */
-  --color-primary-foreground: oklch(0.97 0.02 80);    /* cream         #fdf6ec */
+  --color-primary: oklch(0.52 0.18 38);              /* terracotta    #c2572e */
+  --color-primary-light: oklch(0.65 0.18 42);         /* clay-light    #e07a4d */
+  --color-primary-dark: oklch(0.40 0.14 33);          /* clay-dark     #8c2b17 */
+  --color-primary-foreground: oklch(0.985 0.005 85);  /* warm-white    #fdfaf5 */
 
   /* === Secondary (Moss Green) === */
-  --color-secondary: oklch(0.52 0.11 140);            /* moss          #5c7a3e */
-  --color-secondary-light: oklch(0.65 0.12 138);      /* moss-light    #7fa056 */
-  --color-secondary-dark: oklch(0.40 0.09 135);       /* moss-dark     #3d5528 */
-  --color-secondary-foreground: oklch(0.97 0.02 80);
+  --color-secondary: oklch(0.50 0.12 140);            /* moss          #527a34 */
+  --color-secondary-light: oklch(0.63 0.13 138);      /* moss-light    #7b9a4f */
+  --color-secondary-dark: oklch(0.38 0.10 135);       /* moss-dark     #3a4f24 */
+  --color-secondary-foreground: oklch(0.985 0.005 85);
 
   /* === Background === */
-  --color-background: oklch(0.97 0.02 80);            /* parchment     #fdf6ec */
-  --color-surface: oklch(0.95 0.02 75);               /* linen         #f5edde */
-  --color-surface-elevated: oklch(0.93 0.02 72);      /* linen-deep    #efe3d0 */
+  --color-background: oklch(0.985 0.005 85);          /* warm-white    #fdfaf5 */
+  --color-surface: oklch(0.97 0.015 80);              /* linen         #f8f0e2 */
+  --color-surface-elevated: oklch(0.95 0.02 75);      /* linen-deep    #efe3cc */
 
   /* === Text === */
-  --color-text-primary: oklch(0.25 0.03 50);          /* espresso      #3d2b1f */
-  --color-text-secondary: oklch(0.45 0.03 55);         /* warm-brown    #7a6b5d */
-  --color-text-muted: oklch(0.60 0.03 58);            /* muted-brown   #a6988a */
+  --color-text-primary: oklch(0.20 0.03 45);          /* deep-espresso #2c1a10 */
+  --color-text-secondary: oklch(0.40 0.03 50);        /* warm-brown    #665448 */
+  --color-text-muted: oklch(0.55 0.02 55);            /* muted-brown   #8a7e72 */
 
   /* === Accent (Golden) === */
-  --color-accent: oklch(0.72 0.16 75);                /* golden        #e8a838 */
-  --color-accent-foreground: oklch(0.25 0.03 50);     /* espresso      #3d2b1f */
+  --color-accent: oklch(0.72 0.18 78);                /* golden        #e8a020 */
+  --color-accent-foreground: oklch(0.20 0.03 45);     /* deep-espresso #2c1a10 */
 
   /* === Semantic === */
-  --color-success: oklch(0.48 0.10 140);              /* deep-moss     #4a7c3f */
-  --color-error: oklch(0.48 0.15 25);                 /* brick         #b84c3b */
-  --color-warning: oklch(0.65 0.14 72);               /* golden-amber  #d4992a */
-  --color-info: oklch(0.52 0.06 240);                 /* dusty-blue    #5b7fa5 */
+  --color-success: oklch(0.46 0.12 140);              /* deep-moss     #457a38 */
+  --color-error: oklch(0.45 0.16 25);                 /* deep-brick    #b5452e */
+  --color-warning: oklch(0.63 0.16 72);               /* golden-amber  #d49224 */
+  --color-info: oklch(0.50 0.07 240);                 /* dusty-blue    #4e769e */
 
   /* === Order Status (7 states) === */
   --color-order-draft: oklch(0.60 0.03 58);           /* muted-brown   */
@@ -80,11 +80,11 @@
   --color-role-superadmin: oklch(0.48 0.15 25);       /* brick         */
 
   /* === KDS Dark Theme === */
-  --color-kds-bg: oklch(0.10 0.02 40);               /* espresso-black (not pure) */
-  --color-kds-surface: oklch(0.15 0.02 38);           /* warm-dark-card  */
-  --color-kds-text: oklch(0.90 0.02 80);             /* warm-cream      */
-  --color-kds-accent: oklch(0.70 0.18 38);            /* terracotta-glow */
-  --color-kds-muted: oklch(0.45 0.02 55);            /* muted-dark-text */
+  --color-kds-bg: oklch(0.08 0.01 40);               /* espresso-black (not pure) */
+  --color-kds-surface: oklch(0.14 0.02 38);           /* warm-dark-card  */
+  --color-kds-text: oklch(0.95 0.01 85);             /* warm-cream      */
+  --color-kds-accent: oklch(0.70 0.20 40);            /* terracotta-glow */
+  --color-kds-muted: oklch(0.42 0.03 55);            /* muted-dark-text */
 
   /* === Radii (Variable - "costuras") === */
   --radius-control: 0.25rem;                          /* 4px  inputs, buttons */
@@ -94,10 +94,10 @@
   --radius-kds-card: 0.75rem;                         /* 12px KDS cards */
 
   /* === Shadows (Cálidas, no duras) === */
-  --shadow-card: 0 2px 8px oklch(0.25 0.03 50 / 0.08);
-  --shadow-card-hover: 0 4px 16px oklch(0.25 0.03 50 / 0.12);
-  --shadow-modal: 0 16px 48px oklch(0.25 0.03 50 / 0.20);
-  --shadow-toast: 0 4px 12px oklch(0.25 0.03 50 / 0.12);
+  --shadow-card: 0 2px 8px oklch(0.20 0.03 45 / 0.10);
+  --shadow-card-hover: 0 4px 16px oklch(0.20 0.03 45 / 0.15);
+  --shadow-modal: 0 16px 48px oklch(0.20 0.03 45 / 0.22);
+  --shadow-toast: 0 4px 12px oklch(0.20 0.03 45 / 0.14);
   --shadow-kds-card: 0 4px 16px oklch(0 0 0 / 0.40);
 
   /* === Typography Scale (non-standard, organic) === */
@@ -123,19 +123,19 @@
 
 | Token | Hex | OKLCH | Uso |
 |-------|-----|-------|-----|
-| `primary` | `#c65d3b` | `oklch(0.55 0.15 38)` | Botones principales, CTAs, links, foco |
-| `primary-light` | `#e08a5e` | `oklch(0.68 0.16 42)` | Hover states, fondos suaves |
-| `primary-dark` | `#8e3a25` | `oklch(0.42 0.12 35)` | Active/pressed states |
-| `secondary` | `#5c7a3e` | `oklch(0.52 0.11 140)` | Acentos secundarios, iconos |
-| `background` | `#fdf6ec` | `oklch(0.97 0.02 80)` | Fondo general |
-| `surface` | `#f5edde` | `oklch(0.95 0.02 75)` | Tarjetas, paneles |
-| `text-primary` | `#3d2b1f` | `oklch(0.25 0.03 50)` | Títulos, párrafos |
-| `text-secondary` | `#7a6b5d` | `oklch(0.45 0.03 55)` | Metadatos, subtítulos |
-| `accent` | `#e8a838` | `oklch(0.72 0.16 75)` | Highlights, badges, activos |
-| `success` | `#4a7c3f` | `oklch(0.48 0.10 140)` | Confirmaciones, pagos completados |
-| `error` | `#b84c3b` | `oklch(0.48 0.15 25)` | Errores (con calidez, no agresivo) |
-| `warning` | `#d4992a` | `oklch(0.65 0.14 72)` | Advertencias, aging < 10min |
-| `info` | `#5b7fa5` | `oklch(0.52 0.06 240)` | Información contextual |
+| `primary` | `#c2572e` | `oklch(0.55 0.15 38)` | Botones principales, CTAs, links, foco |
+| `primary-light` | `#e07a4d` | `oklch(0.68 0.16 42)` | Hover states, fondos suaves |
+| `primary-dark` | `#8c2b17` | `oklch(0.42 0.12 35)` | Active/pressed states |
+| `secondary` | `#527a34` | `oklch(0.52 0.11 140)` | Acentos secundarios, iconos |
+| `background` | `#fdfaf5` | `oklch(0.97 0.02 80)` | Fondo general |
+| `surface` | `#f8f0e2` | `oklch(0.95 0.02 75)` | Tarjetas, paneles |
+| `text-primary` | `#2c1a10` | `oklch(0.20 0.03 45)` | Títulos, párrafos |
+| `text-secondary` | `#665448` | `oklch(0.45 0.03 55)` | Metadatos, subtítulos |
+| `accent` | `#e8a020` | `oklch(0.72 0.16 75)` | Highlights, badges, activos |
+| `success` | `#457a38` | `oklch(0.48 0.10 140)` | Confirmaciones, pagos completados |
+| `error` | `#b5452e` | `oklch(0.48 0.15 25)` | Errores (con calidez, no agresivo) |
+| `warning` | `#d49224` | `oklch(0.65 0.14 72)` | Advertencias, aging < 10min |
+| `info` | `#4e769e` | `oklch(0.52 0.06 240)` | Información contextual |
 
 ---
 
@@ -247,10 +247,10 @@
 | Nivel | Sombras | Uso |
 |-------|---------|-----|
 | Flat | `none` | Background, texto, separadores |
-| Elevated 1 | `0 2px 8px oklch(0.25 0.03 50 / 0.08)` | Tarjetas (default) |
-| Elevated 2 | `0 4px 16px oklch(0.25 0.03 50 / 0.12)` | Tarjetas (hover), dropdowns |
-| Elevated 3 | `0 16px 48px oklch(0.25 0.03 50 / 0.20)` | Modales, sheets |
-| Elevated 4 | `0 4px 12px oklch(0.25 0.03 50 / 0.12)` | Toasts, notificaciones |
+| Elevated 1 | `0 2px 8px oklch(0.20 0.03 45 / 0.10)` | Tarjetas (default) |
+| Elevated 2 | `0 4px 16px oklch(0.20 0.03 45 / 0.15)` | Tarjetas (hover), dropdowns |
+| Elevated 3 | `0 16px 48px oklch(0.20 0.03 45 / 0.22)` | Modales, sheets |
+| Elevated 4 | `0 4px 12px oklch(0.20 0.03 45 / 0.14)` | Toasts, notificaciones |
 | KDS Card | `0 4px 16px oklch(0 0 0 / 0.40)` | Tarjetas en KDS |
 
 > **Principio:** Las sombras usan el color de texto primario (espresso) en vez de negro puro. Esto da calidez incluso a la profundidad.
@@ -762,8 +762,8 @@ Esta app NUNCA usará:
 - [ ] Hero centrado con un CTA y tres features cards debajo
 - [ ] Cards sin rotación en grids de mesero
 - [ ] Tipografía sin bold en headings (Space Grotesk Bold es OBLIGATORIO en títulos)
-- [ ] Negro puro `#000` o `oklch(0 0 0)` en ninguna parte (usar espresso `#3d2b1f`)
-- [ ] Blanco puro `#fff` como fondo (usar parchment `#fdf6ec`)
+- [ ] Negro puro `#000` o `oklch(0 0 0)` en ninguna parte (usar espresso `#2c1a10`)
+- [ ] Blanco puro `#fff` como fondo (usar parchment `#fdfaf5`)
 - [ ] Scrollbars default del browser (estilizar con warm tones)
 
 ---

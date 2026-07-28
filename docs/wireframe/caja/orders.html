@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOR — Cajero · Ordenes</title>
+  <title>SOR — Cajero · Órdenes</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary:   { DEFAULT: '#c65d3b', light: '#e08a5e', dark: '#8e3a25', foreground: '#fdf6ec' },
-            secondary: { DEFAULT: '#5c7a3e', light: '#7fa056', dark: '#3d5528', foreground: '#fdf6ec' },
-            accent:    { DEFAULT: '#e8a838', foreground: '#3d2b1f' },
-            success:   '#4a7c3f',
-            error:     '#b84c3b',
-            warning:   '#d4992a',
-            info:      '#5b7fa5',
-            background:'#fdf6ec',
-            surface:   '#f5edde',
-            text:      { primary: '#3d2b1f', secondary: '#7a6b5d', muted: '#a6988a' },
+            primary:   { DEFAULT: '#c2572e', light: '#e07a4d', dark: '#8c2b17', foreground: '#fdfaf5' },
+            secondary: { DEFAULT: '#527a34', light: '#7b9a4f', dark: '#3a4f24', foreground: '#fdfaf5' },
+            accent:    { DEFAULT: '#e8a020', foreground: '#2c1a10' },
+            success:   '#457a38',
+            error:     '#b5452e',
+            warning:   '#d49224',
+            info:      '#4e769e',
+            background:'#fdfaf5',
+            surface:   '#f8f0e2',
+            text:      { primary: '#2c1a10', secondary: '#665448', muted: '#8a7e72' },
           },
         },
       },
@@ -41,7 +41,7 @@
     <nav class="flex-1 py-4 space-y-1">
       <a href="orders.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium bg-primary/10 text-primary border-r-2 border-primary">
         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
-        Ordenes
+        Órdenes
       </a>
       <a href="register.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium text-text-secondary hover:bg-background">
         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15l3 3 7-7"/></svg>
@@ -57,145 +57,154 @@
   <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Header -->
     <header class="h-16 bg-surface border-b flex items-center justify-between px-6 shrink-0">
-      <h2 class="text-lg font-semibold text-text-primary">Ordenes</h2>
+      <h2 class="text-lg font-semibold text-text-primary font-display">Órdenes</h2>
       <div class="flex items-center gap-3">
-        <span class="text-sm text-text-secondary">Cajero</span>
-        <div class="size-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-sm font-bold">C</div>
+        <input type="search" placeholder="Buscar orden..." class="rounded-lg border border-text-muted/30 px-3 py-1.5 text-sm placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary w-56">
+        <a href="../mesero/new-order.html" class="bg-primary text-primary-foreground rounded-lg px-4 py-2 text-sm font-semibold hover:bg-primary-dark active:scale-95 transition-all font-display">
+          + Nueva Orden
+        </a>
+        <div class="flex items-center gap-2 ml-2">
+          <span class="text-sm text-text-secondary">Carlos</span>
+          <div class="size-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-sm font-bold">C</div>
+        </div>
       </div>
     </header>
 
     <!-- Content: Split Panel -->
     <main class="flex-1 flex overflow-hidden">
       <!-- Left: Orders Table -->
-      <div class="w-2/5 border-r bg-surface overflow-y-auto">
+      <div class="w-2/5 border-r bg-surface flex flex-col overflow-hidden">
         <!-- Filters -->
-        <div class="px-4 py-3 border-b bg-background flex gap-2">
-          <input type="search" placeholder="Buscar orden..." class="flex-1 rounded-lg border border-text-muted/30 px-3 py-1.5 text-sm placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary">
-          <select class="rounded-lg border border-text-muted/30 px-3 py-1.5 text-sm bg-surface">
+        <div class="px-4 py-3 border-b bg-background flex gap-2 shrink-0">
+          <select class="rounded-lg border border-text-muted/30 px-3 py-1.5 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-primary">
             <option>Todos los estados</option>
             <option>En Cocina</option>
             <option>Lista</option>
             <option>Entregada</option>
             <option>Pagada</option>
           </select>
+          <select class="rounded-lg border border-text-muted/30 px-3 py-1.5 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-primary">
+            <option>Todas las mesas</option>
+            <option>Mesa 1</option><option>Mesa 2</option><option>Mesa 3</option>
+            <option>Mesa 4</option><option>Mesa 5</option><option>Mesa 7</option>
+            <option>Mesa 8</option><option>Mesa 10</option>
+          </select>
         </div>
         <!-- Table -->
-        <table class="w-full text-sm">
-          <thead class="bg-background border-b sticky top-0">
-            <tr class="text-left text-text-secondary">
-              <th class="px-4 py-2 font-medium">#</th>
-              <th class="px-4 py-2 font-medium">Mesa</th>
-              <th class="px-4 py-2 font-medium">Mesero</th>
-              <th class="px-4 py-2 font-medium">Total</th>
-              <th class="px-4 py-2 font-medium">Estado</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y">
-            <tr class="hover:bg-primary/5 cursor-pointer bg-primary/5">
-              <td class="px-4 py-3 font-medium">#42</td>
-              <td class="px-4 py-3">Mesa 5</td>
-              <td class="px-4 py-3">Miguel</td>
-              <td class="px-4 py-3 font-semibold">$450.00</td>
-              <td class="px-4 py-3"><span class="bg-primary/15 text-primary rounded-full px-2 py-0.5 text-xs font-medium">En Cocina</span></td>
-            </tr>
-            <tr class="hover:bg-primary/5 cursor-pointer">
-              <td class="px-4 py-3 font-medium">#44</td>
-              <td class="px-4 py-3">Mesa 2</td>
-              <td class="px-4 py-3">Miguel</td>
-              <td class="px-4 py-3 font-semibold">$680.50</td>
-              <td class="px-4 py-3"><span class="bg-primary/15 text-primary rounded-full px-2 py-0.5 text-xs font-medium">En Cocina</span></td>
-            </tr>
-            <tr class="hover:bg-primary/5 cursor-pointer">
-              <td class="px-4 py-3 font-medium">#40</td>
-              <td class="px-4 py-3">Mesa 3</td>
-              <td class="px-4 py-3">Ana</td>
-              <td class="px-4 py-3 font-semibold">$320.00</td>
-              <td class="px-4 py-3"><span class="bg-info/15 text-info rounded-full px-2 py-0.5 text-xs font-medium">Lista</span></td>
-            </tr>
-            <tr class="hover:bg-primary/5 cursor-pointer">
-              <td class="px-4 py-3 font-medium">#38</td>
-              <td class="px-4 py-3">Mesa 7</td>
-              <td class="px-4 py-3">Ana</td>
-              <td class="px-4 py-3 font-semibold">$185.00</td>
-              <td class="px-4 py-3"><span class="bg-purple-200 text-purple-800 rounded-full px-2 py-0.5 text-xs font-medium">Entregada</span></td>
-            </tr>
-            <tr class="hover:bg-primary/5 cursor-pointer">
-              <td class="px-4 py-3 font-medium">#35</td>
-              <td class="px-4 py-3">Mesa 4</td>
-              <td class="px-4 py-3">Miguel</td>
-              <td class="px-4 py-3 font-semibold">$295.00</td>
-              <td class="px-4 py-3"><span class="bg-success/15 text-success rounded-full px-2 py-0.5 text-xs font-medium">Pagada</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="flex-1 overflow-y-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-background border-b sticky top-0">
+              <tr class="text-left text-text-secondary">
+                <th class="px-4 py-2.5 font-medium cursor-pointer hover:text-text-primary">
+                  # <span class="text-text-muted ml-0.5">&#9650;</span>
+                </th>
+                <th class="px-4 py-2.5 font-medium cursor-pointer hover:text-text-primary">Mesa</th>
+                <th class="px-4 py-2.5 font-medium cursor-pointer hover:text-text-primary">Mesero</th>
+                <th class="px-4 py-2.5 font-medium cursor-pointer hover:text-text-primary text-right">Total</th>
+                <th class="px-4 py-2.5 font-medium">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y" id="orders-table">
+              <tr class="hover:bg-primary/5 cursor-pointer active:bg-primary/10" data-order="42" data-table="Mesa 5" data-waiter="Miguel" data-total="450.00" data-status="en-cocina">
+                <td class="px-4 py-3 font-medium">#42</td>
+                <td class="px-4 py-3">Mesa 5</td>
+                <td class="px-4 py-3">Miguel</td>
+                <td class="px-4 py-3 font-semibold text-right">$450.00</td>
+                <td class="px-4 py-3"><span class="bg-warning/15 text-warning rounded-full px-2 py-0.5 text-xs font-medium">En Cocina</span></td>
+              </tr>
+              <tr class="hover:bg-primary/5 cursor-pointer active:bg-primary/10" data-order="44" data-table="Mesa 2" data-waiter="Miguel" data-total="680.50" data-status="en-cocina">
+                <td class="px-4 py-3 font-medium">#44</td>
+                <td class="px-4 py-3">Mesa 2</td>
+                <td class="px-4 py-3">Miguel</td>
+                <td class="px-4 py-3 font-semibold text-right">$680.50</td>
+                <td class="px-4 py-3"><span class="bg-warning/15 text-warning rounded-full px-2 py-0.5 text-xs font-medium">En Cocina</span></td>
+              </tr>
+              <tr class="hover:bg-primary/5 cursor-pointer active:bg-primary/10" data-order="40" data-table="Mesa 3" data-waiter="Ana" data-total="320.00" data-status="lista">
+                <td class="px-4 py-3 font-medium">#40</td>
+                <td class="px-4 py-3">Mesa 3</td>
+                <td class="px-4 py-3">Ana</td>
+                <td class="px-4 py-3 font-semibold text-right">$320.00</td>
+                <td class="px-4 py-3"><span class="bg-info/15 text-info rounded-full px-2 py-0.5 text-xs font-medium">Lista</span></td>
+              </tr>
+              <tr class="hover:bg-primary/5 cursor-pointer active:bg-primary/10" data-order="38" data-table="Mesa 7" data-waiter="Ana" data-total="185.00" data-status="entregada">
+                <td class="px-4 py-3 font-medium">#38</td>
+                <td class="px-4 py-3">Mesa 7</td>
+                <td class="px-4 py-3">Ana</td>
+                <td class="px-4 py-3 font-semibold text-right">$185.00</td>
+                <td class="px-4 py-3"><span class="bg-secondary/15 text-secondary rounded-full px-2 py-0.5 text-xs font-medium">Entregada</span></td>
+              </tr>
+              <tr class="hover:bg-primary/5 cursor-pointer active:bg-primary/10" data-order="35" data-table="Mesa 4" data-waiter="Miguel" data-total="295.00" data-status="pagada">
+                <td class="px-4 py-3 font-medium">#35</td>
+                <td class="px-4 py-3">Mesa 4</td>
+                <td class="px-4 py-3">Miguel</td>
+                <td class="px-4 py-3 font-semibold text-right">$295.00</td>
+                <td class="px-4 py-3"><span class="bg-success/15 text-success rounded-full px-2 py-0.5 text-xs font-medium">Pagada</span></td>
+              </tr>
+              <tr class="hover:bg-primary/5 cursor-pointer active:bg-primary/10" data-order="39" data-table="Mesa 8" data-waiter="Miguel" data-total="510.00" data-status="entregada">
+                <td class="px-4 py-3 font-medium">#39</td>
+                <td class="px-4 py-3">Mesa 8</td>
+                <td class="px-4 py-3">Miguel</td>
+                <td class="px-4 py-3 font-semibold text-right">$510.00</td>
+                <td class="px-4 py-3"><span class="bg-secondary/15 text-secondary rounded-full px-2 py-0.5 text-xs font-medium">Entregada</span></td>
+              </tr>
+              <tr class="hover:bg-primary/5 cursor-pointer active:bg-primary/10" data-order="37" data-table="Mesa 10" data-waiter="Ana" data-total="920.00" data-status="lista">
+                <td class="px-4 py-3 font-medium">#37</td>
+                <td class="px-4 py-3">Mesa 10</td>
+                <td class="px-4 py-3">Ana</td>
+                <td class="px-4 py-3 font-semibold text-right">$920.00</td>
+                <td class="px-4 py-3"><span class="bg-info/15 text-info rounded-full px-2 py-0.5 text-xs font-medium">Lista</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Right: Detail + Payment Form -->
-      <div class="flex-1 overflow-y-auto p-6">
+      <div class="flex-1 overflow-y-auto p-6" id="detail-panel">
         <!-- Order Summary -->
         <div class="bg-background rounded-xl p-5 mb-6 border border-text-muted/20">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-lg font-semibold">Mesa 5 — #42</span>
-            <span class="bg-primary/15 text-primary rounded-full px-3 py-1 text-xs font-medium">En Cocina</span>
+            <span class="text-lg font-semibold font-display" id="detail-title">Mesa 5 — #42</span>
+            <span class="rounded-full px-3 py-1 text-xs font-medium bg-warning/15 text-warning" id="detail-status">En Cocina</span>
           </div>
           <table class="w-full text-sm mb-3">
             <thead>
               <tr class="text-text-secondary text-left border-b">
                 <th class="py-1.5 font-medium">Item</th>
-                <th class="py-1.5 font-medium text-right">Cant</th>
+                <th class="py-1.5 font-medium text-center">Cant</th>
                 <th class="py-1.5 font-medium text-right">P.Unit</th>
                 <th class="py-1.5 font-medium text-right">Subtotal</th>
               </tr>
             </thead>
-            <tbody class="divide-y">
-              <tr>
-                <td class="py-2">Hamburguesa <span class="text-text-muted text-xs">- sin cebolla</span></td>
-                <td class="py-2 text-right">2</td>
-                <td class="py-2 text-right">$120.00</td>
-                <td class="py-2 text-right font-medium">$240.00</td>
-              </tr>
-              <tr>
-                <td class="py-2">Coca-Cola</td>
-                <td class="py-2 text-right">1</td>
-                <td class="py-2 text-right">$35.00</td>
-                <td class="py-2 text-right font-medium">$35.00</td>
-              </tr>
-              <tr>
-                <td class="py-2">Papas Fritas</td>
-                <td class="py-2 text-right">1</td>
-                <td class="py-2 text-right">$65.00</td>
-                <td class="py-2 text-right font-medium">$65.00</td>
-              </tr>
-              <tr>
-                <td class="py-2">Pasta Alfredo <span class="text-text-muted text-xs">+ extra queso</span></td>
-                <td class="py-2 text-right">1</td>
-                <td class="py-2 text-right">$110.00</td>
-                <td class="py-2 text-right font-medium">$110.00</td>
-              </tr>
+            <tbody class="divide-y" id="detail-items">
+              <tr><td class="py-2">Hamburguesa <span class="text-text-muted text-xs">— sin cebolla</span></td><td class="py-2 text-center">2</td><td class="py-2 text-right">$120.00</td><td class="py-2 text-right font-medium">$240.00</td></tr>
+              <tr><td class="py-2">Coca-Cola</td><td class="py-2 text-center">1</td><td class="py-2 text-right">$35.00</td><td class="py-2 text-right font-medium">$35.00</td></tr>
+              <tr><td class="py-2">Papas Fritas</td><td class="py-2 text-center">1</td><td class="py-2 text-right">$65.00</td><td class="py-2 text-right font-medium">$65.00</td></tr>
+              <tr><td class="py-2">Pasta Alfredo <span class="text-text-muted text-xs">— extra queso</span></td><td class="py-2 text-center">1</td><td class="py-2 text-right">$110.00</td><td class="py-2 text-right font-medium">$110.00</td></tr>
             </tbody>
           </table>
           <div class="flex justify-between items-center border-t pt-3">
             <span class="text-lg font-bold">Total</span>
-            <span class="text-2xl font-bold text-text-primary">$450.00</span>
+            <span class="text-2xl font-bold text-text-primary" id="detail-total">$450.00</span>
           </div>
         </div>
 
         <!-- Payment Form -->
         <div class="bg-surface rounded-xl border border-text-muted/20 p-5">
-          <h3 class="text-base font-semibold text-text-primary mb-4">Registrar Pago</h3>
+          <h3 class="text-base font-semibold text-text-primary font-display mb-4">Registrar Pago</h3>
 
           <!-- Payment Method -->
-          <label class="block text-sm font-medium text-text-primary mb-2">Metodo de pago</label>
+          <label class="block text-sm font-medium text-text-primary mb-2">Método de pago</label>
           <div class="grid grid-cols-3 gap-3 mb-4" id="payment-methods">
-            <button class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-primary bg-primary/10 text-primary active:scale-95 transition-transform" data-method="cash">
+            <button class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-primary bg-primary/10 text-primary active:scale-95 transition-all" data-method="cash">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
               <span class="text-sm font-medium">Efectivo</span>
             </button>
-            <button class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-text-muted/20 hover:border-primary/30 active:scale-95 transition-transform" data-method="card">
+            <button class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-text-muted/20 hover:border-primary/30 active:scale-95 transition-all" data-method="card">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
               <span class="text-sm font-medium">Tarjeta</span>
             </button>
-            <button class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-text-muted/20 hover:border-primary/30 active:scale-95 transition-transform" data-method="transfer">
+            <button class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-text-muted/20 hover:border-primary/30 active:scale-95 transition-all" data-method="transfer">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M8 7l4-4m0 0l4 4m-4-4v18M16 17l-4 4m0 0l-4-4"/></svg>
               <span class="text-sm font-medium">Transf.</span>
             </button>
@@ -203,18 +212,63 @@
 
           <!-- Amount -->
           <label for="amount" class="block text-sm font-medium text-text-primary mb-1">Monto</label>
-          <input id="amount" type="number" value="450.00" class="w-full rounded-lg border border-text-muted/30 px-3 py-3 text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-primary mb-4">
+          <div class="relative mb-4">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-xl font-bold">$</span>
+            <input id="amount" type="number" value="450.00" step="0.01" class="w-full rounded-lg border border-text-muted/30 pl-8 pr-3 py-3 text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-primary">
+          </div>
 
           <!-- Tip -->
           <label class="block text-sm font-medium text-text-primary mb-1">Propina</label>
-          <div class="flex gap-2 mb-2">
-            <button class="px-4 py-1.5 rounded-lg border border-text-muted/30 text-sm hover:border-primary/50 active:bg-primary/10 transition-colors">10%</button>
-            <button class="px-4 py-1.5 rounded-lg border border-text-muted/30 text-sm hover:border-primary/50 active:bg-primary/10 transition-colors">15%</button>
-            <button class="px-4 py-1.5 rounded-lg border border-text-muted/30 text-sm hover:border-primary/50 active:bg-primary/10 transition-colors">20%</button>
+          <div class="flex gap-2 mb-2" id="tip-buttons">
+            <button class="px-4 py-1.5 rounded-lg border-2 border-text-muted/20 text-sm font-medium hover:border-primary/30 active:bg-primary/10 transition-all" data-pct="10">10%</button>
+            <button class="px-4 py-1.5 rounded-lg border-2 border-primary bg-primary/10 text-primary text-sm font-medium transition-all" data-pct="15">15%</button>
+            <button class="px-4 py-1.5 rounded-lg border-2 border-text-muted/20 text-sm font-medium hover:border-primary/30 active:bg-primary/10 transition-all" data-pct="20">20%</button>
           </div>
-          <input type="number" placeholder="Monto de propina" value="45.00" class="w-full rounded-lg border border-text-muted/30 px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-primary mb-6">
+          <div class="relative mb-6">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-lg font-bold">$</span>
+            <input id="tip-amount" type="number" value="67.50" step="0.01" class="w-full rounded-lg border border-text-muted/30 pl-8 pr-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-primary">
+          </div>
 
-          <button class="w-full bg-primary text-white rounded-lg py-3 text-lg font-semibold hover:bg-primary-dark active:scale-[0.98] transition-all">
+          <!-- Split Payment -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between mb-2">
+              <label class="block text-sm font-medium text-text-primary">Pago Dividido</label>
+              <button id="add-split" class="text-xs text-primary font-medium hover:underline flex items-center gap-1">
+                <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                Agregar método
+              </button>
+            </div>
+            <div class="space-y-2" id="split-list">
+              <div class="flex items-center gap-2 bg-background rounded-lg border border-text-muted/20 p-3 group" data-split>
+                <span class="size-3 rounded-full bg-success shrink-0"></span>
+                <span class="text-sm font-medium w-20">Efectivo</span>
+                <span class="text-text-muted text-xs" data-split-method>cash</span>
+                <span class="flex-1"></span>
+                <span class="text-sm font-medium mr-1">$</span>
+                <input type="number" value="200.00" step="0.01" class="w-24 text-right rounded border border-text-muted/30 px-2 py-1 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary" data-split-amount>
+                <button class="text-text-muted hover:text-error opacity-0 group-hover:opacity-100 transition-opacity ml-1" data-remove-split>
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-2 bg-background rounded-lg border border-text-muted/20 p-3 group" data-split>
+                <span class="size-3 rounded-full bg-info shrink-0"></span>
+                <span class="text-sm font-medium w-20">Tarjeta</span>
+                <span class="text-text-muted text-xs" data-split-method>card</span>
+                <span class="flex-1"></span>
+                <span class="text-sm font-medium mr-1">$</span>
+                <input type="number" value="250.00" step="0.01" class="w-24 text-right rounded border border-text-muted/30 px-2 py-1 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary" data-split-amount>
+                <button class="text-text-muted hover:text-error opacity-0 group-hover:opacity-100 transition-opacity ml-1" data-remove-split>
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-text-muted/20">
+              <span class="text-sm text-text-secondary">Pendiente</span>
+              <span class="text-lg font-bold" id="pending-amount">$0.00</span>
+            </div>
+          </div>
+
+          <button id="register-payment" class="w-full bg-primary text-primary-foreground rounded-lg py-3.5 text-lg font-bold hover:bg-primary-dark active:scale-[0.98] transition-all font-display">
             Registrar Pago
           </button>
         </div>
@@ -223,14 +277,174 @@
   </div>
 
   <script>
-    document.querySelectorAll('#payment-methods button').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('#payment-methods button').forEach(function(b) {
-          b.className = 'flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-text-muted/20 hover:border-primary/30 active:scale-95 transition-transform';
+    (function() {
+      var currentOrderTotal = 450.00;
+      var currentTipPct = 15;
+      var selectedMethod = 'cash';
+
+      var PAYMENT_COLORS = { cash: 'bg-success', card: 'bg-info', transfer: 'bg-purple-500' };
+      var PAYMENT_LABELS = { cash: 'Efectivo', card: 'Tarjeta', transfer: 'Transf.' };
+
+      var ACTIVE_ROW_CLASS = 'bg-primary/10 border-l-2 border-l-primary';
+      var INACTIVE_ROW_CLASS = 'hover:bg-primary/5 cursor-pointer active:bg-primary/10';
+
+      function $id(id) { return document.getElementById(id); }
+
+      function selectOrder(row) {
+        document.querySelectorAll('#orders-table tr').forEach(function(r) {
+          r.className = INACTIVE_ROW_CLASS;
         });
-        btn.className = 'flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-primary bg-primary/10 text-primary active:scale-95 transition-transform';
+        row.className = ACTIVE_ROW_CLASS + ' ' + INACTIVE_ROW_CLASS;
+
+        var ds = row.dataset;
+
+        $id('detail-title').textContent = ds.table + ' \u2014 #' + ds.order;
+        var statusMap = {
+          'en-cocina':  { cls: 'bg-warning/15 text-warning',     label: 'En Cocina' },
+          'lista':      { cls: 'bg-info/15 text-info',           label: 'Lista' },
+          'entregada':  { cls: 'bg-secondary/15 text-secondary', label: 'Entregada' },
+          'pagada':     { cls: 'bg-success/15 text-success',     label: 'Pagada' }
+        };
+        var st = statusMap[ds.status] || statusMap['lista'];
+        $id('detail-status').className = 'rounded-full px-3 py-1 text-xs font-medium ' + st.cls;
+        $id('detail-status').textContent = st.label;
+
+        currentOrderTotal = parseFloat(ds.total);
+        $id('detail-total').textContent = '$' + currentOrderTotal.toFixed(2);
+        $id('amount').value = currentOrderTotal.toFixed(2);
+
+        updateTip();
+        updatePending();
+      }
+
+      document.querySelectorAll('#orders-table tr').forEach(function(row) {
+        row.addEventListener('click', function() { selectOrder(row); });
       });
-    });
+
+      var firstRow = document.querySelector('#orders-table tr');
+      if (firstRow) selectOrder(firstRow);
+
+      document.querySelectorAll('#payment-methods button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('#payment-methods button').forEach(function(b) {
+            b.className = 'flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-text-muted/20 hover:border-primary/30 active:scale-95 transition-all';
+          });
+          btn.className = 'flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-primary bg-primary/10 text-primary active:scale-95 transition-all';
+          selectedMethod = btn.dataset.method;
+        });
+      });
+
+      document.querySelectorAll('#tip-buttons button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('#tip-buttons button').forEach(function(b) {
+            b.className = 'px-4 py-1.5 rounded-lg border-2 border-text-muted/20 text-sm font-medium hover:border-primary/30 active:bg-primary/10 transition-all';
+          });
+          btn.className = 'px-4 py-1.5 rounded-lg border-2 border-primary bg-primary/10 text-primary text-sm font-medium transition-all';
+          currentTipPct = parseInt(btn.dataset.pct, 10);
+          updateTip();
+        });
+      });
+
+      $id('tip-amount').addEventListener('input', function() {
+        document.querySelectorAll('#tip-buttons button').forEach(function(b) {
+          b.className = 'px-4 py-1.5 rounded-lg border-2 border-text-muted/20 text-sm font-medium hover:border-primary/30 active:bg-primary/10 transition-all';
+        });
+        currentTipPct = null;
+      });
+
+      $id('amount').addEventListener('input', function() {
+        updatePending();
+      });
+
+      $id('payment-methods').addEventListener('click', function(e) {
+        var btn = e.target.closest('button');
+        if (!btn) return;
+        document.querySelectorAll('#payment-methods button').forEach(function(b) {
+          b.className = 'flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-text-muted/20 hover:border-primary/30 active:scale-95 transition-all';
+        });
+        btn.className = 'flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-primary bg-primary/10 text-primary active:scale-95 transition-all';
+        selectedMethod = btn.dataset.method;
+      });
+
+      function updateTip() {
+        var tip = (currentOrderTotal * currentTipPct / 100);
+        $id('tip-amount').value = tip.toFixed(2);
+      }
+
+      function getTotalWithTip() {
+        return currentOrderTotal + parseFloat($id('tip-amount').value || '0');
+      }
+
+      function updatePending() {
+        var totalWithTip = getTotalWithTip();
+        var splits = document.querySelectorAll('[data-split-amount]');
+        var paid = 0;
+        splits.forEach(function(s) { paid += parseFloat(s.value || '0'); });
+        var pending = totalWithTip - paid;
+        $id('pending-amount').textContent = '$' + pending.toFixed(2);
+        if (pending <= 0.01) {
+          $id('pending-amount').className = 'text-lg font-bold text-success';
+        } else if (pending < totalWithTip) {
+          $id('pending-amount').className = 'text-lg font-bold text-warning';
+        } else {
+          $id('pending-amount').className = 'text-lg font-bold text-text-primary';
+        }
+      }
+
+      document.querySelectorAll('[data-split-amount]').forEach(function(input) {
+        input.addEventListener('input', updatePending);
+      });
+
+      function addSplit() {
+        var div = document.createElement('div');
+        div.className = 'flex items-center gap-2 bg-background rounded-lg border border-text-muted/20 p-3 group';
+        div.setAttribute('data-split', '');
+        div.innerHTML =
+          '<span class="size-3 rounded-full ' + (PAYMENT_COLORS[selectedMethod] || 'bg-purple-500') + ' shrink-0"></span>' +
+          '<span class="text-sm font-medium w-20">' + (PAYMENT_LABELS[selectedMethod] || 'Nuevo') + '</span>' +
+          '<span class="text-text-muted text-xs" data-split-method>' + selectedMethod + '</span>' +
+          '<span class="flex-1"></span>' +
+          '<span class="text-sm font-medium mr-1">$</span>' +
+          '<input type="number" value="0.00" step="0.01" class="w-24 text-right rounded border border-text-muted/30 px-2 py-1 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary" data-split-amount>' +
+          '<button class="text-text-muted hover:text-error opacity-0 group-hover:opacity-100 transition-opacity ml-1" data-remove-split>' +
+            '<svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>' +
+          '</button>';
+
+        div.querySelector('[data-remove-split]').addEventListener('click', function() {
+          div.remove();
+          updatePending();
+        });
+
+        div.querySelector('[data-split-amount]').addEventListener('input', updatePending);
+
+        $id('split-list').appendChild(div);
+        updatePending();
+      }
+
+      $id('add-split').addEventListener('click', addSplit);
+
+      document.querySelectorAll('#split-list [data-remove-split]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          btn.closest('[data-split]').remove();
+          updatePending();
+        });
+      });
+
+      $id('register-payment').addEventListener('click', function() {
+        var pending = parseFloat($id('pending-amount').textContent.replace(/[^0-9.\-]/g, ''));
+        if (pending > 0.01) {
+          alert('A\u00fan hay un saldo pendiente de $' + pending.toFixed(2));
+          return;
+        }
+        if (confirm('\u00bfConfirmar el pago por un total de $' + getTotalWithTip().toFixed(2) + '?')) {
+          this.textContent = 'Pago Registrado \u2713';
+          this.className = 'w-full bg-success text-white rounded-lg py-3.5 text-lg font-bold active:scale-[0.98] transition-all font-display';
+          this.disabled = true;
+        }
+      });
+
+      updatePending();
+    })();
   </script>
 </body>
 </html>
