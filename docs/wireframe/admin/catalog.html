@@ -58,34 +58,29 @@
   <header class="flex items-center justify-between px-8 py-4 border-b border-text-muted/20 bg-white">
     <h2 class="font-display font-bold text-xl text-[#2c1a10]">Catálogo</h2>
     <div class="flex items-center gap-3">
-      <input type="text" id="searchInput" placeholder="Buscar producto…" class="w-56 px-3 py-1.5 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30" oninput="filterProducts()">
-      <button onclick="openModal('add')" class="font-display font-bold text-sm px-4 py-1.5 rounded-[4px] bg-[#c2572e] text-[#fdfaf5] hover:bg-[#8c2b17] transition-colors">+ Nuevo Producto</button>
+      <span class="text-sm text-text-secondary">Admin</span>
+      <div class="size-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold font-display">A</div>
     </div>
   </header>
 
-  <!-- Category Pills -->
-  <div class="flex gap-2 px-8 py-3 overflow-x-auto border-b border-text-muted/20 bg-white">
-    <button class="cat-pill active px-4 py-1.5 rounded-full text-sm font-medium bg-[#c2572e] text-[#fdfaf5]" data-cat="all" onclick="filterByCategory(this,'all')">Todos</button>
-    <button class="cat-pill px-4 py-1.5 rounded-full text-sm font-medium bg-[#f8f0e2] text-[#2c1a10] hover:bg-[#c2572e]/20" data-cat="platos" onclick="filterByCategory(this,'platos')">Platos</button>
-    <button class="cat-pill px-4 py-1.5 rounded-full text-sm font-medium bg-[#f8f0e2] text-[#2c1a10] hover:bg-[#c2572e]/20" data-cat="bebidas" onclick="filterByCategory(this,'bebidas')">Bebidas</button>
-    <button class="cat-pill px-4 py-1.5 rounded-full text-sm font-medium bg-[#f8f0e2] text-[#2c1a10] hover:bg-[#c2572e]/20" data-cat="postres" onclick="filterByCategory(this,'postres')">Postres</button>
-    <button class="cat-pill px-4 py-1.5 rounded-full text-sm font-medium bg-[#f8f0e2] text-[#2c1a10] hover:bg-[#c2572e]/20" data-cat="entradas" onclick="filterByCategory(this,'entradas')">Entradas</button>
+  <!-- Filters Row — category cards + search + button all inline -->
+  <div class="flex items-center gap-3 px-8 py-4 border-b border-text-muted/20 bg-white">
+    <div class="flex items-center gap-2 flex-1 overflow-x-auto" id="cat-filters">
+      <button class="cat-pill active px-4 py-2 rounded-[8px] text-sm font-medium bg-primary text-primary-foreground shadow-sm shrink-0 font-display" data-cat="all" onclick="filterByCategory(this,'all')">Todos</button>
+      <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="platos" onclick="filterByCategory(this,'platos')">Platos</button>
+      <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="bebidas" onclick="filterByCategory(this,'bebidas')">Bebidas</button>
+      <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="postres" onclick="filterByCategory(this,'postres')">Postres</button>
+      <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="entradas" onclick="filterByCategory(this,'entradas')">Entradas</button>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <input type="text" id="searchInput" placeholder="Buscar producto…" class="w-48 px-3 py-2 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30" oninput="filterProducts()">
+      <button onclick="openModal('add')" class="font-display font-bold text-sm px-4 py-2 rounded-[4px] bg-primary text-primary-foreground hover:bg-primary-dark active:scale-95 transition-all shrink-0">+ Nuevo</button>
+    </div>
   </div>
 
-  <!-- Product Table -->
+  <!-- Product Card Grid -->
   <div class="flex-1 px-8 py-4 overflow-auto">
-    <table class="w-full text-sm">
-      <thead>
-        <tr class="text-left text-[#8a7e72] uppercase text-xs tracking-wider border-b border-text-muted/20">
-          <th class="py-3 font-medium">Producto</th>
-          <th class="py-3 font-medium">Categoría</th>
-          <th class="py-3 font-medium">Precio</th>
-          <th class="py-3 font-medium">Disponible</th>
-          <th class="py-3 font-medium">Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="productTableBody"></tbody>
-    </table>
+    <div id="productCardGrid" class="grid grid-cols-3 gap-4"></div>
   </div>
 </main>
 
@@ -147,25 +142,28 @@
   let activeFilter = 'all';
   let editingIndex = null;
 
-  function renderTable(list) {
-    const tbody = document.getElementById('productTableBody');
+  function renderCards(list) {
+    var grid = document.getElementById('productCardGrid');
     if (!list.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="py-12 text-center text-[#8a7e72]">Sin resultados</td></tr>';
+      grid.innerHTML = '<p class="col-span-3 text-center text-text-muted py-16">Sin productos que mostrar</p>';
       return;
     }
-    tbody.innerHTML = list.map((p,i) => {
-      const origIdx = products.indexOf(p);
-      return `
-        <tr class="border-b border-text-muted/20 hover:bg-[#f8f0e2]/50">
-          <td class="py-3 font-medium text-[#2c1a10]">${p.name}</td>
-          <td class="py-3 text-[#665448] capitalize">${p.category}</td>
-          <td class="py-3 text-[#665448]">$${p.price.toFixed(0)}</td>
-          <td class="py-3"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:${p.available?'#457a38':'#b5452e'}"></span></td>
-          <td class="py-3 space-x-2">
-            <button onclick="openModal('edit',${origIdx})" class="text-[#c2572e] hover:underline text-xs font-medium">Editar</button>
-            <button onclick="toggleProduct(${origIdx})" class="text-xs font-medium hover:underline" style="color:${p.available?'#b5452e':'#457a38'}">${p.available?'Desactivar':'Activar'}</button>
-          </td>
-        </tr>`;
+    grid.innerHTML = list.map(function(p) {
+      var idx = products.indexOf(p);
+      return '<div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm p-5 flex flex-col">' +
+        '<div class="flex items-start justify-between mb-3">' +
+          '<div>' +
+            '<p class="font-display font-bold text-base text-text-primary">' + p.name + '</p>' +
+            '<span class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-text-muted/10 text-text-secondary capitalize">' + p.category + '</span>' +
+          '</div>' +
+          '<span class="inline-block size-3 rounded-full shrink-0 mt-1 ' + (p.available ? 'bg-success' : 'bg-error') + '"></span>' +
+        '</div>' +
+        '<p class="font-display font-bold text-xl text-text-primary mt-2">$' + p.price.toFixed(2) + '</p>' +
+        '<div class="flex items-center gap-3 mt-4 pt-3 border-t border-text-muted/10">' +
+          '<button onclick="openModal(\'edit\',' + idx + ')" class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">Editar</button>' +
+          '<button onclick="toggleProduct(' + idx + ')" class="text-sm font-medium ' + (p.available ? 'text-error hover:text-error/80' : 'text-success hover:text-success/80') + ' transition-colors">' + (p.available ? 'Desactivar' : 'Activar') + '</button>' +
+        '</div>' +
+      '</div>';
     }).join('');
   }
 
@@ -176,17 +174,16 @@
       const matchSearch = p.name.toLowerCase().includes(q);
       return matchCat && matchSearch;
     });
-    renderTable(filtered);
+    renderCards(filtered);
   }
 
   function filterByCategory(btn, cat) {
     activeFilter = cat;
-    document.querySelectorAll('.cat-pill').forEach(b => {
-      b.classList.remove('active','bg-[#c2572e]','text-[#fdfaf5]');
-      b.classList.add('bg-[#f8f0e2]','text-[#2c1a10]');
+    document.querySelectorAll('#cat-filters .cat-pill').forEach(function(b) {
+      b.classList.remove('active');
+      b.className = 'cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display';
     });
-    btn.classList.remove('bg-[#f8f0e2]','text-[#2c1a10]');
-    btn.classList.add('active','bg-[#c2572e]','text-[#fdfaf5]');
+    btn.className = 'cat-pill active px-4 py-2 rounded-[8px] text-sm font-medium bg-primary text-primary-foreground shadow-sm shrink-0 font-display';
     filterProducts();
   }
 
@@ -238,7 +235,7 @@
     if (e.target === this) closeModal();
   });
 
-  filterProducts();
+  renderCards(products);
 </script>
 
 </body>
