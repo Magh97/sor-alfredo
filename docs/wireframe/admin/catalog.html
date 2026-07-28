@@ -82,10 +82,21 @@
     </div>
   </div>
 
-  <!-- Product Card Grid — wrapped in a card -->
+  <!-- Product Table — wrapped in a card -->
   <div class="flex-1 px-8 py-4 overflow-auto">
-    <div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm p-6 min-h-[300px]">
-      <div id="productCardGrid" class="grid grid-cols-3 gap-4"></div>
+    <div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm min-h-[300px]">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-left text-text-muted uppercase text-xs tracking-wider border-b border-text-muted/15">
+            <th class="py-3 pl-6 font-medium">Producto</th>
+            <th class="py-3 font-medium">Categoría</th>
+            <th class="py-3 font-medium">Precio</th>
+            <th class="py-3 font-medium">Disponible</th>
+            <th class="py-3 pr-6 font-medium">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody"></tbody>
+      </table>
     </div>
   </div>
 </main>
@@ -148,28 +159,24 @@
   let activeFilter = 'all';
   let editingIndex = null;
 
-  function renderCards(list) {
-    var grid = document.getElementById('productCardGrid');
+  function renderTable(list) {
+    var tbody = document.getElementById('productTableBody');
     if (!list.length) {
-      grid.innerHTML = '<p class="col-span-3 text-center text-text-muted py-12">Sin productos que mostrar</p>';
+      tbody.innerHTML = '<tr><td colspan="5" class="py-16 text-center text-text-muted">Sin productos que mostrar</td></tr>';
       return;
     }
-    grid.innerHTML = list.map(function(p) {
+    tbody.innerHTML = list.map(function(p) {
       var idx = products.indexOf(p);
-      return '<div class="bg-white rounded-[12px] border border-text-muted/10 shadow-sm p-5 flex flex-col">' +
-        '<div class="flex items-start justify-between mb-3">' +
-          '<div>' +
-            '<p class="font-display font-bold text-base text-text-primary">' + p.name + '</p>' +
-            '<span class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-text-muted/10 text-text-secondary capitalize">' + p.category + '</span>' +
-          '</div>' +
-          '<span class="inline-block size-3 rounded-full shrink-0 mt-1 ' + (p.available ? 'bg-success' : 'bg-error') + '"></span>' +
-        '</div>' +
-        '<p class="font-display font-bold text-xl text-text-primary mt-2">$' + p.price.toFixed(2) + '</p>' +
-        '<div class="flex items-center gap-3 mt-4 pt-3 border-t border-text-muted/10">' +
+      return '<tr class="border-b border-text-muted/10 hover:bg-white/50 transition-colors">' +
+        '<td class="py-3 pl-6 font-medium text-text-primary">' + p.name + '</td>' +
+        '<td class="py-3 text-text-secondary capitalize">' + p.category + '</td>' +
+        '<td class="py-3 text-text-secondary font-mono">$' + p.price.toFixed(2) + '</td>' +
+        '<td class="py-3"><span class="inline-block size-2.5 rounded-full ' + (p.available ? 'bg-success' : 'bg-error') + '"></span></td>' +
+        '<td class="py-3 pr-6 space-x-3">' +
           '<button onclick="openModal(\'edit\',' + idx + ')" class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">Editar</button>' +
           '<button onclick="toggleProduct(' + idx + ')" class="text-sm font-medium ' + (p.available ? 'text-error hover:text-error/80' : 'text-success hover:text-success/80') + ' transition-colors">' + (p.available ? 'Desactivar' : 'Activar') + '</button>' +
-        '</div>' +
-      '</div>';
+        '</td>' +
+      '</tr>';
     }).join('');
   }
 
@@ -180,7 +187,7 @@
       const matchSearch = p.name.toLowerCase().includes(q);
       return matchCat && matchSearch;
     });
-    renderCards(filtered);
+    renderTable(filtered);
   }
 
   function filterByCategory(btn, cat) {
@@ -241,7 +248,7 @@
     if (e.target === this) closeModal();
   });
 
-  renderCards(products);
+  renderTable(products);
 </script>
 
 </body>
