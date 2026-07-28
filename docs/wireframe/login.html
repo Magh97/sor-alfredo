@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOR — Iniciar Sesion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   { DEFAULT: '#d97706', light: '#fbbf24', dark: '#92400e', foreground: '#ffffff' },
+            accent:    { DEFAULT: '#16a34a', foreground: '#ffffff' },
+            success:   '#22c55e',
+            error:     '#dc2626',
+            warning:   '#f59e0b',
+            info:      '#3b82f6',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen bg-neutral-50 flex items-center justify-center p-4">
+  <div class="w-full max-w-sm">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-primary">SOR</h1>
+      <p class="text-neutral-500 mt-1">Sistema de Ordenes para Restaurantes</p>
+    </div>
+
+    <!-- Error state (hidden by default) -->
+    <div id="error" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3 mb-6">
+      <svg class="size-5 text-red-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <div>
+        <p class="text-sm font-medium text-red-800">Error</p>
+        <p class="text-sm text-red-600 mt-1">Credenciales invalidas. Intenta de nuevo.</p>
+      </div>
+    </div>
+
+    <form class="bg-white rounded-xl shadow-card border border-neutral-200 p-6 space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-medium text-neutral-700 mb-1">Correo electronico</label>
+        <input type="email" id="email" placeholder="mesero1@restaurant.com"
+          class="w-full rounded-lg border border-neutral-300 px-3 py-2.5 text-base placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-neutral-700 mb-1">Contrasena</label>
+        <input type="password" id="password" placeholder="••••••••"
+          class="w-full rounded-lg border border-neutral-300 px-3 py-2.5 text-base placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+      </div>
+      <button type="submit"
+        class="w-full bg-primary text-primary-foreground rounded-lg py-3 text-base font-semibold hover:bg-amber-700 transition-colors active:scale-[0.98]">
+        Iniciar Sesion
+      </button>
+    </form>
+
+    <p class="text-center text-xs text-neutral-400 mt-4">SOR v0.1 — Propietario</p>
+  </div>
+
+  <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      if (!email || !password) {
+        document.getElementById('error').classList.remove('hidden');
+      } else {
+        document.getElementById('error').classList.add('hidden');
+      }
+    });
+    document.getElementById('email').addEventListener('input', function() {
+      document.getElementById('error').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>
