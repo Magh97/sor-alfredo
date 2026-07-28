@@ -29,6 +29,12 @@
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; }
     .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+
+    @keyframes dropdown-in {
+      from { opacity: 0; transform: translateY(-6px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .dropdown-enter { animation: dropdown-in 150ms ease-out; }
   </style>
 </head>
 <body class="h-screen flex flex-col bg-background max-w-lg mx-auto relative">
@@ -36,8 +42,42 @@
   <!-- Header -->
   <header class="bg-surface border-b border-text-muted/20 px-4 py-3 shrink-0 flex items-center justify-between">
     <h1 class="text-lg font-semibold text-text-primary font-display">Mis Órdenes</h1>
-    <div class="size-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold cursor-pointer active:scale-95 transition-transform" title="Perfil">
-      M
+    <!-- Avatar — tap to open profile dropdown -->
+    <div class="relative" id="profile-container">
+      <button onclick="toggleProfile()" class="size-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold active:scale-95 transition-transform font-display">
+        M
+      </button>
+
+      <!-- Profile Dropdown -->
+      <div id="profile-dropdown" class="hidden dropdown-enter absolute right-0 top-full mt-2 w-56 bg-surface rounded-[16px] shadow-lg border border-text-muted/20 overflow-hidden z-30">
+        <div class="p-4 border-b border-text-muted/10">
+          <div class="flex items-center gap-3">
+            <div class="size-12 rounded-full bg-primary/15 text-primary flex items-center justify-center text-lg font-bold font-display">M</div>
+            <div>
+              <p class="text-sm font-semibold text-text-primary font-display">Miguel G.</p>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-info/15 text-info mt-0.5">
+                <svg class="size-2.5" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                Mesero
+              </span>
+            </div>
+          </div>
+          <div class="mt-3 space-y-1 text-xs text-text-secondary">
+            <p>mesero1@restaurant.com</p>
+            <div class="flex justify-between">
+              <span>Turno</span>
+              <span class="font-medium text-text-primary">14:00 — 22:00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Órdenes hoy</span>
+              <span class="font-medium text-text-primary">14</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="toggleProfile()" class="w-full text-left px-4 py-3 text-sm text-error font-medium hover:bg-error/5 active:bg-error/10 transition-colors flex items-center gap-2">
+          <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Cerrar Sesión
+        </button>
+      </div>
     </div>
   </header>
 
@@ -208,6 +248,17 @@
   </nav>
 
   <script>
+    function toggleProfile() {
+      var d = document.getElementById('profile-dropdown');
+      d.classList.toggle('hidden');
+    }
+    document.addEventListener('click', function(e) {
+      var container = document.getElementById('profile-container');
+      if (container && !container.contains(e.target)) {
+        document.getElementById('profile-dropdown').classList.add('hidden');
+      }
+    });
+
     document.querySelectorAll('#filters button').forEach(function(btn) {
       btn.addEventListener('click', function() {
         document.querySelectorAll('#filters button').forEach(function(b) {
