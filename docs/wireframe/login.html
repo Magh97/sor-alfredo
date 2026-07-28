@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <title>SOR — Iniciar Sesion</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -10,12 +11,17 @@
       theme: {
         extend: {
           colors: {
-            primary:   { DEFAULT: '#d97706', light: '#fbbf24', dark: '#92400e', foreground: '#ffffff' },
-            accent:    { DEFAULT: '#16a34a', foreground: '#ffffff' },
-            success:   '#22c55e',
-            error:     '#dc2626',
-            warning:   '#f59e0b',
-            info:      '#3b82f6',
+            primary:   { DEFAULT: '#c65d3b', light: '#e08a5e', dark: '#8e3a25', foreground: '#fdf6ec' },
+            secondary: { DEFAULT: '#5c7a3e', light: '#7fa056', dark: '#3d5528', foreground: '#fdf6ec' },
+            accent:    { DEFAULT: '#e8a838', foreground: '#3d2b1f' },
+            success:   '#4a7c3f',
+            error:     '#b84c3b',
+            warning:   '#d4992a',
+            info:      '#5b7fa5',
+            background:'#fdf6ec',
+            surface:   '#f5edde',
+            'surface-elevated': '#efe3d0',
+            text:      { primary: '#3d2b1f', secondary: '#7a6b5d', muted: '#a6988a' },
           },
         },
       },
@@ -23,44 +29,45 @@
   </script>
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; }
+    .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
   </style>
 </head>
-<body class="min-h-screen bg-neutral-50 flex items-center justify-center p-4">
+<body class="min-h-screen bg-background flex items-center justify-center p-4">
   <div class="w-full max-w-sm">
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-primary">SOR</h1>
-      <p class="text-neutral-500 mt-1">Sistema de Ordenes para Restaurantes</p>
+      <h1 class="text-3xl font-bold font-display text-primary">SOR</h1>
+      <p class="text-text-secondary mt-1">Sistema de Ordenes para Restaurantes</p>
     </div>
 
     <!-- Error state (hidden by default) -->
-    <div id="error" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3 mb-6">
-      <svg class="size-5 text-red-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <div id="error" class="hidden bg-error/10 border border-error/20 rounded-[4px] p-4 flex items-start gap-3 mb-6">
+      <svg class="size-5 mt-0.5 shrink-0" style="color: #b84c3b" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
       <div>
-        <p class="text-sm font-medium text-red-800">Error</p>
-        <p class="text-sm text-red-600 mt-1">Credenciales invalidas. Intenta de nuevo.</p>
+        <p class="text-sm font-medium text-error">Error</p>
+        <p class="text-sm text-error mt-1">Credenciales invalidas. Intenta de nuevo.</p>
       </div>
     </div>
 
-    <form class="bg-white rounded-xl shadow-card border border-neutral-200 p-6 space-y-4">
+    <form class="bg-surface rounded-[16px] border border-text-muted/20 p-6 space-y-4">
       <div>
-        <label for="email" class="block text-sm font-medium text-neutral-700 mb-1">Correo electronico</label>
+        <label for="email" class="block text-sm font-medium text-text-primary mb-1">Correo electronico</label>
         <input type="email" id="email" placeholder="mesero1@restaurant.com"
-          class="w-full rounded-lg border border-neutral-300 px-3 py-2.5 text-base placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+          class="w-full rounded-[4px] border border-neutral-300 px-3 py-2.5 text-base placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
       </div>
       <div>
-        <label for="password" class="block text-sm font-medium text-neutral-700 mb-1">Contrasena</label>
+        <label for="password" class="block text-sm font-medium text-text-primary mb-1">Contrasena</label>
         <input type="password" id="password" placeholder="••••••••"
-          class="w-full rounded-lg border border-neutral-300 px-3 py-2.5 text-base placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+          class="w-full rounded-[4px] border border-neutral-300 px-3 py-2.5 text-base placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
       </div>
       <button type="submit"
-        class="w-full bg-primary text-primary-foreground rounded-lg py-3 text-base font-semibold hover:bg-amber-700 transition-colors active:scale-[0.98]">
-        Iniciar Sesion
+        class="w-full bg-primary text-primary-foreground rounded-[4px] py-3 text-base font-semibold hover:bg-primary-dark transition-colors active:scale-[0.98]">
+        Entrar al restaurante
       </button>
     </form>
 
-    <p class="text-center text-xs text-neutral-400 mt-4">SOR v0.1 — Propietario</p>
+    <p class="text-center text-xs text-text-muted mt-4">SOR v0.1 — Propietario</p>
   </div>
 
   <script>

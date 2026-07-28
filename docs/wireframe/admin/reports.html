@@ -10,49 +10,54 @@
       theme: {
         extend: {
           colors: {
-            primary:   { DEFAULT: '#d97706', light: '#fbbf24', dark: '#92400e', foreground: '#ffffff' },
-            accent:    { DEFAULT: '#16a34a', foreground: '#ffffff' },
-            success:   '#22c55e',
-            error:    '#dc2626',
-            warning:  '#f59e0b',
-            info:     '#3b82f6',
+            primary:   { DEFAULT: '#c65d3b', light: '#e08a5e', dark: '#8e3a25', foreground: '#fdf6ec' },
+            secondary: { DEFAULT: '#5c7a3e', light: '#7fa056', dark: '#3d5528', foreground: '#fdf6ec' },
+            accent:    { DEFAULT: '#e8a838', foreground: '#3d2b1f' },
+            success:   '#4a7c3f',
+            error:     '#b84c3b',
+            warning:   '#d4992a',
+            info:      '#5b7fa5',
+            background:'#fdf6ec',
+            surface:   '#f5edde',
+            text:      { primary: '#3d2b1f', secondary: '#7a6b5d', muted: '#a6988a' },
           },
         },
       },
     }
   </script>
-  <style> body { font-family: system-ui, -apple-system, sans-serif; } </style>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style> body { font-family: system-ui, -apple-system, sans-serif; } .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; } </style>
 </head>
-<body class="h-screen flex bg-neutral-50">
+<body class="h-screen flex bg-background">
 
   <!-- Sidebar -->
-  <aside class="w-64 bg-white border-r flex flex-col shrink-0">
+  <aside class="w-64 bg-surface border-r flex flex-col shrink-0">
     <div class="h-16 flex items-center px-6 border-b">
-      <h1 class="text-xl font-bold text-primary">SOR</h1>
+      <h1 class="text-xl font-bold text-primary font-display">SOR</h1>
     </div>
     <nav class="flex-1 py-4 space-y-1">
-      <a href="catalog.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium text-neutral-600 hover:bg-neutral-50">
+      <a href="catalog.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium text-text-secondary hover:bg-background">
         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M9 9h6"/></svg>
         Catalogo
       </a>
-      <a href="users.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium text-neutral-600 hover:bg-neutral-50">
+      <a href="users.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium text-text-secondary hover:bg-background">
         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
         Usuarios
       </a>
-      <a href="reports.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium bg-amber-50 text-amber-700 border-r-2 border-amber-600">
+      <a href="reports.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium bg-primary/10 text-primary border-r-2 border-primary">
         <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         Reportes
       </a>
     </nav>
-    <div class="p-4 border-t text-xs text-neutral-400">SOR v0.1</div>
+    <div class="p-4 border-t text-xs text-text-muted">SOR v0.1</div>
   </aside>
 
   <!-- Main -->
   <div class="flex-1 flex flex-col overflow-hidden">
-    <header class="h-16 bg-white border-b flex items-center justify-between px-6 shrink-0">
-      <h2 class="text-lg font-semibold text-neutral-900">Reportes</h2>
+    <header class="h-16 bg-surface border-b flex items-center justify-between px-6 shrink-0">
+      <h2 class="text-lg font-semibold text-text-primary">Reportes</h2>
       <div class="flex items-center gap-3">
-        <span class="text-sm text-neutral-500">Admin</span>
+        <span class="text-sm text-text-secondary">Admin</span>
         <div class="size-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">A</div>
       </div>
     </header>
@@ -60,61 +65,61 @@
     <main class="flex-1 overflow-y-auto p-6">
       <!-- Date Range -->
       <div class="flex items-center gap-3 mb-6">
-        <label class="text-sm font-medium text-neutral-700">Desde</label>
-        <input type="date" value="2026-07-01" class="rounded-lg border border-neutral-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500">
-        <label class="text-sm font-medium text-neutral-700">Hasta</label>
-        <input type="date" value="2026-07-28" class="rounded-lg border border-neutral-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500">
-        <button class="bg-amber-600 text-white rounded-lg px-4 py-2 text-sm font-semibold hover:bg-amber-700 active:scale-95 transition-all">Filtrar</button>
+        <label class="text-sm font-medium text-text-primary">Desde</label>
+        <input type="date" value="2026-07-01" class="rounded-lg border border-text-muted/30 px-3 py-2 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-primary">
+        <label class="text-sm font-medium text-text-primary">Hasta</label>
+        <input type="date" value="2026-07-28" class="rounded-lg border border-text-muted/30 px-3 py-2 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-primary">
+        <button class="bg-primary text-white rounded-lg px-4 py-2 text-sm font-semibold hover:bg-primary-dark active:scale-95 transition-all">Filtrar</button>
       </div>
 
       <!-- Report Tabs -->
       <div class="flex gap-1 border-b mb-6" id="report-tabs">
-        <button class="px-4 py-2.5 text-sm font-medium border-b-2 border-amber-600 text-amber-700 -mb-px" data-tab="sales">Ventas</button>
-        <button class="px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-neutral-500 hover:text-neutral-700 -mb-px" data-tab="top-products">Top Productos</button>
-        <button class="px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-neutral-500 hover:text-neutral-700 -mb-px" data-tab="performance">Desempeno</button>
+        <button class="px-4 py-2.5 text-sm font-medium border-b-2 border-primary text-primary -mb-px" data-tab="sales">Ventas</button>
+        <button class="px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-text-secondary hover:text-text-primary -mb-px" data-tab="top-products">Top Productos</button>
+        <button class="px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-text-secondary hover:text-text-primary -mb-px" data-tab="performance">Desempeno</button>
       </div>
 
       <!-- Sales Tab -->
       <div id="tab-sales">
         <div class="grid grid-cols-3 gap-4 mb-6">
-          <div class="bg-white rounded-xl border border-neutral-200 p-5">
-            <p class="text-sm text-neutral-500 mb-1">Ventas Totales</p>
-            <p class="text-3xl font-bold text-neutral-900">$48,250.00</p>
-            <p class="text-sm text-green-600 mt-1">+18% vs mes anterior</p>
+          <div class="bg-surface rounded-xl border border-text-muted/20 p-5">
+            <p class="text-sm text-text-secondary mb-1">Ventas Totales</p>
+            <p class="text-3xl font-bold text-text-primary">$48,250.00</p>
+            <p class="text-sm text-success mt-1">+18% vs mes anterior</p>
           </div>
-          <div class="bg-white rounded-xl border border-neutral-200 p-5">
-            <p class="text-sm text-neutral-500 mb-1">Ticket Promedio</p>
-            <p class="text-3xl font-bold text-neutral-900">$345.00</p>
-            <p class="text-sm text-green-600 mt-1">+5% vs mes anterior</p>
+          <div class="bg-surface rounded-xl border border-text-muted/20 p-5">
+            <p class="text-sm text-text-secondary mb-1">Ticket Promedio</p>
+            <p class="text-3xl font-bold text-text-primary">$345.00</p>
+            <p class="text-sm text-success mt-1">+5% vs mes anterior</p>
           </div>
-          <div class="bg-white rounded-xl border border-neutral-200 p-5">
-            <p class="text-sm text-neutral-500 mb-1">Total Ordenes</p>
-            <p class="text-3xl font-bold text-neutral-900">142</p>
-            <p class="text-sm text-green-600 mt-1">+12% vs mes anterior</p>
+          <div class="bg-surface rounded-xl border border-text-muted/20 p-5">
+            <p class="text-sm text-text-secondary mb-1">Total Ordenes</p>
+            <p class="text-3xl font-bold text-text-primary">142</p>
+            <p class="text-sm text-success mt-1">+12% vs mes anterior</p>
           </div>
         </div>
 
         <!-- Chart placeholder -->
-        <div class="bg-white rounded-xl border border-neutral-200 p-6">
-          <h3 class="text-base font-semibold text-neutral-900 mb-4">Ventas por Dia</h3>
+        <div class="bg-surface rounded-xl border border-text-muted/20 p-6">
+          <h3 class="text-base font-semibold text-text-primary mb-4">Ventas por Dia</h3>
           <div class="h-48 flex items-end gap-1 justify-between">
-            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-amber-400 rounded-t" style="height:60%"></div><span class="text-xs text-neutral-400 mt-1">Lun</span></div>
-            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-amber-400 rounded-t" style="height:45%"></div><span class="text-xs text-neutral-400 mt-1">Mar</span></div>
-            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-amber-400 rounded-t" style="height:80%"></div><span class="text-xs text-neutral-400 mt-1">Mie</span></div>
-            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-amber-400 rounded-t" style="height:50%"></div><span class="text-xs text-neutral-400 mt-1">Jue</span></div>
-            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-amber-400 rounded-t" style="height:90%"></div><span class="text-xs text-neutral-400 mt-1">Vie</span></div>
-            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-amber-400 rounded-t" style="height:95%"></div><span class="text-xs text-neutral-400 mt-1">Sab</span></div>
-            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-amber-200 rounded-t" style="height:30%"></div><span class="text-xs text-neutral-400 mt-1">Dom</span></div>
+            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-primary rounded-t" style="height:60%"></div><span class="text-xs text-text-muted mt-1">Lun</span></div>
+            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-primary rounded-t" style="height:45%"></div><span class="text-xs text-text-muted mt-1">Mar</span></div>
+            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-primary rounded-t" style="height:80%"></div><span class="text-xs text-text-muted mt-1">Mie</span></div>
+            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-primary rounded-t" style="height:50%"></div><span class="text-xs text-text-muted mt-1">Jue</span></div>
+            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-primary rounded-t" style="height:90%"></div><span class="text-xs text-text-muted mt-1">Vie</span></div>
+            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-primary rounded-t" style="height:95%"></div><span class="text-xs text-text-muted mt-1">Sab</span></div>
+            <div class="flex-1 flex flex-col justify-end items-center"><div class="w-full bg-primary/20 rounded-t" style="height:30%"></div><span class="text-xs text-text-muted mt-1">Dom</span></div>
           </div>
-          <p class="text-xs text-neutral-400 text-center mt-3">Grafico de barras — datos simulados</p>
+          <p class="text-xs text-text-muted text-center mt-3">Grafico de barras — datos simulados</p>
         </div>
       </div>
 
       <!-- Top Products Tab (hidden) -->
       <div id="tab-top-products" class="hidden">
-        <table class="w-full text-sm bg-white rounded-xl border border-neutral-200">
-          <thead class="bg-neutral-50 border-b">
-            <tr class="text-left text-neutral-500">
+        <table class="w-full text-sm bg-surface rounded-xl border border-text-muted/20">
+          <thead class="bg-background border-b">
+            <tr class="text-left text-text-secondary">
               <th class="px-4 py-3 font-medium">#</th>
               <th class="px-4 py-3 font-medium">Producto</th>
               <th class="px-4 py-3 font-medium text-right">Cantidad</th>
@@ -122,20 +127,20 @@
             </tr>
           </thead>
           <tbody class="divide-y">
-            <tr><td class="px-4 py-3 font-bold text-amber-600">1</td><td class="px-4 py-3 font-medium">Hamburguesa Clasica</td><td class="px-4 py-3 text-right">87</td><td class="px-4 py-3 text-right font-medium">$10,440.00</td></tr>
-            <tr><td class="px-4 py-3 font-bold text-neutral-400">2</td><td class="px-4 py-3 font-medium">Tacos al Pastor</td><td class="px-4 py-3 text-right">74</td><td class="px-4 py-3 text-right font-medium">$6,290.00</td></tr>
-            <tr><td class="px-4 py-3 font-bold text-neutral-400">3</td><td class="px-4 py-3 font-medium">Pizza Margarita</td><td class="px-4 py-3 text-right">52</td><td class="px-4 py-3 text-right font-medium">$7,800.00</td></tr>
-            <tr><td class="px-4 py-3 font-bold text-neutral-400">4</td><td class="px-4 py-3 font-medium">Coca-Cola</td><td class="px-4 py-3 text-right">95</td><td class="px-4 py-3 text-right font-medium">$3,325.00</td></tr>
-            <tr><td class="px-4 py-3 font-bold text-neutral-400">5</td><td class="px-4 py-3 font-medium">Pasta Alfredo</td><td class="px-4 py-3 text-right">38</td><td class="px-4 py-3 text-right font-medium">$4,180.00</td></tr>
+            <tr><td class="px-4 py-3 font-bold text-primary">1</td><td class="px-4 py-3 font-medium">Hamburguesa Clasica</td><td class="px-4 py-3 text-right">87</td><td class="px-4 py-3 text-right font-medium">$10,440.00</td></tr>
+            <tr><td class="px-4 py-3 font-bold text-text-muted">2</td><td class="px-4 py-3 font-medium">Tacos al Pastor</td><td class="px-4 py-3 text-right">74</td><td class="px-4 py-3 text-right font-medium">$6,290.00</td></tr>
+            <tr><td class="px-4 py-3 font-bold text-text-muted">3</td><td class="px-4 py-3 font-medium">Pizza Margarita</td><td class="px-4 py-3 text-right">52</td><td class="px-4 py-3 text-right font-medium">$7,800.00</td></tr>
+            <tr><td class="px-4 py-3 font-bold text-text-muted">4</td><td class="px-4 py-3 font-medium">Coca-Cola</td><td class="px-4 py-3 text-right">95</td><td class="px-4 py-3 text-right font-medium">$3,325.00</td></tr>
+            <tr><td class="px-4 py-3 font-bold text-text-muted">5</td><td class="px-4 py-3 font-medium">Pasta Alfredo</td><td class="px-4 py-3 text-right">38</td><td class="px-4 py-3 text-right font-medium">$4,180.00</td></tr>
           </tbody>
         </table>
       </div>
 
       <!-- Performance Tab (hidden) -->
       <div id="tab-performance" class="hidden">
-        <table class="w-full text-sm bg-white rounded-xl border border-neutral-200">
-          <thead class="bg-neutral-50 border-b">
-            <tr class="text-left text-neutral-500">
+        <table class="w-full text-sm bg-surface rounded-xl border border-text-muted/20">
+          <thead class="bg-background border-b">
+            <tr class="text-left text-text-secondary">
               <th class="px-4 py-3 font-medium">Mesero</th>
               <th class="px-4 py-3 font-medium text-right">Ordenes</th>
               <th class="px-4 py-3 font-medium text-right">Total Ventas</th>
@@ -144,9 +149,9 @@
             </tr>
           </thead>
           <tbody class="divide-y">
-            <tr><td class="px-4 py-3 font-medium">Miguel G.</td><td class="px-4 py-3 text-right">48</td><td class="px-4 py-3 text-right font-medium">$17,280.00</td><td class="px-4 py-3 text-right">$360.00</td><td class="px-4 py-3 text-right text-green-600">$2,150.00</td></tr>
-            <tr><td class="px-4 py-3 font-medium">Ana L.</td><td class="px-4 py-3 text-right">52</td><td class="px-4 py-3 text-right font-medium">$18,720.00</td><td class="px-4 py-3 text-right">$360.00</td><td class="px-4 py-3 text-right text-green-600">$2,340.00</td></tr>
-            <tr><td class="px-4 py-3 font-medium">Pedro S.</td><td class="px-4 py-3 text-right">42</td><td class="px-4 py-3 text-right font-medium">$12,250.00</td><td class="px-4 py-3 text-right">$291.67</td><td class="px-4 py-3 text-right text-green-600">$1,520.00</td></tr>
+            <tr><td class="px-4 py-3 font-medium">Miguel G.</td><td class="px-4 py-3 text-right">48</td><td class="px-4 py-3 text-right font-medium">$17,280.00</td><td class="px-4 py-3 text-right">$360.00</td><td class="px-4 py-3 text-right text-success">$2,150.00</td></tr>
+            <tr><td class="px-4 py-3 font-medium">Ana L.</td><td class="px-4 py-3 text-right">52</td><td class="px-4 py-3 text-right font-medium">$18,720.00</td><td class="px-4 py-3 text-right">$360.00</td><td class="px-4 py-3 text-right text-success">$2,340.00</td></tr>
+            <tr><td class="px-4 py-3 font-medium">Pedro S.</td><td class="px-4 py-3 text-right">42</td><td class="px-4 py-3 text-right font-medium">$12,250.00</td><td class="px-4 py-3 text-right">$291.67</td><td class="px-4 py-3 text-right text-success">$1,520.00</td></tr>
           </tbody>
         </table>
       </div>
@@ -157,9 +162,9 @@
     document.querySelectorAll('#report-tabs button').forEach(function(btn) {
       btn.addEventListener('click', function() {
         document.querySelectorAll('#report-tabs button').forEach(function(b) {
-          b.className = 'px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-neutral-500 hover:text-neutral-700 -mb-px';
+          b.className = 'px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-text-secondary hover:text-text-primary -mb-px';
         });
-        btn.className = 'px-4 py-2.5 text-sm font-medium border-b-2 border-amber-600 text-amber-700 -mb-px';
+        btn.className = 'px-4 py-2.5 text-sm font-medium border-b-2 border-primary text-primary -mb-px';
         var tab = btn.dataset.tab;
         ['sales','top-products','performance'].forEach(function(t) {
           document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
