@@ -167,21 +167,25 @@
       tbody.innerHTML = '<tr><td colspan="5" class="py-16 text-center text-text-muted">Sin resultados</td></tr>';
       return;
     }
-    tbody.innerHTML = list.map((u,i) => {
-      const origIdx = users.indexOf(u);
-      const c = roleColors[u.role] || roleColors.mesero;
-      return `
-        <tr class="border-b border-text-muted/10 hover:bg-white/50 transition-colors">
-          <td class="py-3 pl-6 font-medium text-text-primary">${u.name}</td>
-          <td class="py-3 text-text-secondary">${u.email}</td>
-          <td class="py-3"><span class="role-badge capitalize" style="background:${c.bg};color:${c.text}">${u.role}</span></td>
-          <td class="py-3"><span class="inline-block size-2.5 rounded-full ' + (u.active ? 'bg-success' : 'bg-error') + '"></span></td>
-          <td class="py-3 pr-6 space-x-3">
-            <button onclick="openModal('edit',' + origIdx + ')" class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">Editar</button>
-            <button onclick="toggleUser(' + origIdx + ')" class="text-sm font-medium ' + (u.active ? 'text-error hover:text-error/80' : 'text-success hover:text-success/80') + ' transition-colors">' + (u.active ? 'Desactivar' : 'Activar') + '</button>
-          </td>
-        </tr>`;
-    }).join('');
+    var html = '';
+    list.forEach(function(u) {
+      var idx = users.indexOf(u);
+      var c = roleColors[u.role] || roleColors.mesero;
+      var activeClass = u.active ? 'bg-success' : 'bg-error';
+      var toggleClass = u.active ? 'text-error hover:text-error/80' : 'text-success hover:text-success/80';
+      var toggleLabel = u.active ? 'Desactivar' : 'Activar';
+      html += '<tr class="border-b border-text-muted/10 hover:bg-white/50 transition-colors">' +
+        '<td class="py-3 pl-6 font-medium text-text-primary">' + u.name + '</td>' +
+        '<td class="py-3 text-text-secondary">' + u.email + '</td>' +
+        '<td class="py-3"><span class="role-badge capitalize" style="background:' + c.bg + ';color:' + c.text + '">' + u.role + '</span></td>' +
+        '<td class="py-3"><span class="inline-block size-2.5 rounded-full ' + activeClass + '"></span></td>' +
+        '<td class="py-3 pr-6 space-x-3">' +
+          '<button onclick="openModal(\'edit\',' + idx + ')" class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">Editar</button>' +
+          '<button onclick="toggleUser(' + idx + ')" class="text-sm font-medium ' + toggleClass + ' transition-colors">' + toggleLabel + '</button>' +
+        '</td>' +
+      '</tr>';
+    });
+    tbody.innerHTML = html;
   }
 
   function filterUsers() {
