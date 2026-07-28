@@ -63,24 +63,30 @@
     </div>
   </header>
 
-  <!-- Filters Row — category cards + search + button all inline -->
-  <div class="flex items-center gap-3 px-8 py-4 border-b border-text-muted/20 bg-white">
-    <div class="flex items-center gap-2 flex-1 overflow-x-auto" id="cat-filters">
-      <button class="cat-pill active px-4 py-2 rounded-[8px] text-sm font-medium bg-primary text-primary-foreground shadow-sm shrink-0 font-display" data-cat="all" onclick="filterByCategory(this,'all')">Todos</button>
-      <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="platos" onclick="filterByCategory(this,'platos')">Platos</button>
-      <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="bebidas" onclick="filterByCategory(this,'bebidas')">Bebidas</button>
-      <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="postres" onclick="filterByCategory(this,'postres')">Postres</button>
-      <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="entradas" onclick="filterByCategory(this,'entradas')">Entradas</button>
-    </div>
-    <div class="flex items-center gap-2 shrink-0">
-      <input type="text" id="searchInput" placeholder="Buscar producto…" class="w-48 px-3 py-2 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30" oninput="filterProducts()">
-      <button onclick="openModal('add')" class="font-display font-bold text-sm px-4 py-2 rounded-[4px] bg-primary text-primary-foreground hover:bg-primary-dark active:scale-95 transition-all shrink-0">+ Nuevo</button>
+  <!-- Filters Card -->
+  <div class="px-8 py-4">
+    <div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm">
+      <div class="flex items-center gap-3 p-4">
+        <div class="flex items-center gap-2 flex-1 overflow-x-auto" id="cat-filters">
+          <button class="cat-pill active px-4 py-2 rounded-[8px] text-sm font-medium bg-primary text-primary-foreground shadow-sm shrink-0 font-display" data-cat="all" onclick="filterByCategory(this,'all')">Todos</button>
+          <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="platos" onclick="filterByCategory(this,'platos')">Platos</button>
+          <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="bebidas" onclick="filterByCategory(this,'bebidas')">Bebidas</button>
+          <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="postres" onclick="filterByCategory(this,'postres')">Postres</button>
+          <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="entradas" onclick="filterByCategory(this,'entradas')">Entradas</button>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <input type="text" id="searchInput" placeholder="Buscar producto…" class="w-48 px-3 py-2 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30" oninput="filterProducts()">
+          <button onclick="openModal('add')" class="font-display font-bold text-sm px-4 py-2 rounded-[4px] bg-primary text-primary-foreground hover:bg-primary-dark active:scale-95 transition-all shrink-0">+ Nuevo</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Product Card Grid -->
+  <!-- Product Card Grid — wrapped in a card -->
   <div class="flex-1 px-8 py-4 overflow-auto">
-    <div id="productCardGrid" class="grid grid-cols-3 gap-4"></div>
+    <div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm p-6 min-h-[300px]">
+      <div id="productCardGrid" class="grid grid-cols-3 gap-4"></div>
+    </div>
   </div>
 </main>
 
@@ -145,12 +151,12 @@
   function renderCards(list) {
     var grid = document.getElementById('productCardGrid');
     if (!list.length) {
-      grid.innerHTML = '<p class="col-span-3 text-center text-text-muted py-16">Sin productos que mostrar</p>';
+      grid.innerHTML = '<p class="col-span-3 text-center text-text-muted py-12">Sin productos que mostrar</p>';
       return;
     }
     grid.innerHTML = list.map(function(p) {
       var idx = products.indexOf(p);
-      return '<div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm p-5 flex flex-col">' +
+      return '<div class="bg-white rounded-[12px] border border-text-muted/10 shadow-sm p-5 flex flex-col">' +
         '<div class="flex items-start justify-between mb-3">' +
           '<div>' +
             '<p class="font-display font-bold text-base text-text-primary">' + p.name + '</p>' +
@@ -181,7 +187,7 @@
     activeFilter = cat;
     document.querySelectorAll('#cat-filters .cat-pill').forEach(function(b) {
       b.classList.remove('active');
-      b.className = 'cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-surface text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display';
+      b.className = 'cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display';
     });
     btn.className = 'cat-pill active px-4 py-2 rounded-[8px] text-sm font-medium bg-primary text-primary-foreground shadow-sm shrink-0 font-display';
     filterProducts();
