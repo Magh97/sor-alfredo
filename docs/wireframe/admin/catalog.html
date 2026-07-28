@@ -53,18 +53,18 @@
 </aside>
 
 <!-- Main -->
-<main class="flex-1 flex flex-col min-h-screen">
+<main class="flex-1 flex flex-col min-h-screen bg-white">
   <!-- Header -->
-  <header class="flex items-center justify-between px-8 py-4 border-b border-[#f8f0e2] bg-white/50">
+  <header class="flex items-center justify-between px-8 py-4 border-b border-text-muted/20 bg-white">
     <h2 class="font-display font-bold text-xl text-[#2c1a10]">Catálogo</h2>
     <div class="flex items-center gap-3">
-      <input type="text" id="searchInput" placeholder="Buscar producto…" class="w-56 px-3 py-1.5 text-sm border border-[#f8f0e2] rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-[#c2572e]/30" oninput="filterProducts()">
+      <input type="text" id="searchInput" placeholder="Buscar producto…" class="w-56 px-3 py-1.5 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30" oninput="filterProducts()">
       <button onclick="openModal('add')" class="font-display font-bold text-sm px-4 py-1.5 rounded-[4px] bg-[#c2572e] text-[#fdfaf5] hover:bg-[#8c2b17] transition-colors">+ Nuevo Producto</button>
     </div>
   </header>
 
   <!-- Category Pills -->
-  <div class="flex gap-2 px-8 py-3 overflow-x-auto border-b border-[#f8f0e2] bg-white/30">
+  <div class="flex gap-2 px-8 py-3 overflow-x-auto border-b border-text-muted/20 bg-white">
     <button class="cat-pill active px-4 py-1.5 rounded-full text-sm font-medium bg-[#c2572e] text-[#fdfaf5]" data-cat="all" onclick="filterByCategory(this,'all')">Todos</button>
     <button class="cat-pill px-4 py-1.5 rounded-full text-sm font-medium bg-[#f8f0e2] text-[#2c1a10] hover:bg-[#c2572e]/20" data-cat="platos" onclick="filterByCategory(this,'platos')">Platos</button>
     <button class="cat-pill px-4 py-1.5 rounded-full text-sm font-medium bg-[#f8f0e2] text-[#2c1a10] hover:bg-[#c2572e]/20" data-cat="bebidas" onclick="filterByCategory(this,'bebidas')">Bebidas</button>
@@ -76,7 +76,7 @@
   <div class="flex-1 px-8 py-4 overflow-auto">
     <table class="w-full text-sm">
       <thead>
-        <tr class="text-left text-[#8a7e72] uppercase text-xs tracking-wider border-b border-[#f8f0e2]">
+        <tr class="text-left text-[#8a7e72] uppercase text-xs tracking-wider border-b border-text-muted/20">
           <th class="py-3 font-medium">Producto</th>
           <th class="py-3 font-medium">Categoría</th>
           <th class="py-3 font-medium">Precio</th>
@@ -91,8 +91,8 @@
 
 <!-- Modal -->
 <div id="productModal" class="modal-overlay fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-[8px] w-full max-w-md mx-4 shadow-xl">
-    <div class="flex items-center justify-between px-6 py-4 border-b border-[#f8f0e2]">
+  <div class="bg-surface rounded-[8px] w-full max-w-md mx-4 shadow-xl">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-text-muted/20">
       <h3 id="modalTitle" class="font-display font-bold text-lg text-[#2c1a10]">Nuevo Producto</h3>
       <button onclick="closeModal()" class="text-[#8a7e72] hover:text-[#2c1a10] text-xl leading-none">&times;</button>
     </div>
@@ -100,11 +100,11 @@
       <input type="hidden" id="editIndex">
       <div>
         <label class="block text-xs font-medium text-[#665448] mb-1">Nombre del producto</label>
-        <input type="text" id="prodName" required class="w-full px-3 py-2 border border-[#f8f0e2] rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-[#c2572e]/30">
+        <input type="text" id="prodName" required class="w-full px-3 py-2 border border-text-muted/20 rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
       </div>
       <div>
         <label class="block text-xs font-medium text-[#665448] mb-1">Categoría</label>
-        <select id="prodCategory" class="w-full px-3 py-2 border border-[#f8f0e2] rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-[#c2572e]/30">
+        <select id="prodCategory" class="w-full px-3 py-2 border border-text-muted/20 rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
           <option value="platos">Platos</option>
           <option value="bebidas">Bebidas</option>
           <option value="postres">Postres</option>
@@ -113,7 +113,7 @@
       </div>
       <div>
         <label class="block text-xs font-medium text-[#665448] mb-1">Precio (MXN)</label>
-        <input type="number" id="prodPrice" required min="0" step="0.01" class="w-full px-3 py-2 border border-[#f8f0e2] rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-[#c2572e]/30">
+        <input type="number" id="prodPrice" required min="0" step="0.01" class="w-full px-3 py-2 border border-text-muted/20 rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
       </div>
       <div class="flex items-center gap-3">
         <label class="text-xs font-medium text-[#665448]">Disponible</label>
@@ -124,7 +124,7 @@
         </label>
       </div>
       <div class="flex gap-3 pt-2">
-        <button type="button" onclick="closeModal()" class="flex-1 py-2 text-sm border border-[#f8f0e2] rounded-[4px] text-[#665448] hover:bg-[#f8f0e2]">Cancelar</button>
+        <button type="button" onclick="closeModal()" class="flex-1 py-2 text-sm border border-text-muted/20 rounded-[4px] text-[#665448] hover:bg-[#f8f0e2]">Cancelar</button>
         <button type="submit" class="flex-1 py-2 text-sm bg-[#c2572e] text-[#fdfaf5] rounded-[4px] font-display font-bold hover:bg-[#8c2b17]">Guardar</button>
       </div>
     </form>
@@ -156,7 +156,7 @@
     tbody.innerHTML = list.map((p,i) => {
       const origIdx = products.indexOf(p);
       return `
-        <tr class="border-b border-[#f8f0e2] hover:bg-[#f8f0e2]/50">
+        <tr class="border-b border-text-muted/20 hover:bg-[#f8f0e2]/50">
           <td class="py-3 font-medium text-[#2c1a10]">${p.name}</td>
           <td class="py-3 text-[#665448] capitalize">${p.category}</td>
           <td class="py-3 text-[#665448]">$${p.price.toFixed(0)}</td>
