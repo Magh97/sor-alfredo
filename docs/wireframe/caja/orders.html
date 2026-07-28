@@ -78,9 +78,9 @@
               <option>Pagada</option>
             </select>
           </div>
-          <a href="../mesero/new-order.html" class="bg-primary text-primary-foreground rounded-[4px] px-4 py-2 text-sm font-bold hover:bg-primary-dark active:scale-95 transition-all font-display shrink-0">
+          <button onclick="openNewOrder()" class="bg-primary text-primary-foreground rounded-[4px] px-4 py-2 text-sm font-bold hover:bg-primary-dark active:scale-95 transition-all font-display shrink-0">
             + Nueva Orden
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -490,6 +490,156 @@
 
       updatePending();
     })();
+
+    // ── Nueva Orden Modal ──
+    var newOrderItems = [];
+    var newOrderTable = 'Mesa 5';
+
+    window.openNewOrder = function() {
+      document.getElementById('new-order-modal').classList.remove('hidden');
+    };
+
+    window.closeNewOrder = function() {
+      document.getElementById('new-order-modal').classList.add('hidden');
+      resetNewOrder();
+    };
+
+    window.filterProducts = function(btn, cat) {
+      document.querySelectorAll('#product-filters button').forEach(function(b) {
+        b.className = 'px-3 py-1.5 rounded-[4px] text-xs font-medium bg-white text-text-secondary border border-text-muted/20 hover:border-primary/30 transition-colors';
+      });
+      btn.className = 'px-3 py-1.5 rounded-[4px] text-xs font-medium bg-primary text-primary-foreground transition-colors';
+      var catFilter = cat || 'all';
+      document.querySelectorAll('#product-grid > div').forEach(function(card) {
+        card.style.display = (catFilter === 'all' || card.dataset.category === catFilter) ? '' : 'none';
+      });
+    };
+
+    window.addToCart = function(btn) {
+      var name = btn.dataset.name;
+      var price = parseFloat(btn.dataset.price);
+      var existing = newOrderItems.find(function(i) { return i.name === name; });
+      if (existing) {
+        existing.qty++;
+      } else {
+        newOrderItems.push({ name: name, price: price, qty: 1 });
+      }
+      renderCart();
+      btn.classList.add('ring-2', 'ring-primary', 'scale-[0.97]');
+      setTimeout(function() { btn.classList.remove('ring-2', 'ring-primary', 'scale-[0.97]'); }, 200);
+    };
+
+    function updateCartQty(name, delta) {
+      var item = newOrderItems.find(function(i) { return i.name === name; });
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) newOrderItems = newOrderItems.filter(function(i) { return i.name !== name; });
+      renderCart();
+    }
+
+    function getCartTotal() {
+      return newOrderItems.reduce(function(sum, i) { return sum + i.price * i.qty; }, 0);
+    }
+
+    function renderCart() {
+      var list = document.getElementById('cart-items');
+      var count = document.getElementById('cart-count');
+      var total = getCartTotal();
+      count.textContent = newOrderItems.reduce(function(s, i) { return s + i.qty; }, 0);
+      if (!newOrderItems.length) {
+        list.innerHTML = '<p class="text-sm text-text-muted text-center py-4">Selecciona productos para agregar a la orden</p>';
+        document.getElementById('cart-total').textContent = '$0.00';
+        document.getElementById('send-order-btn').disabled = true;
+        return;
+      }
+      list.innerHTML = newOrderItems.map(function(item) {
+        return '<div class="flex items-center justify-between py-1.5">' +
+          '<div class="flex items-center gap-3">' +
+            '<span class="text-sm font-medium">' + item.name + '</span>' +
+            '<div class="flex items-center gap-1">' +
+              '<button onclick="updateCartQty(\'' + item.name + '\', -1)" class="size-6 rounded-full border border-text-muted/30 flex items-center justify-center text-xs hover:border-error/50 transition-colors">-</button>' +
+              '<span class="text-sm w-6 text-center">' + item.qty + '</span>' +
+              '<button onclick="updateCartQty(\'' + item.name + '\', 1)" class="size-6 rounded-full border border-text-muted/30 flex items-center justify-center text-xs hover:border-primary/50 transition-colors">+</button>' +
+            '</div>' +
+          '</div>' +
+          '<span class="text-sm font-medium">$' + (item.price * item.qty).toFixed(2) + '</span>' +
+        '</div>';
+      }).join('');
+      document.getElementById('cart-total').textContent = '$' + total.toFixed(2);
+      document.getElementById('send-order-btn').disabled = false;
+    }
+
+    window.sendOrder = function() {
+      if (!newOrderItems.length) return;
+      var total = getCartTotal();
+      alert('Orden enviada a cocina!\nMesa: ' + newOrderTable + '\nItems: ' + newOrderItems.reduce(function(s,i){return s+i.qty;},0) + '\nTotal: $' + total.toFixed(2));
+      resetNewOrder();
+      closeNewOrder();
+    };
+
+    function resetNewOrder() {
+      newOrderItems = [];
+      renderCart();
+      document.querySelectorAll('#product-filters button').forEach(function(b) {
+        b.className = 'px-3 py-1.5 rounded-[4px] text-xs font-medium bg-white text-text-secondary border border-text-muted/20 hover:border-primary/30 transition-colors';
+      });
+    }
   </script>
+
+  <!-- Nueva Orden Modal -->
+  <div id="new-order-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-6" onclick="if(event.target===this)closeNewOrder()">
+    <div class="bg-surface rounded-[24px] shadow-xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-text-muted/15">
+        <div class="flex items-center gap-4">
+          <h3 class="font-display font-bold text-lg text-text-primary">Nueva Orden</h3>
+          <select class="px-3 py-1.5 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary" onchange="newOrderTable=this.value">
+            <option>Mesa 1</option><option>Mesa 2</option><option>Mesa 3</option><option>Mesa 4</option><option selected>Mesa 5</option><option>Mesa 6</option><option>Mesa 7</option><option>Mesa 8</option>
+          </select>
+        </div>
+        <button onclick="closeNewOrder()" class="text-text-muted hover:text-text-primary text-2xl leading-none">&times;</button>
+      </div>
+
+      <div class="flex gap-2 px-6 py-3 border-b border-text-muted/10 overflow-x-auto" id="product-filters">
+        <button class="px-3 py-1.5 rounded-[4px] text-xs font-medium bg-primary text-primary-foreground transition-colors" onclick="filterProducts(this,'all')">Todos</button>
+        <button class="px-3 py-1.5 rounded-[4px] text-xs font-medium bg-white text-text-secondary border border-text-muted/20 hover:border-primary/30 transition-colors" onclick="filterProducts(this,'platos')">Platos</button>
+        <button class="px-3 py-1.5 rounded-[4px] text-xs font-medium bg-white text-text-secondary border border-text-muted/20 hover:border-primary/30 transition-colors" onclick="filterProducts(this,'bebidas')">Bebidas</button>
+        <button class="px-3 py-1.5 rounded-[4px] text-xs font-medium bg-white text-text-secondary border border-text-muted/20 hover:border-primary/30 transition-colors" onclick="filterProducts(this,'postres')">Postres</button>
+        <button class="px-3 py-1.5 rounded-[4px] text-xs font-medium bg-white text-text-secondary border border-text-muted/20 hover:border-primary/30 transition-colors" onclick="filterProducts(this,'entradas')">Entradas</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-6 py-4">
+        <div class="grid grid-cols-4 gap-3" id="product-grid">
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="platos" data-name="Hamburguesa Clásica" data-price="120" onclick="addToCart(this)"><span class="text-2xl">🍔</span><span class="text-sm font-medium text-text-primary">Hamburguesa</span><span class="text-xs font-bold text-primary">$120.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="platos" data-name="Pizza Margarita" data-price="150" onclick="addToCart(this)"><span class="text-2xl">🍕</span><span class="text-sm font-medium text-text-primary">Pizza Margarita</span><span class="text-xs font-bold text-primary">$150.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="entradas" data-name="Tacos al Pastor" data-price="85" onclick="addToCart(this)"><span class="text-2xl">🌮</span><span class="text-sm font-medium text-text-primary">Tacos al Pastor</span><span class="text-xs font-bold text-primary">$85.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="entradas" data-name="Ensalada César" data-price="95" onclick="addToCart(this)"><span class="text-2xl">🥗</span><span class="text-sm font-medium text-text-primary">Ensalada César</span><span class="text-xs font-bold text-primary">$95.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="platos" data-name="Pasta Alfredo" data-price="130" onclick="addToCart(this)"><span class="text-2xl">🍝</span><span class="text-sm font-medium text-text-primary">Pasta Alfredo</span><span class="text-xs font-bold text-primary">$130.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="bebidas" data-name="Coca-Cola 355ml" data-price="35" onclick="addToCart(this)"><span class="text-2xl">🥤</span><span class="text-sm font-medium text-text-primary">Coca-Cola</span><span class="text-xs font-bold text-primary">$35.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="bebidas" data-name="Limonada Mineral" data-price="45" onclick="addToCart(this)"><span class="text-2xl">🍋</span><span class="text-sm font-medium text-text-primary">Limonada</span><span class="text-xs font-bold text-primary">$45.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="bebidas" data-name="Agua de Horchata" data-price="40" onclick="addToCart(this)"><span class="text-2xl">🥛</span><span class="text-sm font-medium text-text-primary">Horchata</span><span class="text-xs font-bold text-primary">$40.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="postres" data-name="Flan de Caramelo" data-price="65" onclick="addToCart(this)"><span class="text-2xl">🍮</span><span class="text-sm font-medium text-text-primary">Flan</span><span class="text-xs font-bold text-primary">$65.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="postres" data-name="Tiramisú" data-price="85" onclick="addToCart(this)"><span class="text-2xl">🍰</span><span class="text-sm font-medium text-text-primary">Tiramisú</span><span class="text-xs font-bold text-primary">$85.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="entradas" data-name="Guacamole" data-price="95" onclick="addToCart(this)"><span class="text-2xl">🥑</span><span class="text-sm font-medium text-text-primary">Guacamole</span><span class="text-xs font-bold text-primary">$95.00</span></div>
+          <div class="bg-white rounded-[16px] border border-text-muted/10 p-4 flex flex-col items-center text-center cursor-pointer hover:border-primary/30 active:scale-[0.97] transition-all gap-1" data-category="platos" data-name="Chiles en Nogada" data-price="180" onclick="addToCart(this)"><span class="text-2xl">🌶</span><span class="text-sm font-medium text-text-primary">Chiles en Nogada</span><span class="text-xs font-bold text-primary">$180.00</span></div>
+        </div>
+      </div>
+
+      <div class="border-t border-text-muted/15 bg-white px-6 py-4 flex flex-col gap-3">
+        <div class="flex items-center gap-2">
+          <span class="size-6 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold" id="cart-count">0</span>
+          <span class="text-sm font-medium text-text-secondary">Productos seleccionados</span>
+          <span class="flex-1"></span>
+          <span class="text-sm text-text-secondary">Total:</span>
+          <span class="text-base font-bold text-text-primary font-display" id="cart-total">$0.00</span>
+        </div>
+        <div class="max-h-32 overflow-y-auto" id="cart-items">
+          <p class="text-sm text-text-muted text-center py-4">Selecciona productos para agregar a la orden</p>
+        </div>
+        <button id="send-order-btn" onclick="sendOrder()" disabled class="w-full bg-primary text-primary-foreground rounded-[4px] py-3 text-sm font-bold hover:bg-primary-dark active:scale-[0.98] transition-all font-display disabled:opacity-50 disabled:cursor-not-allowed">
+          Enviar a Cocina
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
