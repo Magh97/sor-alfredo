@@ -66,7 +66,7 @@
     <main class="flex-1 overflow-y-auto p-6 space-y-6 bg-white">
 
       <!-- Shift Status Card -->
-      <div class="bg-surface rounded-xl border border-text-muted/20 p-6">
+      <div class="bg-surface rounded-[16px] border border-text-muted/20 shadow-sm p-6">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <div class="relative">
@@ -79,7 +79,7 @@
               <p class="text-sm text-text-secondary">Inicio: 14:00 &middot; Duraci&oacute;n: <span id="shift-duration">2h 35m</span></p>
             </div>
           </div>
-          <button id="close-shift" class="bg-error text-white rounded-lg px-6 py-3 font-semibold hover:bg-error/80 active:scale-95 transition-all font-display">
+          <button id="close-shift" class="bg-error text-white rounded-[4px] px-6 py-3 font-semibold hover:bg-error/80 active:scale-95 transition-all font-display">
             Cerrar Turno
           </button>
         </div>
@@ -87,7 +87,7 @@
 
       <!-- Summary Cards -->
       <div class="grid grid-cols-3 gap-4">
-        <div class="bg-surface rounded-xl border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
           <div class="flex items-center gap-2 mb-2">
             <svg class="size-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
             <p class="text-sm font-medium text-text-secondary">Ventas</p>
@@ -95,7 +95,7 @@
           <p class="text-3xl font-bold text-text-primary font-display">$6,250.00</p>
           <p class="text-sm text-success mt-1">12 pagos procesados</p>
         </div>
-        <div class="bg-surface rounded-xl border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
           <div class="flex items-center gap-2 mb-2">
             <svg class="size-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
             <p class="text-sm font-medium text-text-secondary">Propinas</p>
@@ -103,7 +103,7 @@
           <p class="text-3xl font-bold text-text-primary font-display">$825.00</p>
           <p class="text-sm text-text-muted mt-1">Promedio 13.2%</p>
         </div>
-        <div class="bg-surface rounded-xl border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
           <div class="flex items-center gap-2 mb-2">
             <svg class="size-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             <p class="text-sm font-medium text-text-secondary">Efectivo en Caja</p>
@@ -116,10 +116,10 @@
       <!-- Split Row: Breakdown + Profit -->
       <div class="grid grid-cols-2 gap-4">
         <!-- Payment Methods Breakdown -->
-        <div class="bg-surface rounded-xl border border-text-muted/20 p-5">
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5">
           <h3 class="text-base font-semibold text-text-primary font-display mb-4">Desglose por M&eacute;todo</h3>
           <div class="space-y-3">
-            <div class="flex items-center justify-between bg-background rounded-lg px-4 py-3">
+            <div class="flex items-center justify-between bg-background rounded-[4px] px-4 py-3">
               <div class="flex items-center gap-3">
                 <span class="size-3 rounded-full bg-success"></span>
                 <span class="text-sm font-medium">Efectivo</span>
@@ -129,7 +129,7 @@
                 <p class="text-xs text-text-muted">7 pagos</p>
               </div>
             </div>
-            <div class="flex items-center justify-between bg-background rounded-lg px-4 py-3">
+            <div class="flex items-center justify-between bg-background rounded-[4px] px-4 py-3">
               <div class="flex items-center gap-3">
                 <span class="size-3 rounded-full bg-info"></span>
                 <span class="text-sm font-medium">Tarjeta</span>
@@ -139,7 +139,7 @@
                 <p class="text-xs text-text-muted">3 pagos</p>
               </div>
             </div>
-            <div class="flex items-center justify-between bg-background rounded-lg px-4 py-3">
+            <div class="flex items-center justify-between bg-background rounded-[4px] px-4 py-3">
               <div class="flex items-center gap-3">
                 <span class="size-3 rounded-full bg-purple-500"></span>
                 <span class="text-sm font-medium">Transferencia</span>
@@ -153,7 +153,7 @@
         </div>
 
         <!-- Profit / Loss -->
-        <div class="bg-surface rounded-xl border border-text-muted/20 p-5">
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5">
           <h3 class="text-base font-semibold text-text-primary font-display mb-4">Balance del Turno</h3>
           <div class="space-y-3">
             <div class="flex justify-between text-sm">
@@ -189,7 +189,7 @@
       </div>
 
       <!-- Recent Payments -->
-      <div class="bg-surface rounded-xl border border-text-muted/20 p-5">
+      <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-base font-semibold text-text-primary font-display">Pagos Recientes</h3>
           <a href="orders.html" class="text-sm text-primary font-medium hover:underline font-display">Ver todas &rarr;</a>
@@ -330,7 +330,7 @@
           statusEl.textContent = 'Turno CERRADO';
         }
         this.textContent = 'Turno Cerrado \u2713';
-        this.className = 'bg-text-muted text-white rounded-lg px-6 py-3 font-semibold font-display cursor-not-allowed';
+        this.className = 'bg-text-muted text-white rounded-[4px] px-6 py-3 font-semibold font-display cursor-not-allowed';
         this.disabled = true;
       });
     })();
