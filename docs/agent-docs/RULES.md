@@ -26,8 +26,18 @@ Tailwind classes only. No inline styles, no CSS modules, no styled-components.
 shadcn/ui primitives as base. Custom components import from @/components/ui/.
 cn() from @/lib/utils for conditional classes. Never string concatenation.
 lucide-react icons imported individually. Never barrel import.
-48px min touch target on mesero tablet screens. Use p-3 or p-4.
-24px min font on KDS screens. Use text-kds-sm or larger.
+Space Grotesk Bold (700) for ALL headings, buttons, KDS text. system-ui for body only.
+Organic spacing scale: p-3=14px, p-4=20px, p-5=28px, p-6=40px. NOT standard Tailwind.
+48px min touch target on mesero tablet screens. Use p-4 or larger.
+KDS screens: Space Grotesk Bold on ALL text. No system-ui. text-kds-sm (24px) or larger.
+Variable radii: control=4px, card=16px, modal=24px, chip=full, KDS=12px.
+Cards in mesero grids: apply cardRotation(index) for 1-2° rotation ("diario personal" effect).
+Warm shadows only: use espresso tint, never black.
+Background: parchment (#fdf6ec). Never white (#fff). Never black (#000).
+Empty states: poetic microcopy with personality. NEVER "No data found".
+Error states: human messages with personality. NEVER "Something went wrong".
+Loading states: textile shimmer skeleton (linen→golden→linen gradient). NEVER generic spinner.
+Design source of truth: docs/DESIGN_SYSTEM.md. All UI MUST reference it.
 
 // ACCESSIBILITY
 aria-label on every icon-only button, link, or interactive element.
@@ -85,9 +95,14 @@ No deleting rows that have FK references. Use soft delete (is_active=false).
 No skipping restaurant_id in queries. Always scoped to current restaurant.
 
 // ANIMATIONS
-No ease-in for UI elements. Use ease-out.
-No animating from scale(0). Start at scale(0.9).
+No spinners. Textile shimmer skeleton only.
+No ease-in for UI elements. Use ease-out or cubic-bezier(0.34, 1.56, 0.64, 1) for bounce.
+No animating from scale(0). Start at scale(0.9) or scale(0.95).
 No motion for users with prefers-reduced-motion.
+Micro-interactions: 150-200ms. Page transitions: 300-400ms.
+Button hover: scale 1.02. Button press: scale 0.97.
+KDS new order: slide+scale+bounce+terracotta pulse, 500ms.
+KDS order done: slide-out+fade+scale-down, 400ms.
 
 // SECURITY
 No secrets in code, config files, or logs.
