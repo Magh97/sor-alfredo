@@ -55,35 +55,51 @@
   <header class="flex items-center justify-between px-8 py-4 border-b border-text-muted/20 bg-white">
     <h2 class="font-display font-bold text-xl text-[#2c1a10]">Usuarios</h2>
     <div class="flex items-center gap-3">
-      <select id="roleFilter" onchange="filterUsers()" class="px-3 py-1.5 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30">
-        <option value="all">Todos los roles</option>
-        <option value="admin">Administrador</option>
-        <option value="mesero">Mesero</option>
-        <option value="cajero">Cajero</option>
-        <option value="cocina">Cocina</option>
-      </select>
-      <select id="statusFilter" onchange="filterUsers()" class="px-3 py-1.5 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30">
-        <option value="all">Todos los estados</option>
-        <option value="active">Activos</option>
-        <option value="inactive">Inactivos</option>
-      </select>
-      <button onclick="openModal('add')" class="font-display font-bold text-sm px-4 py-1.5 rounded-[4px] bg-[#c2572e] text-[#fdfaf5] hover:bg-[#8c2b17] transition-colors">+ Agregar Usuario</button>
+      <span class="text-sm text-text-secondary">Admin</span>
+      <div class="size-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold font-display">A</div>
     </div>
   </header>
 
+  <!-- Filters Card -->
+  <div class="px-8 py-4">
+    <div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm">
+      <div class="flex items-center gap-3 p-4">
+        <div class="flex items-center gap-2 flex-1">
+          <input type="text" id="searchInput" placeholder="Buscar usuario…" oninput="filterUsers()" class="px-3 py-2 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 w-48">
+          <select id="roleFilter" onchange="filterUsers()" class="px-3 py-2 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30">
+            <option value="all">Todos los roles</option>
+            <option value="admin">Administrador</option>
+            <option value="mesero">Mesero</option>
+            <option value="cajero">Cajero</option>
+            <option value="cocina">Cocina</option>
+          </select>
+          <select id="statusFilter" onchange="filterUsers()" class="px-3 py-2 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30">
+            <option value="all">Todos los estados</option>
+            <option value="active">Activos</option>
+            <option value="inactive">Inactivos</option>
+          </select>
+        </div>
+        <button onclick="openModal('add')" class="font-display font-bold text-sm px-4 py-2 rounded-[4px] bg-primary text-primary-foreground hover:bg-primary-dark active:scale-95 transition-all shrink-0">+ Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Table — wrapped in a card -->
   <div class="flex-1 px-8 py-4 overflow-auto">
-    <table class="w-full text-sm">
-      <thead>
-        <tr class="text-left text-[#8a7e72] uppercase text-xs tracking-wider border-b border-text-muted/20">
-          <th class="py-3 font-medium">Nombre</th>
-          <th class="py-3 font-medium">Email</th>
-          <th class="py-3 font-medium">Rol</th>
-          <th class="py-3 font-medium">Activo</th>
-          <th class="py-3 font-medium">Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="usersTableBody"></tbody>
-    </table>
+    <div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm min-h-[300px]">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-left text-text-muted uppercase text-xs tracking-wider border-b border-text-muted/15">
+            <th class="py-3 pl-6 font-medium">Nombre</th>
+            <th class="py-3 font-medium">Email</th>
+            <th class="py-3 font-medium">Rol</th>
+            <th class="py-3 font-medium">Activo</th>
+            <th class="py-3 pr-6 font-medium">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+    </div>
   </div>
 </main>
 
@@ -148,33 +164,35 @@
   function renderUsers(list) {
     const tbody = document.getElementById('usersTableBody');
     if (!list.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="py-12 text-center text-[#8a7e72]">Sin resultados</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" class="py-16 text-center text-text-muted">Sin resultados</td></tr>';
       return;
     }
     tbody.innerHTML = list.map((u,i) => {
       const origIdx = users.indexOf(u);
       const c = roleColors[u.role] || roleColors.mesero;
       return `
-        <tr class="border-b border-text-muted/20 hover:bg-[#f8f0e2]/50">
-          <td class="py-3 font-medium text-[#2c1a10]">${u.name}</td>
-          <td class="py-3 text-[#665448]">${u.email}</td>
+        <tr class="border-b border-text-muted/10 hover:bg-white/50 transition-colors">
+          <td class="py-3 pl-6 font-medium text-text-primary">${u.name}</td>
+          <td class="py-3 text-text-secondary">${u.email}</td>
           <td class="py-3"><span class="role-badge capitalize" style="background:${c.bg};color:${c.text}">${u.role}</span></td>
-          <td class="py-3"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:${u.active?'#457a38':'#b5452e'}"></span></td>
-          <td class="py-3 space-x-2">
-            <button onclick="openModal('edit',${origIdx})" class="text-[#c2572e] hover:underline text-xs font-medium">Editar</button>
-            <button onclick="toggleUser(${origIdx})" class="text-xs font-medium hover:underline" style="color:${u.active?'#b5452e':'#457a38'}">${u.active?'Desactivar':'Activar'}</button>
+          <td class="py-3"><span class="inline-block size-2.5 rounded-full ' + (u.active ? 'bg-success' : 'bg-error') + '"></span></td>
+          <td class="py-3 pr-6 space-x-3">
+            <button onclick="openModal('edit',' + origIdx + ')" class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">Editar</button>
+            <button onclick="toggleUser(' + origIdx + ')" class="text-sm font-medium ' + (u.active ? 'text-error hover:text-error/80' : 'text-success hover:text-success/80') + ' transition-colors">' + (u.active ? 'Desactivar' : 'Activar') + '</button>
           </td>
         </tr>`;
     }).join('');
   }
 
   function filterUsers() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
     const roleFilter = document.getElementById('roleFilter').value;
     const statusFilter = document.getElementById('statusFilter').value;
     const filtered = users.filter(u => {
       const matchRole = roleFilter === 'all' || u.role === roleFilter;
       const matchStatus = statusFilter === 'all' || (statusFilter === 'active' ? u.active : !u.active);
-      return matchRole && matchStatus;
+      const matchSearch = u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search);
+      return matchRole && matchStatus && matchSearch;
     });
     renderUsers(filtered);
   }
