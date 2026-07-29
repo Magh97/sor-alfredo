@@ -12,7 +12,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npm run dev',
+    command: 'pnpm -w dev',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
   },
