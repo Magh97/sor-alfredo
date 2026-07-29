@@ -19,6 +19,8 @@ tailwind.config = {
         success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
         background:'#FFFFFF', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
         espresso:'#2C1810',
+        burgundy:'#6B1A2A20',
+        parchment:'#F0E6D3',
         text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
       },
       fontFamily: {
@@ -125,13 +127,13 @@ tailwind.config = {
 <main class="flex-1 min-h-screen bg-white px-10 py-8">
 
   <!-- HEADER -->
-  <div class="flex items-center justify-between pb-6 border-b-[6px] border-primary mb-10">
+  <header class="flex items-center justify-between pb-6 border-b-[6px] border-primary mb-10">
     <h1 class="font-sans font-bold text-[36px] uppercase tracking-[-0.02em] text-espresso">Usuarios</h1>
     <div class="flex items-center gap-3">
-      <span class="font-mono text-[14px] text-text-secondary">SOR-ADM-001</span>
+      <span class="font-mono text-[14px] text-text-secondary">SOR-ADM-002</span>
       <div class="w-11 h-11 border-[4px] border-primary flex items-center justify-center font-serif font-bold text-[18px] text-primary">EM</div>
     </div>
-  </div>
+  </header>
 
   <!-- FILTERS CARD -->
   <div class="mb-10 p-6" style="background:#EBDCC4; border:6px solid #6B1A2A;">
@@ -392,6 +394,12 @@ document.addEventListener('keydown', function(e) {
 });
 
 renderTable(users);
+
+function logout() {
+  if (confirm('Cerrar sesion?')) {
+    window.location.href = '../../login_experimental.html';
+  }
+}
 </script>
 
 </body>
