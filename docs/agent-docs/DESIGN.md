@@ -160,7 +160,7 @@ CAJERO & ADMIN (desktop):
   <div class="flex h-screen bg-background">
     <aside class="w-64 bg-surface border-r border-text-muted/10 flex flex-col shrink-0">
       <div class="h-14 px-5 border-b border-text-muted/10 flex items-center font-bold font-display">
-        SOR logo
+        Alfredo's logo
       </div>
       <nav class="flex-1 py-4">{sidebar nav links, Space Grotesk}</nav>
       <div class="p-4 border-t border-text-muted/10">{UserMenu}</div>
@@ -176,7 +176,7 @@ CAJERO & ADMIN (desktop):
 KDS (32", dark theme, full-screen):
   <div class="h-screen bg-kds-bg flex flex-col overflow-hidden" data-kds>
     <header class="h-20 bg-kds-surface border-b border-kds-muted/20 px-8 flex items-center justify-between shrink-0">
-      <span class="text-kds-lg font-display font-bold text-kds-text">SOR Cocina</span>
+      <span class="text-kds-lg font-display font-bold text-kds-text">Alfredo's Cocina</span>
       <span class="text-kds-base font-display text-kds-muted">{clock} · {count} activas</span>
     </header>
     <main class="flex-1 p-6 overflow-hidden">

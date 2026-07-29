@@ -1,4 +1,4 @@
-# Design System Experimental: SOR
+# Design System Experimental: Alfredo's
 ## Versión: Experimental v1 | 2026-07-29
 
 ---

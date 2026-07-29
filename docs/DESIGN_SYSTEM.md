@@ -1,4 +1,4 @@
-# Design System: SOR
+# Design System: Alfredo's
 
 > **Última actualización:** 2026-07-28
 > **Stack:** React 19 + Vite + Tailwind CSS 4.3 + shadcn/ui + lucide-react
@@ -696,7 +696,7 @@ Para separadores o bordes decorativos, usar gradientes lineales que simulan hilo
 ```
 ┌─────────────────────────────────────┐
 │                                     │
-│           [Logo SOR]                │
+│           [Logo Alfredo's]                │
 │      "Bienvenido de vuelta"         │
 │                                     │
 │    ┌─────────────────────────┐      │

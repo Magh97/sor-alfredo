@@ -1,4 +1,4 @@
-# Modelo de Datos -- SOR
+# Modelo de Datos -- Alfredo's
 
 ## Modelo Logico (ERD)
 

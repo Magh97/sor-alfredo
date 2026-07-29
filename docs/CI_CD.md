@@ -1,4 +1,4 @@
-# CI/CD Pipeline Design -- SOR
+# CI/CD Pipeline Design -- Alfredo's
 
 ---
 
@@ -59,7 +59,7 @@ jobs:
       postgres:
         image: postgres:18-alpine
         env:
-          POSTGRES_DB: sor_test
+          POSTGRES_DB: Alfredo's_test
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
         ports: ['5432:5432']
@@ -109,7 +109,7 @@ jobs:
       postgres:
         image: postgres:18-alpine
         env:
-          POSTGRES_DB: sor_test
+          POSTGRES_DB: Alfredo's_test
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
         ports: ['5432:5432']

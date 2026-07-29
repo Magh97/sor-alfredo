@@ -1,8 +1,8 @@
-# 📋 Sistema de Gestión de Órdenes para Restaurantes (SOR)
+# 📋 Sistema de Gestión de Órdenes para Restaurantes (Alfredo's)
 
 ## 1. 📋 Visión General
 
-El **Sistema de Gestión de Órdenes para Restaurantes (SOR)** es una plataforma web diseñada para digitalizar y controlar el flujo completo de órdenes en un restaurante de servicio a mesa. Permite a meseros tomar órdenes asignadas a mesas, enviarlas a cocina en tiempo real, gestionar modificaciones de platillos, y facilita al cajero el registro de pagos, corte de caja y generación de reportes. El administrador controla el catálogo de productos, complementos, usuarios y la configuración del sistema.
+El **Sistema de Gestión de Órdenes para Restaurantes (Alfredo's)** es una plataforma web diseñada para digitalizar y controlar el flujo completo de órdenes en un restaurante de servicio a mesa. Permite a meseros tomar órdenes asignadas a mesas, enviarlas a cocina en tiempo real, gestionar modificaciones de platillos, y facilita al cajero el registro de pagos, corte de caja y generación de reportes. El administrador controla el catálogo de productos, complementos, usuarios y la configuración del sistema.
 
 **Alcance General:** El sistema gestiona órdenes, mesas, catálogo de productos, usuarios, pagos y reportes básicos. **No incluye** inventario de insumos, reservaciones de mesas, programa de lealtad, ni integración con MercadoPago en el MVP (preparado para futura extensión).
 

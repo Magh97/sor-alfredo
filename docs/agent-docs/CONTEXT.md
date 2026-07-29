@@ -4,7 +4,7 @@ Read this first. It describes the project, stack, structure, and key entry point
 
 ## Project
 
-SOR — Sistema de Gestion de Ordenes para Restaurantes.
+Alfredo's — Sistema de Gestion de Ordenes para Restaurantes.
 Digitaliza flujo mesa→orden→cocina→pago en restaurante de servicio a mesa.
 
 ## Actors & Devices

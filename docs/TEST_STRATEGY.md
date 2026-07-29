@@ -1,4 +1,4 @@
-# Estrategia de Testing -- SOR
+# Estrategia de Testing -- Alfredo's
 
 ---
 
@@ -228,7 +228,7 @@ jobs:
       postgres:
         image: postgres:18-alpine
         env:
-          POSTGRES_DB: sor_test
+          POSTGRES_DB: Alfredo's_test
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
         ports: ['5432:5432']

@@ -1,4 +1,4 @@
-# API Reference -- SOR
+# API Reference -- Alfredo's
 
 Base URL: `http://localhost:3000/api`
 
