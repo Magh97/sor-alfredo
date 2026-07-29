@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOR — Reservas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary:   { DEFAULT:'#6B1A2A', light:'#8B2535', dark:'#4A0F1B', foreground:'#F0E6D3' },
+        secondary: { DEFAULT:'#2D4A22', light:'#3D6230', dark:'#1C3015', foreground:'#F0E6D3' },
+        accent:    { DEFAULT:'#C9A84C', foreground:'#2C1810' },
+        success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
+        background:'#FFFFFF', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
+        espresso:'#2C1810', burgundy:'#6B1A2A', parchment:'#F0E6D3',
+        text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
+      },
+      fontFamily: {
+        serif: ['"Playfair Display"','Georgia', 'serif'],
+        mono:  ['"JetBrains Mono"','"Courier New"', 'monospace'],
+        sans:  ['"DM Sans"','"Helvetica Neue"', 'sans-serif'],
+        script:['"Caveat"', 'cursive'],
+      },
+    }
+  }
+}
+</script>
+<style>
+  .bg-paper {
+    background-color: #FFFFFF;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+  .shadow-paper {
+    box-shadow: 0 1px 0 #C9A84C, 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
+  }
+  .border-torn {
+    border-top: 3px solid #6B1A2A;
+    position: relative;
+  }
+  .border-torn::before {
+    content: '';
+    position: absolute;
+    top: -6px; left: 0;
+    width: 100%; height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent, transparent 8px,
+      #F0E6D3 8px, #F0E6D3 12px,
+      transparent 12px, transparent 20px,
+      #F0E6D3 20px, #F0E6D3 22px,
+      transparent 22px, transparent 30px
+    );
+  }
+  input:focus, select:focus { outline:none; }
+  .status-badge {
+    display:inline-block;
+    padding:2px 10px;
+    font-family:'DM Sans',sans-serif;
+    font-weight:700;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+  }
+  .status-confirmada { border:2px solid #C9A84C; background:#C9A84C; color:#2C1810; }
+  .status-pendiente  { border:2px solid #8B7355;  color:#8B7355; background:transparent; }
+  .status-sentada    { border:2px solid #2D4A22;  background:#2D4A22; color:#F0E6D3; }
+  .status-cancelada  { border:2px solid #8B1A1A;  color:#8B1A1A; background:transparent; }
+  .calendar-cell {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2C1810;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid #8B7355;
+    transition: background 0.1s;
+  }
+  .calendar-cell:hover { background: rgba(107,26,42,0.08); }
+  .calendar-cell.today { background: #6B1A2A; color: #C9A84C; }
+  .calendar-cell.other-month { color: #8B7355; opacity:0.4; }
+  .calendar-cell.selected { outline: 4px solid #C9A84C; outline-offset: -2px; }
+  .calendar-cell .dot {
+    width: 5px; height: 5px;
+    background: #C9A84C;
+    margin-top: 3px;
+  }
+  .calendar-header {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #5C4030;
+    text-align: center;
+    padding: 6px 0;
+  }
+  .modal-overlay { background:rgba(44,24,16,0.65); }
+</style>
+</head>
+<body class="bg-paper min-h-screen flex font-sans text-text-primary">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="w-64 min-h-screen bg-espresso text-parchment flex flex-col shrink-0">
+  <div class="px-6 py-6 border-b-4 border-accent">
+    <h1 class="font-serif font-bold text-2xl tracking-tight text-accent">SOR</h1>
+    <p class="text-xs text-text-muted mt-1">Sistema de Ordenes Restaurante</p>
+  </div>
+  <nav class="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto">
+    <div class="px-4 pt-3 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Operaciones</div>
+    <a href="../caja/orders_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Ordenes
+    </a>
+    <a href="../caja/register_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15l3 3 7-7"/></svg>
+      Caja
+    </a>
+    <a href="mesas_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Mesas
+    </a>
+    <a href="reservas_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider border-l-[6px] border-primary bg-burgundy/20 text-accent">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Reservas
+    </a>
+
+    <div class="px-4 pt-4 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Catalogo</div>
+    <a href="catalog_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M9 9h6"/></svg>
+      Productos
+    </a>
+    <a href="categorias_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1" fill="currentColor"/><circle cx="8" cy="12" r="1" fill="currentColor"/><circle cx="8" cy="18" r="1" fill="currentColor"/></svg>
+      Categorias
+    </a>
+
+    <div class="px-4 pt-4 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Personal</div>
+    <a href="users_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      Usuarios
+    </a>
+
+    <div class="px-4 pt-4 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Reportes</div>
+    <a href="dashboard_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Dashboard
+    </a>
+    <a href="reports_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      Ventas
+    </a>
+    <a href="empleados_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Empleados
+    </a>
+
+    <div class="px-4 pt-4 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Sistema</div>
+    <a href="configuracion_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Configuracion
+    </a>
+  </nav>
+  <div class="px-6 py-4 border-t-4 border-accent">
+    <p class="text-xs font-mono text-accent">Admin</p>
+    <p class="text-[11px] text-text-muted mt-0.5">Miguel</p>
+    <button onclick="logout()" class="mt-2 text-[10px] font-sans font-bold uppercase text-text-muted hover:text-error transition-colors">Cerrar Sesion</button>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="flex-1 min-h-screen bg-white px-10 py-8">
+
+  <!-- HEADER -->
+  <header class="flex items-center justify-between pb-6 border-b-[6px] border-primary mb-10">
+    <h1 class="font-sans font-bold text-[36px] uppercase tracking-[-0.02em] text-espresso">RESERVAS</h1>
+    <div class="flex items-center gap-3">
+      <span class="font-mono text-[14px] text-text-secondary">SOR-ADM-006</span>
+      <div class="w-11 h-11 border-[4px] border-primary flex items-center justify-center font-serif font-bold text-[18px] text-primary">EM</div>
+    </div>
+  </header>
+
+  <!-- TOP ROW: Calendar + Stats -->
+  <div class="grid grid-cols-3 gap-8 mb-10">
+
+    <!-- CALENDAR -->
+    <div class="col-span-2" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+      <div class="px-6 py-4 border-b-[4px] border-primary flex items-center justify-between">
+        <h2 class="font-sans font-bold text-[14px] uppercase tracking-[0.08em] text-espresso">CALENDARIO</h2>
+        <div class="flex items-center gap-3">
+          <button onclick="navigateMonth(-1)" class="font-sans font-bold text-[18px] text-text-secondary hover:text-primary px-2" style="border-radius:0;">&lt;</button>
+          <span id="monthYearLabel" class="font-serif font-bold text-[16px] text-espresso w-40 text-center"></span>
+          <button onclick="navigateMonth(1)" class="font-sans font-bold text-[18px] text-text-secondary hover:text-primary px-2" style="border-radius:0;">&gt;</button>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="grid grid-cols-7">
+          <div class="calendar-header">Do</div>
+          <div class="calendar-header">Lu</div>
+          <div class="calendar-header">Ma</div>
+          <div class="calendar-header">Mi</div>
+          <div class="calendar-header">Ju</div>
+          <div class="calendar-header">Vi</div>
+          <div class="calendar-header">Sa</div>
+        </div>
+        <div class="grid grid-cols-7" id="calendarGrid"></div>
+      </div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div style="background:#EBDCC4; border:6px solid #6B1A2A;">
+      <div class="px-6 py-4 border-b-[4px] border-primary">
+        <h2 class="font-sans font-bold text-[14px] uppercase tracking-[0.08em] text-espresso">ESTADISTICAS RAPIDAS</h2>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Total hoy</span>
+          <span id="statTotal" class="font-mono font-bold text-[22px] text-espresso">12</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Confirmadas</span>
+          <span id="statConfirmadas" class="font-mono font-bold text-[22px]" style="color:#C9A84C;">8</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Pendientes</span>
+          <span id="statPendientes" class="font-mono font-bold text-[22px] text-text-muted">3</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Sentadas</span>
+          <span id="statSentadas" class="font-mono font-bold text-[22px]" style="color:#2D4A22;">5</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Canceladas</span>
+          <span id="statCanceladas" class="font-mono font-bold text-[22px]" style="color:#8B1A1A;">1</span>
+        </div>
+        <div style="border-top:2px solid #8B7355;"></div>
+        <div class="flex justify-between items-center">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Ocupacion</span>
+          <span id="statOcupacion" class="font-mono font-bold text-[22px] text-espresso">75%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESERVATIONS TABLE -->
+  <div style="background:#EBDCC4; border:6px solid #6B1A2A;">
+    <div class="px-6 py-4 border-b-[4px] border-primary flex items-center justify-between">
+      <h2 id="tableDateLabel" class="font-sans font-bold text-[14px] uppercase tracking-[0.08em] text-espresso">RESERVAS DEL DIA — 29 Julio 2026</h2>
+      <button onclick="openModal(null)" class="px-6 py-2.5 border-[4px] border-primary bg-primary text-primary-foreground font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:bg-primary-light transition-colors" style="border-radius:0;">+ NUEVA</button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse" id="reservationsTable">
+        <thead>
+          <tr style="background:rgba(107,26,42,0.08);">
+            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Hora</th>
+            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Cliente</th>
+            <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Pers</th>
+            <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Mesa</th>
+            <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Estado</th>
+            <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Accion</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="emptyState" class="hidden" style="background:#EBDCC4; border:6px solid #6B1A2A; margin-top:0;">
+    <div class="p-16 text-center">
+      <p class="font-script text-[24px] leading-relaxed" style="color:#8B7355;">No hay reservas para este dia.<br/>Cada mesa vacia es una historia por contar.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== EDIT MODAL ===== -->
+<div id="modalOverlay" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center hidden">
+  <div id="modalContent" class="w-full max-w-lg" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+    <div class="px-8 py-5 border-b-[4px] border-primary flex items-center justify-between">
+      <h2 id="modalTitle" class="font-sans font-bold text-[20px] uppercase tracking-[-0.01em] text-espresso">EDITAR RESERVA</h2>
+      <button onclick="closeModal()" class="font-mono text-[20px] text-text-muted hover:text-error leading-none">&times;</button>
+    </div>
+    <form id="reservationForm" class="px-8 py-6 space-y-5" onsubmit="saveReservation(event)">
+      <input type="hidden" id="editId" value="">
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Nombre</label>
+        <input type="text" id="resName" required
+          class="w-full px-4 py-2.5 font-serif text-[16px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+          style="border-radius:0; outline:none;">
+      </div>
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Telefono</label>
+        <input type="text" id="resPhone"
+          class="w-full px-4 py-2.5 font-mono text-[14px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+          style="border-radius:0; outline:none;">
+      </div>
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Personas</label>
+        <select id="resPeople" required
+          class="w-full px-4 py-2.5 font-mono text-[14px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+          style="border-radius:0; outline:none; -webkit-appearance:none; appearance:none;">
+          <option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Fecha</label>
+          <input type="date" id="resDate" required
+            class="w-full px-4 py-2.5 font-mono text-[13px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+            style="border-radius:0; outline:none;">
+        </div>
+        <div>
+          <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Hora</label>
+          <select id="resTime" required
+            class="w-full px-4 py-2.5 font-mono text-[13px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+            style="border-radius:0; outline:none; -webkit-appearance:none; appearance:none;">
+            <option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="18:00">18:00</option><option value="18:30">18:30</option><option value="19:00">19:00</option><option value="19:30">19:30</option><option value="20:00">20:00</option><option value="20:30">20:30</option><option value="21:00">21:00</option><option value="21:30">21:30</option><option value="22:00">22:00</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Mesa</label>
+        <select id="resTable" required
+          class="w-full px-4 py-2.5 font-mono text-[14px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+          style="border-radius:0; outline:none; -webkit-appearance:none; appearance:none;">
+          <option value="">— SIN ASIGNAR —</option>
+          <option value="1">Mesa 1</option><option value="2">Mesa 2</option><option value="3">Mesa 3</option><option value="4">Mesa 4</option><option value="5">Mesa 5</option><option value="6">Mesa 6</option><option value="7">Mesa 7</option><option value="8">Mesa 8</option><option value="9">Mesa 9</option><option value="10">Mesa 10</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Estado</label>
+        <select id="resStatus" required
+          class="w-full px-4 py-2.5 font-mono text-[14px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+          style="border-radius:0; outline:none; -webkit-appearance:none; appearance:none;">
+          <option value="Pendiente">Pendiente</option>
+          <option value="Confirmada">Confirmada</option>
+          <option value="Sentada">Sentada</option>
+          <option value="Cancelada">Cancelada</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Notas</label>
+        <textarea id="resNotes" rows="2"
+          class="w-full px-4 py-2.5 font-script text-[16px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary resize-none"
+          style="border-radius:0; outline:none;"
+          placeholder="Preferencias, alergias, ocasion especial..."></textarea>
+      </div>
+      <div class="flex justify-end gap-3 pt-2">
+        <button type="button" onclick="closeModal()"
+          class="px-6 py-2.5 border-2 border-text-muted text-text-secondary font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:border-text-primary transition-colors"
+          style="border-radius:0;">Cancelar</button>
+        <button type="submit"
+          class="px-6 py-2.5 border-[4px] border-primary bg-primary text-primary-foreground font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:bg-primary-light transition-colors"
+          style="border-radius:0;">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+let reservations = [
+  { id:1, name:'Juan Perez',       phone:'555-1234', people:4, date:'2026-07-29', time:'14:00', table:5,  status:'Confirmada', notes:'Alergia a mariscos' },
+  { id:2, name:'Carlos Ruiz',      phone:'555-2345', people:6, date:'2026-07-29', time:'19:00', table:7,  status:'Sentada',    notes:'' },
+  { id:3, name:'Ana Gomez',        phone:'555-3456', people:2, date:'2026-07-29', time:'20:00', table:null,status:'Pendiente',  notes:'Cerca de la ventana' },
+  { id:4, name:'Maria Lopez',      phone:'555-4567', people:3, date:'2026-07-29', time:'20:30', table:8,  status:'Confirmada', notes:'Aniversario' },
+  { id:5, name:'Pedro Sanchez',    phone:'555-5678', people:8, date:'2026-07-29', time:'21:00', table:10, status:'Confirmada', notes:'' },
+  { id:6, name:'Luisa Fernandez',  phone:'555-6789', people:3, date:'2026-07-28', time:'20:00', table:3,  status:'Confirmada', notes:'' },
+  { id:7, name:'Jorge Martinez',   phone:'555-7890', people:2, date:'2026-07-28', time:'20:30', table:null,status:'Cancelada', notes:'' },
+  { id:8, name:'Sofia Hernandez',  phone:'555-8901', people:5, date:'2026-07-27', time:'19:30', table:6,  status:'Confirmada', notes:'' },
+  { id:9, name:'Diego Torres',     phone:'555-9012', people:2, date:'2026-07-27', time:'20:00', table:null,status:'Pendiente',  notes:'' },
+  { id:10,name:'Valeria Castro',   phone:'555-0123', people:4, date:'2026-07-30', time:'20:00', table:4,  status:'Confirmada', notes:'' },
+  { id:11,name:'Raul Ortiz',       phone:'555-1122', people:3, date:'2026-07-30', time:'21:00', table:null,status:'Pendiente',  notes:'' },
+  { id:12,name:'Carmen Rios',      phone:'555-2233', people:6, date:'2026-07-29', time:'18:30', table:2,  status:'Sentada',    notes:'Mesa con silla de bebé' },
+];
+
+let nextId = 13;
+let currentYear = 2026;
+let currentMonth = 6; // 0-indexed, July
+let selectedDate = '2026-07-29';
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function getReservationsForDate(dateStr) {
+  return reservations.filter(r => r.date === dateStr).sort((a,b) => a.time.localeCompare(b.time));
+}
+
+function hasReservationsOnDate(dateStr) {
+  return reservations.some(r => r.date === dateStr);
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const label = document.getElementById('monthYearLabel');
+  label.textContent = MESES[currentMonth] + ' ' + currentYear;
+
+  const firstDay = new Date(currentYear, currentMonth, 1);
+  const startDay = firstDay.getDay(); // 0=Sun
+
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' +
+    String(today.getMonth()+1).padStart(2,'0') + '-' +
+    String(today.getDate()).padStart(2,'0');
+
+  let html = '';
+
+  // Previous month trailing days
+  const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
+  for (let i = startDay - 1; i >= 0; i--) {
+    const d = prevMonthDays - i;
+    html += '<div class="calendar-cell other-month">' + d + '</div>';
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = currentYear + '-' +
+      String(currentMonth+1).padStart(2,'0') + '-' +
+      String(d).padStart(2,'0');
+
+    let cls = 'calendar-cell';
+    if (dateStr === todayStr) cls += ' today';
+    if (dateStr === selectedDate) cls += ' selected';
+
+    const hasRes = hasReservationsOnDate(dateStr);
+
+    html += '<div class="' + cls + '" onclick="selectDate(\'' + dateStr + '\')" data-date="' + dateStr + '">';
+    html += '<span>' + d + '</span>';
+    if (hasRes) html += '<div class="dot"></div>';
+    html += '</div>';
+  }
+
+  // Fill remaining cells to complete the grid row
+  const totalCells = startDay + daysInMonth;
+  const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+  for (let i = 1; i <= remaining; i++) {
+    html += '<div class="calendar-cell other-month">' + i + '</div>';
+  }
+
+  grid.innerHTML = html;
+}
+
+function selectDate(dateStr) {
+  selectedDate = dateStr;
+  renderCalendar();
+  renderTable();
+  updateStats();
+}
+
+function navigateMonth(dir) {
+  currentMonth += dir;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  renderCalendar();
+}
+
+function formatDateLabel(dateStr) {
+  const [y,m,d] = dateStr.split('-');
+  const idx = parseInt(m) - 1;
+  return parseInt(d) + ' ' + MESES[idx] + ' ' + y;
+}
+
+function renderTable() {
+  const data = getReservationsForDate(selectedDate);
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+  const table = document.getElementById('reservationsTable');
+  const label = document.getElementById('tableDateLabel');
+
+  label.textContent = 'RESERVAS DEL DIA — ' + formatDateLabel(selectedDate);
+
+  if (data.length === 0) {
+    tbody.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+
+  empty.classList.add('hidden');
+
+  tbody.innerHTML = data.map((r,i) => {
+    const bg = i % 2 === 0 ? '#EBDCC4' : '#E5D4B8';
+    let statusCls = '';
+    switch(r.status) {
+      case 'Confirmada': statusCls = 'status-confirmada'; break;
+      case 'Pendiente':  statusCls = 'status-pendiente'; break;
+      case 'Sentada':    statusCls = 'status-sentada'; break;
+      case 'Cancelada':  statusCls = 'status-cancelada'; break;
+    }
+    const tableDisplay = r.table ? 'Mesa ' + r.table : '—';
+    return `
+      <tr style="background:${bg}; border-bottom:1px solid #8B7355; cursor:pointer;" onclick="openModal(${r.id})">
+        <td class="px-6 py-4 font-mono font-bold text-[15px] text-espresso">${r.time}</td>
+        <td class="px-6 py-4 font-serif font-bold text-[16px] text-espresso">${escapeHtml(r.name)}</td>
+        <td class="px-6 py-4 text-center font-mono font-bold text-[14px] text-text-primary">${r.people}</td>
+        <td class="px-6 py-4 text-center font-mono text-[13px] text-text-secondary">${tableDisplay}</td>
+        <td class="px-6 py-4 text-center"><span class="status-badge ${statusCls}">${r.status}</span></td>
+        <td class="px-6 py-4 text-center">
+          <button onclick="event.stopPropagation();openModal(${r.id})" class="font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:underline" style="color:#C9A84C;">Editar</button>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function updateStats() {
+  const data = getReservationsForDate(selectedDate);
+  const total = data.length;
+  const confirmadas = data.filter(r => r.status === 'Confirmada').length;
+  const pendientes  = data.filter(r => r.status === 'Pendiente').length;
+  const sentadas    = data.filter(r => r.status === 'Sentada').length;
+  const canceladas  = data.filter(r => r.status === 'Cancelada').length;
+  const ocupacion   = total > 0 ? Math.round((confirmadas + sentadas) / total * 100) : 0;
+
+  document.getElementById('statTotal').textContent = total + ' reservas';
+  document.getElementById('statConfirmadas').textContent = confirmadas;
+  document.getElementById('statPendientes').textContent = pendientes;
+  document.getElementById('statSentadas').textContent = sentadas;
+  document.getElementById('statCanceladas').textContent = canceladas;
+  document.getElementById('statOcupacion').textContent = ocupacion + '%';
+}
+
+function openModal(resId) {
+  const modal = document.getElementById('modalOverlay');
+  const title = document.getElementById('modalTitle');
+
+  if (resId) {
+    const r = reservations.find(r => r.id === resId);
+    if (!r) return;
+    document.getElementById('editId').value = r.id;
+    document.getElementById('resName').value = r.name;
+    document.getElementById('resPhone').value = r.phone || '';
+    document.getElementById('resPeople').value = r.people;
+    document.getElementById('resDate').value = r.date;
+    document.getElementById('resTime').value = r.time;
+    document.getElementById('resTable').value = r.table || '';
+    document.getElementById('resStatus').value = r.status;
+    document.getElementById('resNotes').value = r.notes || '';
+    title.textContent = 'EDITAR RESERVA';
+  } else {
+    document.getElementById('editId').value = '';
+    document.getElementById('resName').value = '';
+    document.getElementById('resPhone').value = '';
+    document.getElementById('resPeople').value = '2';
+    document.getElementById('resDate').value = selectedDate;
+    document.getElementById('resTime').value = '20:00';
+    document.getElementById('resTable').value = '';
+    document.getElementById('resStatus').value = 'Pendiente';
+    document.getElementById('resNotes').value = '';
+    title.textContent = 'NUEVA RESERVA';
+  }
+
+  modal.classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.add('hidden');
+}
+
+function saveReservation(e) {
+  e.preventDefault();
+  const editId = document.getElementById('editId').value;
+  const name = document.getElementById('resName').value.trim();
+  const phone = document.getElementById('resPhone').value.trim();
+  const people = parseInt(document.getElementById('resPeople').value);
+  const date = document.getElementById('resDate').value;
+  const time = document.getElementById('resTime').value;
+  const tableVal = document.getElementById('resTable').value;
+  const table = tableVal !== '' ? parseInt(tableVal) : null;
+  const status = document.getElementById('resStatus').value;
+  const notes = document.getElementById('resNotes').value.trim();
+
+  if (editId) {
+    const idx = reservations.findIndex(r => r.id === parseInt(editId));
+    if (idx >= 0) {
+      reservations[idx] = { ...reservations[idx], name, phone, people, date, time, table, status, notes };
+    }
+  } else {
+    reservations.push({ id: nextId++, name, phone, people, date, time, table, status, notes });
+  }
+
+  closeModal();
+  renderCalendar();
+  renderTable();
+  updateStats();
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+function logout() {
+  if (confirm('Cerrar sesion?')) {
+    window.location.href = '../../login_experimental.html';
+  }
+}
+
+renderCalendar();
+renderTable();
+updateStats();
+</script>
+
+</body>
+</html>

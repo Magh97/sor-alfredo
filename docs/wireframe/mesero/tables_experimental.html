@@ -62,6 +62,11 @@
       MESAS
     </h1>
 
+    <button onclick="toggleReservas()" class="mr-2 px-4 py-2 font-sans font-bold text-[13px] uppercase tracking-[0.1em] select-none active:scale-95 transition-all"
+      style="background:transparent; color:#C9A84C; border:2px solid #C9A84C; border-radius:0;">
+      Reservas
+    </button>
+
     <div class="relative" id="profile-container">
       <button onclick="toggleProfile()" class="size-10 flex items-center justify-center text-base font-bold active:scale-95 transition-transform font-sans"
         style="background:#6B1A2A; color:#F0E6D3; border:4px solid #4A0F1B; border-radius:0; clip-path:polygon(4px 0%,100% 0%,100% calc(100%-4px),calc(100%-4px) 100%,0% 100%,0% 4px);">
@@ -108,6 +113,43 @@
         style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Reservadas</button>
       <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-status="limpieza"
         style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Limpieza</button>
+    </div>
+  </div>
+
+  <!-- Reservations Panel -->
+  <div id="reservas-panel" class="hidden px-4 pb-4">
+    <div class="bg-surface shadow-paper p-4 mb-3" style="border:6px solid #6B1A2A; border-radius:0;">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-espresso">Reservas de Hoy</h2>
+        <a href="new-reserva_experimental.html" class="px-3 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-white active:scale-95 transition-all"
+          style="background:#6B1A2A; border:2px solid #4A0F1B; border-radius:0;">+ Nueva</a>
+      </div>
+      <div id="reservas-list" class="space-y-2">
+        <div class="flex items-center justify-between py-2" style="border-bottom:1px solid #8B7355;">
+          <div>
+            <span class="font-sans font-bold text-[15px] text-text-primary">20:00 — Juan Pérez</span>
+            <span class="font-mono text-[12px] text-text-secondary ml-2">4 pers · Mesa 5</span>
+          </div>
+          <span class="font-sans font-bold text-[10px] uppercase tracking-[0.1em] select-none"
+            style="padding:2px 10px; background:#C9A84C; color:#2C1810; border:2px solid #A08030; border-radius:0;">Confirmada</span>
+        </div>
+        <div class="flex items-center justify-between py-2" style="border-bottom:1px solid #8B7355;">
+          <div>
+            <span class="font-sans font-bold text-[15px] text-text-primary">20:30 — María López</span>
+            <span class="font-mono text-[12px] text-text-secondary ml-2">2 pers · Sin mesa</span>
+          </div>
+          <span class="font-sans font-bold text-[10px] uppercase tracking-[0.1em] select-none"
+            style="padding:2px 10px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Pendiente</span>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <div>
+            <span class="font-sans font-bold text-[15px] text-text-primary">19:00 — Carlos Ruiz</span>
+            <span class="font-mono text-[12px] text-text-secondary ml-2">6 pers · Mesa 7</span>
+          </div>
+          <span class="font-sans font-bold text-[10px] uppercase tracking-[0.1em] select-none"
+            style="padding:2px 10px; background:#2D4A22; color:#F0E6D3; border:2px solid #1C3015; border-radius:0;">Sentada</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -201,6 +243,10 @@
             : '<div class="mt-2" style="height:24px;"></div>') +
         '</div>';
       }).join('') + '</div>';
+    }
+
+    function toggleReservas() {
+      document.getElementById('reservas-panel').classList.toggle('hidden');
     }
 
     function toggleProfile() {
