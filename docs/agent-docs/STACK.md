@@ -7,7 +7,7 @@
 | Backend Framework | Express | 5 | nodejs-express |
 | Frontend Framework | React | 19 | react-core |
 | Build Tool | Vite | 6 | — |
-| CSS Framework | Tailwind CSS | 4.3 | react-components |
+| CSS Framework | Tailwind CSS | 4.3 | Note: experimental variant uses Victorian brutalist palette + 4-font typography system (Playfair Display, JetBrains Mono, DM Sans, Caveat) |
 | UI Primitives | shadcn/ui | latest | react-components |
 | Icons | lucide-react | latest | — |
 | ORM | Drizzle ORM | latest | nodejs-database |

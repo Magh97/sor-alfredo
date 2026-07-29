@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>SOR — Mis Ordenes</title>
+  <title>SOR — Mis Órdenes</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <script>
@@ -11,16 +11,16 @@
       theme: {
         extend: {
           colors: {
-            primary:   { DEFAULT: '#c65d3b', light: '#e08a5e', dark: '#8e3a25', foreground: '#fdf6ec' },
-            secondary: { DEFAULT: '#5c7a3e', light: '#7fa056', dark: '#3d5528', foreground: '#fdf6ec' },
-            accent:    { DEFAULT: '#e8a838', foreground: '#3d2b1f' },
-            success:   '#4a7c3f',
-            error:     '#b84c3b',
-            warning:   '#d4992a',
-            info:      '#5b7fa5',
-            background:'#fdf6ec',
-            surface:   '#f5edde',
-            text:      { primary: '#3d2b1f', secondary: '#7a6b5d', muted: '#a6988a' },
+            primary:   { DEFAULT: '#c2572e', light: '#e07a4d', dark: '#8c2b17', foreground: '#fdfaf5' },
+            secondary: { DEFAULT: '#527a34', light: '#7b9a4f', dark: '#3a4f24', foreground: '#fdfaf5' },
+            accent:    { DEFAULT: '#e8a020', foreground: '#2c1a10' },
+            success:   '#457a38',
+            error:     '#b5452e',
+            warning:   '#d49224',
+            info:      '#4e769e',
+            background:'#fdfaf5',
+            surface:   '#f8f0e2',
+            text:      { primary: '#2c1a10', secondary: '#665448', muted: '#8a7e72' },
           },
         },
       },
@@ -29,138 +29,403 @@
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; }
     .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+
+    @keyframes dropdown-in {
+      from { opacity: 0; transform: translateY(-6px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .dropdown-enter { animation: dropdown-in 150ms ease-out; }
+
+    .order-card { transition: all 0.15s ease; }
+
+    .detail-enter {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.25s ease, opacity 0.2s ease, margin 0.2s ease;
+    }
+    .detail-enter.open {
+      max-height: 600px;
+      opacity: 1;
+    }
   </style>
 </head>
-<body class="h-screen flex flex-col bg-background max-w-lg mx-auto">
+<body class="h-screen flex flex-col bg-background max-w-lg mx-auto relative">
 
-  <!-- Top Bar -->
-  <header class="bg-surface border-b px-4 py-3 shrink-0">
-    <h1 class="text-lg font-semibold text-text-primary font-display">Mis Ordenes</h1>
+  <!-- Header -->
+  <header class="bg-surface border-b border-text-muted/20 px-4 py-3 shrink-0 flex items-center justify-between">
+    <h1 class="text-lg font-semibold text-text-primary font-display">Mis Órdenes</h1>
+    <div class="relative" id="profile-container">
+      <button onclick="toggleProfile()" class="size-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold active:scale-95 transition-transform font-display">M</button>
+      <div id="profile-dropdown" class="hidden dropdown-enter absolute right-0 top-full mt-2 w-56 bg-surface rounded-[16px] shadow-lg border border-text-muted/20 overflow-hidden z-30">
+        <div class="p-4 border-b border-text-muted/10">
+          <div class="flex items-center gap-3">
+            <div class="size-12 rounded-full bg-primary/15 text-primary flex items-center justify-center text-lg font-bold font-display">M</div>
+            <div>
+              <p class="text-sm font-semibold text-text-primary font-display">Miguel G.</p>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-info/15 text-info mt-0.5">
+                <svg class="size-2.5" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Mesero
+              </span>
+            </div>
+          </div>
+          <div class="mt-3 space-y-1 text-xs text-text-secondary">
+            <p>mesero1@restaurant.com</p>
+            <div class="flex justify-between"><span>Turno</span><span class="font-medium text-text-primary">14:00 — 22:00</span></div>
+            <div class="flex justify-between"><span>Órdenes hoy</span><span class="font-medium text-text-primary">14</span></div>
+          </div>
+        </div>
+        <button onclick="toggleProfile()" class="w-full text-left px-4 py-3 text-sm text-error font-medium hover:bg-error/5 active:bg-error/10 transition-colors flex items-center gap-2">
+          <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
   </header>
 
-  <!-- Status Tabs -->
+  <!-- Filter Chips -->
   <div class="px-4 pt-3 pb-2">
-    <div class="flex gap-2 overflow-x-auto pb-1" id="tabs">
-      <button class="px-4 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground shrink-0" data-status="all">Todas</button>
-      <button class="px-4 py-2 rounded-full text-sm font-medium bg-text-muted/20 text-text-secondary shrink-0" data-status="in_kitchen">En Cocina</button>
-      <button class="px-4 py-2 rounded-full text-sm font-medium bg-text-muted/20 text-text-secondary shrink-0" data-status="ready">Listas</button>
-      <button class="px-4 py-2 rounded-full text-sm font-medium bg-text-muted/20 text-text-secondary shrink-0" data-status="delivered">Entregadas</button>
+    <div class="flex gap-2" id="filters">
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground shrink-0 active:scale-95 transition-transform" data-status="all">Todas</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-surface text-text-secondary shrink-0 active:scale-95 transition-transform" data-status="in_kitchen">En Cocina</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-surface text-text-secondary shrink-0 active:scale-95 transition-transform" data-status="ready">Listas</button>
     </div>
   </div>
 
   <!-- Order Cards -->
-  <main class="flex-1 overflow-y-auto px-4 pt-2 pb-4">
+  <main class="flex-1 overflow-y-auto px-4 pt-2 pb-24">
     <div class="space-y-3" id="order-list">
 
-      <!-- Card: in_kitchen -->
-      <div class="bg-surface border border-text-muted/20 rounded-xl p-4 cursor-pointer active:scale-[0.98] transition-transform" data-status="in_kitchen">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-lg font-semibold">Mesa 5</span>
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-warning/15 text-warning">
-            <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6v6l4 2"/></svg>
-            En Cocina
-          </span>
+      <!-- ===== Order #42 Mesa 5 — En Cocina ===== -->
+      <div class="order-card bg-surface rounded-[16px] shadow-sm" data-status="in_kitchen">
+        <div class="p-4 cursor-pointer active:bg-surface-elevated transition-colors" onclick="toggleDetail(this)">
+          <div class="flex items-center gap-3">
+            <div class="size-10 rounded-full bg-warning/20 flex items-center justify-center shrink-0">
+              <svg class="size-5 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-base font-semibold text-text-primary font-display">#42</span>
+                  <span class="text-sm text-text-secondary">Mesa 5</span>
+                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-warning/15 text-warning shrink-0">
+                  <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> En Cocina
+                </span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-sm text-text-secondary">4 items</span>
+                <span class="text-sm font-semibold text-text-primary">$450.00</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-xs text-text-muted">Hace 8 min</span>
+                <svg class="size-4 text-text-muted chevron transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-text-secondary">4 items</span>
-          <span class="font-semibold text-text-primary">$450.00</span>
+        <!-- Detail -->
+        <div class="detail-enter border-t border-text-muted/15" id="detail-42">
+          <div class="px-4 py-3 space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Hamburguesa</span><span class="text-text-muted ml-2">x2</span></div>
+              <div class="text-sm"><span class="text-text-muted">$120.00</span><span class="ml-3 font-medium text-text-primary">$240.00</span></div>
+            </div>
+            <div class="text-xs text-text-muted -mt-1 ml-2 pb-1">Sin cebolla</div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Coca-Cola</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$35.00</span><span class="ml-3 font-medium text-text-primary">$35.00</span></div>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Papas Fritas</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$65.00</span><span class="ml-3 font-medium text-text-primary">$65.00</span></div>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Pasta Alfredo</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$110.00</span><span class="ml-3 font-medium text-text-primary">$110.00</span></div>
+            </div>
+            <div class="text-xs text-text-muted -mt-1 ml-2">Extra queso</div>
+            <div class="flex justify-between items-center pt-2 border-t border-text-muted/10 mt-2">
+              <span class="text-sm font-semibold text-text-primary font-display">Total</span>
+              <span class="text-base font-bold text-text-primary font-display">$450.00</span>
+            </div>
+          </div>
         </div>
-        <div class="text-xs text-text-muted mt-1">Hace 8 min · #42</div>
       </div>
 
-      <!-- Card: in_kitchen -->
-      <div class="bg-surface border border-text-muted/20 rounded-xl p-4 cursor-pointer active:scale-[0.98] transition-transform" data-status="in_kitchen">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-lg font-semibold">Mesa 2</span>
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-warning/15 text-warning">
-            <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6v6l4 2"/></svg>
-            En Cocina
-          </span>
+      <!-- ===== Order #43 Mesa 8 — Lista! ===== -->
+      <div class="order-card bg-surface rounded-[16px] shadow-sm" data-status="ready">
+        <div class="p-4 cursor-pointer active:bg-surface-elevated transition-colors" onclick="toggleDetail(this)">
+          <div class="flex items-center gap-3">
+            <div class="size-10 rounded-full bg-info/20 flex items-center justify-center shrink-0">
+              <svg class="size-5 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-base font-semibold text-text-primary font-display">#43</span>
+                  <span class="text-sm text-text-secondary">Mesa 8</span>
+                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-info/15 text-info shrink-0">
+                  <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> ¡Lista!
+                </span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-sm text-text-secondary">6 items</span>
+                <span class="text-sm font-semibold text-text-primary">$780.00</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-xs text-text-muted">Hace 1 min</span>
+                <svg class="size-4 text-text-muted chevron transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-text-secondary">5 items</span>
-          <span class="font-semibold text-text-primary">$680.50</span>
+        <div class="detail-enter border-t border-text-muted/15" id="detail-43">
+          <div class="px-4 py-3 space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Tacos al Pastor</span><span class="text-text-muted ml-2">x4</span></div>
+              <div class="text-sm"><span class="text-text-muted">$85.00</span><span class="ml-3 font-medium text-text-primary">$340.00</span></div>
+            </div>
+            <div class="text-xs text-text-muted -mt-1 ml-2 pb-1">Piña extra · Salsa habanero</div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Agua de Horchata</span><span class="text-text-muted ml-2">x2</span></div>
+              <div class="text-sm"><span class="text-text-muted">$45.00</span><span class="ml-3 font-medium text-text-primary">$90.00</span></div>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Guacamole</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$95.00</span><span class="ml-3 font-medium text-text-primary">$95.00</span></div>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Cerveza Artesanal</span><span class="text-text-muted ml-2">x2</span></div>
+              <div class="text-sm"><span class="text-text-muted">$65.00</span><span class="ml-3 font-medium text-text-primary">$130.00</span></div>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Salsa y Totopos</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$45.00</span><span class="ml-3 font-medium text-text-primary">$45.00</span></div>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Flan Casero</span><span class="text-text-muted ml-2">x2</span></div>
+              <div class="text-sm"><span class="text-text-muted">$40.00</span><span class="ml-3 font-medium text-text-primary">$80.00</span></div>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-text-muted/10 mt-2">
+              <span class="text-sm font-semibold text-text-primary font-display">Total</span>
+              <span class="text-base font-bold text-text-primary font-display">$780.00</span>
+            </div>
+          </div>
         </div>
-        <div class="text-xs text-text-muted mt-1">Hace 2 min · #44</div>
       </div>
 
-      <!-- Card: ready -->
-      <div class="bg-surface border border-text-muted/20 rounded-xl p-4 cursor-pointer active:scale-[0.98] transition-transform" data-status="ready">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-lg font-semibold">Mesa 3</span>
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-info/15 text-info">
-            <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
-            Lista
-          </span>
+      <!-- ===== Order #44 Mesa 2 — En Cocina ===== -->
+      <div class="order-card bg-surface rounded-[16px] shadow-sm" data-status="in_kitchen">
+        <div class="p-4 cursor-pointer active:bg-surface-elevated transition-colors" onclick="toggleDetail(this)">
+          <div class="flex items-center gap-3">
+            <div class="size-10 rounded-full bg-warning/20 flex items-center justify-center shrink-0">
+              <svg class="size-5 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-base font-semibold text-text-primary font-display">#44</span>
+                  <span class="text-sm text-text-secondary">Mesa 2</span>
+                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-warning/15 text-warning shrink-0">
+                  <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> En Cocina
+                </span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-sm text-text-secondary">3 items</span>
+                <span class="text-sm font-semibold text-text-primary">$295.00</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-xs text-text-muted">Hace 3 min</span>
+                <svg class="size-4 text-text-muted chevron transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-text-secondary">3 items</span>
-          <span class="font-semibold text-text-primary">$320.00</span>
+        <div class="detail-enter border-t border-text-muted/15" id="detail-44">
+          <div class="px-4 py-3 space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Pizza Margarita</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$150.00</span><span class="ml-3 font-medium text-text-primary">$150.00</span></div>
+            </div>
+            <div class="text-xs text-text-muted -mt-1 ml-2">Doble queso</div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Ensalada Caesar</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$95.00</span><span class="ml-3 font-medium text-text-primary">$95.00</span></div>
+            </div>
+            <div class="text-xs text-text-muted -mt-1 ml-2">Aderezo aparte</div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Limonada</span><span class="text-text-muted ml-2">x2</span></div>
+              <div class="text-sm"><span class="text-text-muted">$25.00</span><span class="ml-3 font-medium text-text-primary">$50.00</span></div>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-text-muted/10 mt-2">
+              <span class="text-sm font-semibold text-text-primary font-display">Total</span>
+              <span class="text-base font-bold text-text-primary font-display">$295.00</span>
+            </div>
+          </div>
         </div>
-        <div class="text-xs text-text-muted mt-1">Hace 15 min · #40</div>
       </div>
 
-      <!-- Card: delivered -->
-      <div class="bg-surface border border-text-muted/20 rounded-xl p-4 cursor-pointer active:scale-[0.98] transition-transform" data-status="delivered">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-lg font-semibold">Mesa 7</span>
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-secondary/15 text-secondary">
-            <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12h22M12 1v22"/></svg>
-            Entregada
-          </span>
+      <!-- ===== Order #38 Mesa 7 — Entregada ===== -->
+      <div class="order-card bg-surface rounded-[16px] shadow-sm" data-status="delivered">
+        <div class="p-4 cursor-pointer active:bg-surface-elevated transition-colors" onclick="toggleDetail(this)">
+          <div class="flex items-center gap-3">
+            <div class="size-10 rounded-full bg-secondary/20 flex items-center justify-center shrink-0">
+              <svg class="size-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-base font-semibold text-text-primary font-display">#38</span>
+                  <span class="text-sm text-text-secondary">Mesa 7</span>
+                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-secondary/15 text-secondary shrink-0">
+                  <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> Entregada
+                </span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-sm text-text-secondary">2 items</span>
+                <span class="text-sm font-semibold text-text-primary">$185.00</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-xs text-text-muted">Hace 25 min</span>
+                <svg class="size-4 text-text-muted chevron transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-text-secondary">2 items</span>
-          <span class="font-semibold text-text-primary">$185.00</span>
+        <div class="detail-enter border-t border-text-muted/15" id="detail-38">
+          <div class="px-4 py-3 space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Quesadillas Huitlacoche</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$110.00</span><span class="ml-3 font-medium text-text-primary">$110.00</span></div>
+            </div>
+            <div class="text-xs text-text-muted -mt-1 ml-2">Queso Oaxaca · Epazote</div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Agua Jamaica</span><span class="text-text-muted ml-2">x3</span></div>
+              <div class="text-sm"><span class="text-text-muted">$25.00</span><span class="ml-3 font-medium text-text-primary">$75.00</span></div>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-text-muted/10 mt-2">
+              <span class="text-sm font-semibold text-text-primary font-display">Total</span>
+              <span class="text-base font-bold text-text-primary font-display">$185.00</span>
+            </div>
+            <button class="mt-2 w-full bg-primary text-primary-foreground rounded-[8px] py-2.5 text-sm font-bold active:scale-[0.98] transition-transform font-display">
+              Generar Cuenta
+            </button>
+          </div>
         </div>
-        <div class="text-xs text-text-muted mt-1">Hace 25 min · #38</div>
-        <button class="mt-3 w-full bg-primary text-primary-foreground rounded-lg py-2.5 text-sm font-bold hover:bg-primary-dark active:scale-[0.98] transition-colors font-display">
-          Generar Cuenta
-        </button>
       </div>
 
-      <!-- Card: paid -->
-      <div class="bg-surface border border-text-muted/20 rounded-xl p-4 cursor-pointer active:scale-[0.98] transition-transform" data-status="paid">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-lg font-semibold">Mesa 4</span>
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-success/15 text-success">
-            <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/></svg>
-            Pagada
-          </span>
+      <!-- ===== Order #35 Mesa 4 — Pagada ===== -->
+      <div class="order-card bg-surface rounded-[16px] shadow-sm" data-status="paid">
+        <div class="p-4 cursor-pointer active:bg-surface-elevated transition-colors" onclick="toggleDetail(this)">
+          <div class="flex items-center gap-3">
+            <div class="size-10 rounded-full bg-success/20 flex items-center justify-center shrink-0">
+              <svg class="size-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-base font-semibold text-text-primary font-display">#35</span>
+                  <span class="text-sm text-text-secondary">Mesa 4</span>
+                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-success/15 text-success shrink-0">
+                  <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/></svg> Pagada
+                </span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-sm text-text-secondary">3 items</span>
+                <span class="text-sm font-semibold text-text-primary">$295.00</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-xs text-text-muted">Hace 45 min</span>
+                <svg class="size-4 text-text-muted chevron transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center justify-between text-sm">
-          <span class="text-text-secondary">3 items</span>
-          <span class="font-semibold text-text-primary">$295.00</span>
+        <div class="detail-enter border-t border-text-muted/15" id="detail-35">
+          <div class="px-4 py-3 space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Enchiladas Suizas</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$130.00</span><span class="ml-3 font-medium text-text-primary">$130.00</span></div>
+            </div>
+            <div class="text-xs text-text-muted -mt-1 ml-2">Crema extra · Pollo</div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Coca-Cola</span><span class="text-text-muted ml-2">x2</span></div>
+              <div class="text-sm"><span class="text-text-muted">$35.00</span><span class="ml-3 font-medium text-text-primary">$70.00</span></div>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <div><span class="font-semibold text-text-primary">Churros con Chocolate</span><span class="text-text-muted ml-2">x1</span></div>
+              <div class="text-sm"><span class="text-text-muted">$95.00</span><span class="ml-3 font-medium text-text-primary">$95.00</span></div>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-text-muted/10 mt-2">
+              <span class="text-sm font-semibold text-text-primary font-display">Total</span>
+              <span class="text-base font-bold text-text-primary font-display">$295.00</span>
+            </div>
+          </div>
         </div>
-        <div class="text-xs text-text-muted mt-1">Hace 45 min · #35</div>
       </div>
 
     </div>
   </main>
 
+  <!-- FAB — Nueva Orden -->
+  <a href="new-order.html" class="fixed bottom-20 right-4 size-14 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform z-20" style="right: calc(50% - 224px + 16px);">
+    <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+  </a>
+
   <!-- Bottom Nav -->
-  <nav class="h-16 bg-surface border-t flex items-center justify-around shrink-0">
+  <nav class="h-16 bg-surface border-t border-text-muted/20 flex items-center justify-around shrink-0">
     <a href="orders.html" class="flex flex-col items-center justify-center gap-1 h-full min-w-[64px] text-primary">
       <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-      <span class="text-xs">Ordenes</span>
+      <span class="text-xs font-medium">Órdenes</span>
     </a>
     <a href="tables.html" class="flex flex-col items-center justify-center gap-1 h-full min-w-[64px] text-text-muted">
       <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       <span class="text-xs">Mesas</span>
     </a>
-    <a href="profile.html" class="flex flex-col items-center justify-center gap-1 h-full min-w-[64px] text-text-muted">
-      <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-      <span class="text-xs">Perfil</span>
-    </a>
   </nav>
 
   <script>
-    document.querySelectorAll('#tabs button').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('#tabs button').forEach(function(b) {
-          b.className = 'px-4 py-2 rounded-full text-sm font-medium bg-text-muted/20 text-text-secondary shrink-0';
+    function toggleProfile() {
+      document.getElementById('profile-dropdown').classList.toggle('hidden');
+    }
+    document.addEventListener('click', function(e) {
+      var c = document.getElementById('profile-container');
+      if (c && !c.contains(e.target)) {
+        document.getElementById('profile-dropdown').classList.add('hidden');
+      }
+    });
+
+    function toggleDetail(header) {
+      var card = header.closest('.order-card');
+      var detail = card.querySelector('.detail-enter');
+      var chevron = header.querySelector('.chevron');
+
+      if (!detail.classList.contains('open')) {
+        // Close all other open details
+        document.querySelectorAll('.detail-enter.open').forEach(function(d) {
+          d.classList.remove('open');
+          var otherCard = d.closest('.order-card');
+          if (otherCard) {
+            var otherChevron = otherCard.querySelector('.chevron');
+            if (otherChevron) otherChevron.style.transform = 'rotate(0deg)';
+          }
         });
-        btn.className = 'px-4 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground shrink-0';
+      }
+
+      detail.classList.toggle('open');
+      chevron.style.transform = detail.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    document.querySelectorAll('#filters button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#filters button').forEach(function(b) {
+          b.className = 'px-4 py-2 rounded-full text-sm font-medium bg-surface text-text-secondary shrink-0 active:scale-95 transition-transform';
+        });
+        btn.className = 'px-4 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground shrink-0 active:scale-95 transition-transform';
         var filter = btn.dataset.status;
         document.querySelectorAll('#order-list > div').forEach(function(card) {
           card.style.display = (filter === 'all' || card.dataset.status === filter) ? '' : 'none';

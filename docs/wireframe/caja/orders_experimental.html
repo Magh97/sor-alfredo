@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOR — Cajero · Órdenes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   { DEFAULT:'#6B1A2A', light:'#8B2535', dark:'#4A0F1B', foreground:'#F0E6D3' },
+            secondary: { DEFAULT:'#2D4A22', light:'#3D6230', dark:'#1C3015', foreground:'#F0E6D3' },
+            accent:    { DEFAULT:'#C9A84C', foreground:'#2C1810' },
+            success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
+            background:'#FFFFFF', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
+            espresso:'#2C1810',
+            burgundy:'#6B1A2A20',
+            parchment:'#F0E6D3',
+            text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"','Georgia', 'serif'],
+            mono:  ['"JetBrains Mono"','"Courier New"', 'monospace'],
+            sans:  ['"DM Sans"','"Helvetica Neue"', 'sans-serif'],
+            script:['"Caveat"', 'cursive'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    .bg-paper {
+      background-color: #FFFFFF;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+    .shadow-paper {
+      box-shadow: 0 1px 0 #C9A84C, 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
+    }
+    .card-brutal {
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .scrollbar-none::-webkit-scrollbar { width:6px; }
+    .scrollbar-none::-webkit-scrollbar-track { background:transparent; }
+    .scrollbar-none::-webkit-scrollbar-thumb { background:#C9A84C; }
+    .scrollbar-none { scrollbar-width:thin; scrollbar-color:#C9A84C transparent; }
+    .wax-seal { position:relative; }
+    .wax-seal::after {
+      content:'';position:absolute;
+      top:-12px;right:-12px;
+      width:28px;height:28px;
+      background:#6B1A2A;
+      clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);
+      opacity:0.85;
+    }
+    .chip-filter { border:2px solid #C9A84C; color:#2C1810; cursor:pointer; }
+    .chip-filter.active { background:#6B1A2A; color:#C9A84C; border-color:#6B1A2A; }
+    input:focus, select:focus { outline:none; }
+  </style>
+</head>
+<body class="h-screen flex bg-paper font-sans text-text-primary">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="w-64 min-h-screen bg-espresso text-parchment flex flex-col shrink-0">
+  <div class="px-6 py-6 border-b-4 border-accent">
+    <h1 class="font-serif font-bold text-2xl tracking-tight text-accent">SOR</h1>
+    <p class="text-xs text-text-muted mt-1">Sistema de Ordenes Restaurante</p>
+  </div>
+  <nav class="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto">
+    <div class="px-4 pt-3 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Operaciones</div>
+    <a href="orders_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider border-l-[6px] border-primary bg-burgundy/20 text-accent">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Ordenes
+    </a>
+    <a href="register_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15l3 3 7-7"/></svg>
+      Caja
+    </a>
+    <a href="../admin/reservas_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Reservas
+    </a>
+  </nav>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="flex-1 flex flex-col min-h-screen bg-white overflow-hidden">
+
+  <!-- HEADER -->
+  <div class="shrink-0 px-10 pt-8">
+    <div class="flex items-center justify-between pb-6 border-b-[6px] border-primary mb-10">
+      <h1 class="font-sans font-bold text-[36px] uppercase tracking-[-0.02em] text-espresso">Órdenes</h1>
+      <div class="flex items-center gap-3">
+        <span class="font-mono text-[14px] text-text-secondary">SOR-CAJ-001</span>
+        <div class="w-11 h-11 border-[4px] border-primary flex items-center justify-center font-serif font-bold text-[18px] text-primary">CA</div>
+      </div>
+    </div>
+
+    <!-- FILTERS CARD -->
+    <div class="mb-6 p-4 shadow-paper" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+      <div class="flex items-center gap-4 flex-wrap">
+        <div class="relative flex-1 min-w-[200px]">
+          <input type="search" id="filter-search" placeholder="BUSCAR POR #ORDEN O MESA..." class="w-full px-4 py-2.5 border-[2px] border-text-muted bg-white font-mono text-[13px] focus:border-[4px] focus:border-primary transition-all" style="outline:none; border-radius:0;" autocomplete="off">
+        </div>
+        <select id="filter-status" class="px-4 py-2.5 border-[2px] border-text-muted bg-white font-mono text-[13px] focus:border-[4px] focus:border-primary transition-all" style="outline:none; border-radius:0;">
+          <option value="all">TODOS LOS ESTADOS</option>
+          <option value="en-cocina">EN COCINA</option>
+          <option value="lista">LISTA</option>
+          <option value="entregada">ENTREGADA</option>
+          <option value="pagada">PAGADA</option>
+        </select>
+        <button onclick="openNewOrder()" class="px-6 py-2.5 border-[4px] border-primary bg-primary text-primary-foreground font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:bg-primary-light transition-colors shrink-0" style="border-radius:0;">+ NUEVA ORDEN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPLIT PANEL -->
+  <div class="flex-1 flex gap-4 px-10 pb-8 overflow-hidden">
+
+    <!-- LEFT: Orders Table -->
+    <div class="w-[42%] flex flex-col overflow-hidden">
+      <div class="shadow-paper flex-1 flex flex-col overflow-hidden" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+        <div class="flex-1 overflow-y-auto scrollbar-none" id="orders-table-container">
+          <table class="w-full" id="orders-table">
+            <thead class="sticky top-0 z-10" style="background:#EBDCC4;">
+              <tr class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso">
+                <th class="px-4 py-3 text-left border-b-2 border-primary"># ID</th>
+                <th class="px-4 py-3 text-left border-b-2 border-primary">Mesa</th>
+                <th class="px-4 py-3 text-left border-b-2 border-primary">Mesero</th>
+                <th class="px-4 py-3 text-right border-b-2 border-primary">Total</th>
+                <th class="px-4 py-3 text-center border-b-2 border-primary">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y" style="border-color:#8B7355;">
+
+              <tr class="cursor-pointer transition-colors" data-order="42" data-table="Mesa 5" data-waiter="Miguel" data-total="450.00" data-status="en-cocina" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#42</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 5</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Miguel</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$450.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span></td>
+              </tr>
+
+              <tr class="cursor-pointer transition-colors" data-order="44" data-table="Mesa 2" data-waiter="Miguel" data-total="680.50" data-status="en-cocina" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#44</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 2</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Miguel</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$680.50</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span></td>
+              </tr>
+
+              <tr class="cursor-pointer transition-colors" data-order="40" data-table="Mesa 3" data-waiter="Ana" data-total="320.00" data-status="lista" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#40</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 3</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Ana</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$320.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#3A5068;border-color:#3A5068;background-color:rgba(58,80,104,0.08);">Lista</span></td>
+              </tr>
+
+              <tr class="cursor-pointer transition-colors" data-order="38" data-table="Mesa 7" data-waiter="Ana" data-total="185.00" data-status="entregada" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#38</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 7</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Ana</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$185.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#2D4A22;border-color:#2D4A22;background-color:rgba(45,74,34,0.08);">Entregada</span></td>
+              </tr>
+
+              <tr class="cursor-pointer transition-colors" data-order="35" data-table="Mesa 4" data-waiter="Miguel" data-total="295.00" data-status="pagada" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#35</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 4</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Miguel</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$295.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#5C4030;border-color:#5C4030;background-color:rgba(92,64,48,0.08);">Pagada</span></td>
+              </tr>
+
+              <tr class="cursor-pointer transition-colors" data-order="39" data-table="Mesa 8" data-waiter="Miguel" data-total="510.00" data-status="entregada" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#39</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 8</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Miguel</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$510.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#2D4A22;border-color:#2D4A22;background-color:rgba(45,74,34,0.08);">Entregada</span></td>
+              </tr>
+
+              <tr class="cursor-pointer transition-colors" data-order="37" data-table="Mesa 10" data-waiter="Ana" data-total="920.00" data-status="lista" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#37</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 10</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Ana</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$920.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#3A5068;border-color:#3A5068;background-color:rgba(58,80,104,0.08);">Lista</span></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <div class="px-4 py-2 font-mono text-[12px] text-text-muted" style="background:#E5D4B8; border-top:2px solid #8B7355;">
+          7 órdenes &mdash; <span id="visible-count">7</span> visibles
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Detail + Payment -->
+    <div class="flex-1 overflow-y-auto scrollbar-none" id="detail-panel">
+      <div class="space-y-4">
+
+        <!-- ORDER SUMMARY CARD -->
+        <div class="card-brutal shadow-paper p-5" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+          <div class="flex items-center justify-between mb-4 pb-3" style="border-bottom:3px solid #C9A84C;">
+            <span class="font-serif font-bold text-[24px] text-espresso tracking-[-0.01em]" id="detail-title">Mesa 5 &mdash; #42</span>
+            <span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" id="detail-status" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span>
+          </div>
+
+          <table class="w-full text-sm mb-3">
+            <thead>
+              <tr class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary text-left">
+                <th class="py-2 border-b-2 border-primary">Platillo</th>
+                <th class="py-2 border-b-2 border-primary text-center">Cant</th>
+                <th class="py-2 border-b-2 border-primary text-right">P.Unit</th>
+                <th class="py-2 border-b-2 border-primary text-right">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="detail-items" class="divide-y" style="border-color:#D4C4A8;">
+              <tr>
+                <td class="py-2.5">
+                  <span class="font-serif font-bold text-[16px] text-espresso">Hamburguesa Clásica</span>
+                  <span class="font-script text-[15px] block ml-2 text-text-muted">&mdash; sin cebolla</span>
+                </td>
+                <td class="py-2.5 text-center font-mono font-bold text-[13px] text-espresso">2</td>
+                <td class="py-2.5 text-right font-mono text-[13px]" style="color:#2D4A22;">$120.00</td>
+                <td class="py-2.5 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$240.00</td>
+              </tr>
+              <tr>
+                <td class="py-2.5">
+                  <span class="font-serif font-bold text-[16px] text-espresso">Coca-Cola</span>
+                </td>
+                <td class="py-2.5 text-center font-mono font-bold text-[13px] text-espresso">1</td>
+                <td class="py-2.5 text-right font-mono text-[13px]" style="color:#2D4A22;">$35.00</td>
+                <td class="py-2.5 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$35.00</td>
+              </tr>
+              <tr>
+                <td class="py-2.5">
+                  <span class="font-serif font-bold text-[16px] text-espresso">Papas Fritas</span>
+                </td>
+                <td class="py-2.5 text-center font-mono font-bold text-[13px] text-espresso">1</td>
+                <td class="py-2.5 text-right font-mono text-[13px]" style="color:#2D4A22;">$65.00</td>
+                <td class="py-2.5 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$65.00</td>
+              </tr>
+              <tr>
+                <td class="py-2.5">
+                  <span class="font-serif font-bold text-[16px] text-espresso">Pasta Alfredo</span>
+                  <span class="font-script text-[15px] block ml-2 text-text-muted">&mdash; extra queso</span>
+                </td>
+                <td class="py-2.5 text-center font-mono font-bold text-[13px] text-espresso">1</td>
+                <td class="py-2.5 text-right font-mono text-[13px]" style="color:#2D4A22;">$110.00</td>
+                <td class="py-2.5 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$110.00</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="flex justify-between items-center pt-3" style="border-top:3px solid #C9A84C;">
+            <span class="font-sans font-bold text-[18px] uppercase tracking-[0.1em] text-espresso">Total</span>
+            <span class="font-mono font-bold tracking-wide" style="font-size:32px;color:#2D4A22;" id="detail-total">$450.00</span>
+          </div>
+        </div>
+
+        <!-- CANCEL / EDIT ACTIONS -->
+        <div class="flex justify-end mb-4">
+          <button onclick="showCancelModal()" class="text-[12px] font-sans font-bold uppercase tracking-[0.1em] text-error hover:text-error/80 border-b-2 border-transparent hover:border-error transition-colors" style="border-radius:0;">
+            Cancelar Orden
+          </button>
+          <button onclick="showEditModal()" class="text-[12px] font-sans font-bold uppercase tracking-[0.1em] text-accent hover:text-accent/80 border-b-2 border-transparent hover:border-accent transition-colors ml-4" style="border-radius:0;">
+            Editar Orden
+          </button>
+        </div>
+
+        <!-- PAYMENT FORM CARD -->
+        <div class="shadow-paper p-5 space-y-5" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+          <h3 class="font-sans font-bold text-[20px] uppercase tracking-[-0.02em] text-espresso border-b-[3px] border-accent pb-2 mb-1">Registrar Pago</h3>
+
+          <!-- Payment Method -->
+          <div>
+            <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-2">Método de pago</label>
+            <div class="grid grid-cols-3 gap-3" id="payment-methods">
+              <button class="flex flex-col items-center gap-2 p-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] transition-all active:scale-[0.97]" data-method="cash" style="border-color:#6B1A2A;color:#6B1A2A;background-color:rgba(107,26,42,0.08); border-radius:0;">
+                <span class="font-mono text-xl font-bold">$</span>
+                EFECTIVO
+              </button>
+              <button class="flex flex-col items-center gap-2 p-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] transition-all active:scale-[0.97]" data-method="card" style="border-color:#8B7355;color:#8B7355; border-radius:0;">
+                <span class="font-mono text-xl font-bold">&#9632;</span>
+                TARJETA
+              </button>
+              <button class="flex flex-col items-center gap-2 p-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] transition-all active:scale-[0.97]" data-method="transfer" style="border-color:#8B7355;color:#8B7355; border-radius:0;">
+                <span class="font-mono text-xl font-bold">&#8646;</span>
+                TRANSF.
+              </button>
+            </div>
+          </div>
+
+          <!-- Amount -->
+          <div>
+            <label for="payment-amount" class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1">Monto</label>
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono font-bold text-xl text-text-secondary">$</span>
+              <input id="payment-amount" type="number" value="450.00" step="0.01" class="w-full pl-10 pr-4 py-3 font-mono font-bold border-[2px] border-text-muted bg-white focus:border-[4px] focus:border-primary transition-all" style="font-size:28px;color:#2C1810;outline:none;border-radius:0;">
+            </div>
+          </div>
+
+          <!-- Tip -->
+          <div>
+            <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-2">Propina</label>
+            <div class="flex gap-2 mb-2" id="tip-buttons">
+              <button data-pct="10" class="px-4 py-2 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] border-text-muted text-text-muted hover:border-primary hover:text-primary active:bg-[rgba(107,26,42,0.08)] transition-all" style="border-radius:0;">10%</button>
+              <button data-pct="15" class="px-4 py-2 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] transition-all active:scale-[0.97]" style="border-color:#6B1A2A;color:#6B1A2A;background-color:rgba(107,26,42,0.08);border-radius:0;">15%</button>
+              <button data-pct="20" class="px-4 py-2 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] border-text-muted text-text-muted hover:border-primary hover:text-primary active:bg-[rgba(107,26,42,0.08)] transition-all" style="border-radius:0;">20%</button>
+            </div>
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono font-bold text-lg text-text-secondary">$</span>
+              <input id="tip-amount" type="number" value="67.50" step="0.01" class="w-full pl-10 pr-4 py-2.5 font-mono font-bold text-lg border-[2px] border-text-muted bg-white focus:border-[4px] focus:border-primary transition-all" style="outline:none;border-radius:0;">
+            </div>
+          </div>
+
+          <!-- Cash Change Section -->
+          <div id="cash-change-section">
+            <div class="border-t-[3px] border-accent pt-4 mt-1">
+              <label for="amount-received" class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1">Recibido (efectivo)</label>
+              <div class="relative mb-3">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono font-bold text-lg" style="color:#2D4A22;">$</span>
+                <input id="amount-received" type="number" value="500.00" step="0.01" class="w-full pl-10 pr-4 py-2.5 font-mono font-bold text-lg border-[4px] bg-white focus:outline-none transition-all" style="border-color:#2D4A22;outline:none;border-radius:0;">
+              </div>
+              <div id="change-display" class="flex items-center justify-between px-4 py-3" style="background-color:rgba(45,74,34,0.1);">
+                <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Cambio</span>
+                <span class="font-mono font-bold text-lg" style="color:#2D4A22;" id="change-amount">$32.50</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Split Payment -->
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <label class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Pago Dividido</label>
+              <button id="add-split" class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.1em] hover:underline text-primary">
+                <span class="text-base leading-none">+</span> Agregar
+              </button>
+            </div>
+            <div class="space-y-2" id="split-list">
+              <div class="flex items-center gap-3 px-4 py-3 border-[2px] border-text-muted group" style="background-color:rgba(240,230,211,0.6);" data-split>
+                <span class="w-3 h-3 shrink-0" style="background-color:#2D4A22;border:1px solid #1C3015;" data-split-dot></span>
+                <span class="font-sans font-bold text-[13px] w-20 text-espresso">Efectivo</span>
+                <span class="font-mono text-[11px] text-text-muted" data-split-method>cash</span>
+                <span class="flex-1"></span>
+                <span class="font-mono text-[13px] font-bold text-text-secondary">$</span>
+                <input type="number" value="200.00" step="0.01" class="w-24 text-right font-mono text-[13px] font-bold px-2 py-1 border-[2px] border-text-muted bg-white focus:border-primary" data-split-amount style="outline:none;border-radius:0;">
+                <button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity text-error" data-remove-split title="Eliminar">&times;</button>
+              </div>
+              <div class="flex items-center gap-3 px-4 py-3 border-[2px] border-text-muted group" style="background-color:rgba(240,230,211,0.6);" data-split>
+                <span class="w-3 h-3 shrink-0" style="background-color:#3A5068;border:1px solid #2A3D50;" data-split-dot></span>
+                <span class="font-sans font-bold text-[13px] w-20 text-espresso">Tarjeta</span>
+                <span class="font-mono text-[11px] text-text-muted" data-split-method>card</span>
+                <span class="flex-1"></span>
+                <span class="font-mono text-[13px] font-bold text-text-secondary">$</span>
+                <input type="number" value="250.00" step="0.01" class="w-24 text-right font-mono text-[13px] font-bold px-2 py-1 border-[2px] border-text-muted bg-white focus:border-primary" data-split-amount style="outline:none;border-radius:0;">
+                <button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity text-error" data-remove-split title="Eliminar">&times;</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between mt-3 pt-3" style="border-top:2px solid #C9A84C;">
+              <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Pendiente</span>
+              <span class="font-mono font-bold text-xl text-espresso" id="pending-amount">$0.00</span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button id="register-payment" class="w-full py-4 font-sans font-bold text-[16px] uppercase tracking-[0.12em] border-[6px] border-primary bg-primary text-primary-foreground hover:bg-primary-light active:scale-[0.98] transition-all shadow-paper" style="border-radius:0;">
+            Registrar Pago
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ===== NUEVA ORDEN MODAL ===== -->
+<div id="new-order-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6" style="background-color:rgba(44,24,16,0.55);" onclick="if(event.target===this)closeNewOrder()">
+  <div class="shadow-paper w-full max-w-4xl max-h-[88vh] flex flex-col overflow-hidden" style="background:#EBDCC4; border:6px solid #6B1A2A; box-shadow:0 4px 0 #4A0F1B,0 6px 0 #C9A84C,0 10px 20px rgba(44,24,16,0.3);">
+
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b-[4px] border-accent">
+      <div class="flex items-center gap-4">
+        <h3 class="font-sans font-bold text-[20px] uppercase tracking-[-0.02em] text-espresso">Nueva Orden</h3>
+        <select class="px-3 py-2 font-mono text-[13px] border-[2px] border-text-muted bg-white focus:border-primary" style="outline:none;border-radius:0;" onchange="newOrderTable=this.value">
+          <option>Mesa 1</option><option>Mesa 2</option><option>Mesa 3</option><option>Mesa 4</option><option selected>Mesa 5</option><option>Mesa 6</option><option>Mesa 7</option><option>Mesa 8</option><option>Mesa 9</option><option>Mesa 10</option>
+        </select>
+      </div>
+      <button onclick="closeNewOrder()" class="font-mono text-2xl font-bold hover:text-error transition-colors text-text-muted leading-none">&times;</button>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="flex gap-2 px-6 py-3 border-b-[2px] border-text-muted overflow-x-auto" id="product-filters">
+      <button class="chip-filter active px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'all')">TODOS</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'platos')">PLATOS</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'bebidas')">BEBIDAS</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'postres')">POSTRES</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'entradas')">ENTRADAS</button>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="flex-1 overflow-y-auto px-6 py-4 scrollbar-none">
+      <div class="grid grid-cols-4 gap-3" id="product-grid">
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Hamburguesa Clásica" data-price="120" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Plato</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Hamburguesa Clásica</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$120.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Pizza Margarita" data-price="150" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Plato</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Pizza Margarita</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$150.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Tacos al Pastor" data-price="85" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Entrada</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Tacos al Pastor</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$85.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Ensalada César" data-price="95" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Entrada</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Ensalada César</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$95.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Pasta Alfredo" data-price="130" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Plato</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Pasta Alfredo</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$130.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Coca-Cola 355ml" data-price="35" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Bebida</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Coca-Cola 355ml</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$35.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Limonada Mineral" data-price="45" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Bebida</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Limonada Mineral</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$45.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Agua de Horchata" data-price="40" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Bebida</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Agua de Horchata</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$40.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="postres" data-name="Flan de Caramelo" data-price="65" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Postre</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Flan de Caramelo</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$65.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="postres" data-name="Tiramisú" data-price="85" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Postre</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Tiramisú</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$85.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Guacamole" data-price="95" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Entrada</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Guacamole</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$95.00</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Chiles en Nogada" data-price="180" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Plato</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Chiles en Nogada</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$180.00</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Cart Tray -->
+    <div class="border-t-[4px] border-accent bg-white px-6 py-4 flex flex-col gap-3">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center px-2.5 py-1 font-mono font-bold text-[13px]" style="background-color:rgba(107,26,42,0.1);color:#6B1A2A;" id="cart-count">0</span>
+        <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Productos</span>
+        <span class="flex-1"></span>
+        <span class="font-mono text-[13px] text-text-secondary">Total:</span>
+        <span class="font-mono font-bold text-lg tracking-wide" style="color:#2D4A22;" id="cart-total">$0.00</span>
+      </div>
+      <div class="max-h-32 overflow-y-auto scrollbar-none" id="cart-items">
+        <p class="font-script text-[15px] text-center py-4 text-text-muted">Selecciona productos para agregar a la orden</p>
+      </div>
+      <button id="send-order-btn" onclick="sendOrder()" disabled class="w-full py-3 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-primary bg-primary text-primary-foreground hover:bg-primary-light active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-paper" style="border-radius:0;">
+        Enviar a Cocina
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+(function() {
+  var currentOrderTotal = 450.00;
+  var currentTipPct = 15;
+  var selectedMethod = 'cash';
+
+  var PAYMENT_COLORS = { cash:'#2D4A22', card:'#3A5068', transfer:'#C9A84C' };
+  var PAYMENT_LABELS = { cash:'Efectivo', card:'Tarjeta', transfer:'Transf.' };
+
+  function $(id) { return document.getElementById(id); }
+
+  /* ── Order Selection ── */
+  function deselectAll() {
+    document.querySelectorAll('#orders-table tbody tr').forEach(function(r) {
+      r.style.borderLeft = '';
+      r.style.backgroundColor = '';
+      r.style.paddingLeft = '';
+    });
+  }
+
+  window.selectOrder = function(row) {
+    deselectAll();
+    row.style.borderLeft = '4px solid #6B1A2A';
+    row.style.backgroundColor = 'rgba(107,26,42,0.04)';
+
+    var ds = row.dataset;
+    $('detail-title').textContent = ds.table + ' \u2014 #' + ds.order;
+
+    var statusStyles = {
+      'en-cocina': { color:'#C9A84C', border:'#C9A84C', bg:'rgba(201,168,76,0.08)', label:'En Cocina' },
+      'lista':     { color:'#3A5068', border:'#3A5068', bg:'rgba(58,80,104,0.08)', label:'Lista' },
+      'entregada': { color:'#2D4A22', border:'#2D4A22', bg:'rgba(45,74,34,0.08)', label:'Entregada' },
+      'pagada':    { color:'#5C4030', border:'#5C4030', bg:'rgba(92,64,48,0.08)', label:'Pagada' }
+    };
+    var st = statusStyles[ds.status] || statusStyles['lista'];
+    var statusEl = $('detail-status');
+    statusEl.textContent = st.label;
+    statusEl.style.color = st.color;
+    statusEl.style.borderColor = st.border;
+    statusEl.style.backgroundColor = st.bg;
+
+    currentOrderTotal = parseFloat(ds.total);
+    $('detail-total').textContent = '$' + currentOrderTotal.toFixed(2);
+    $('payment-amount').value = currentOrderTotal.toFixed(2);
+
+    updateTip();
+    updatePending();
+    toggleCashSection();
+  };
+
+  // Auto-select first row
+  var firstRow = document.querySelector('#orders-table tbody tr');
+  if (firstRow) selectOrder(firstRow);
+
+  /* ── Filters ── */
+  $('filter-search').addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    var count = 0;
+    document.querySelectorAll('#orders-table tbody tr').forEach(function(r) {
+      var match = r.dataset.order.toLowerCase().includes(q) || r.dataset.table.toLowerCase().includes(q);
+      r.style.display = match ? '' : 'none';
+      if (match) count++;
+    });
+    $('visible-count').textContent = count;
+  });
+
+  $('filter-status').addEventListener('change', function() {
+    var status = this.value;
+    var count = 0;
+    document.querySelectorAll('#orders-table tbody tr').forEach(function(r) {
+      var match = (status === 'all' || r.dataset.status === status);
+      r.style.display = match ? '' : 'none';
+      if (match) count++;
+    });
+    $('visible-count').textContent = count;
+  });
+
+  /* ── Payment Method Buttons ── */
+  document.querySelectorAll('#payment-methods button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#payment-methods button').forEach(function(b) {
+        b.style.borderColor = '#8B7355';
+        b.style.color = '#8B7355';
+        b.style.backgroundColor = '';
+      });
+      btn.style.borderColor = '#6B1A2A';
+      btn.style.color = '#6B1A2A';
+      btn.style.backgroundColor = 'rgba(107,26,42,0.08)';
+      selectedMethod = btn.dataset.method;
+      toggleCashSection();
+    });
+  });
+
+  /* ── Tip ── */
+  function updateTip() {
+    var tip = currentOrderTotal * currentTipPct / 100;
+    $('tip-amount').value = tip.toFixed(2);
+    updateChange();
+  }
+
+  document.querySelectorAll('#tip-buttons button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#tip-buttons button').forEach(function(b) {
+        b.style.borderColor = '#8B7355';
+        b.style.color = '#8B7355';
+        b.style.backgroundColor = '';
+      });
+      btn.style.borderColor = '#6B1A2A';
+      btn.style.color = '#6B1A2A';
+      btn.style.backgroundColor = 'rgba(107,26,42,0.08)';
+      currentTipPct = parseInt(btn.dataset.pct, 10);
+      updateTip();
+    });
+  });
+
+  $('tip-amount').addEventListener('input', function() {
+    document.querySelectorAll('#tip-buttons button').forEach(function(b) {
+      b.style.borderColor = '#8B7355';
+      b.style.color = '#8B7355';
+      b.style.backgroundColor = '';
+    });
+    currentTipPct = null;
+    updateChange();
+  });
+
+  function getTotalWithTip() {
+    return currentOrderTotal + parseFloat($('tip-amount').value || '0');
+  }
+
+  /* ── Cash Change ── */
+  function toggleCashSection() {
+    $('cash-change-section').style.display = (selectedMethod === 'cash') ? '' : 'none';
+    if (selectedMethod === 'cash') {
+      $('amount-received').value = (Math.ceil(getTotalWithTip() / 50) * 50).toFixed(2);
+      updateChange();
+    }
+  }
+
+  $('amount-received').addEventListener('input', updateChange);
+
+  function updateChange() {
+    var total = getTotalWithTip();
+    var received = parseFloat($('amount-received').value || '0');
+    var change = received - total;
+    var display = $('change-display');
+    var amount = $('change-amount');
+
+    if (change < 0) {
+      display.style.backgroundColor = 'rgba(139,26,26,0.1)';
+      amount.style.color = '#8B1A1A';
+      amount.textContent = 'Falta $' + Math.abs(change).toFixed(2);
+    } else {
+      display.style.backgroundColor = 'rgba(45,74,34,0.1)';
+      amount.style.color = '#2D4A22';
+      amount.textContent = '$' + change.toFixed(2);
+    }
+  }
+
+  /* ── Split Payment ── */
+  function updatePending() {
+    var totalWithTip = getTotalWithTip();
+    var splits = document.querySelectorAll('[data-split-amount]');
+    var paid = 0;
+    splits.forEach(function(s) { paid += parseFloat(s.value || '0'); });
+    var pending = totalWithTip - paid;
+    $('pending-amount').textContent = '$' + pending.toFixed(2);
+    if (pending <= 0.01) {
+      $('pending-amount').style.color = '#2D4A22';
+    } else if (pending < totalWithTip) {
+      $('pending-amount').style.color = '#C9A84C';
+    } else {
+      $('pending-amount').style.color = '#2C1810';
+    }
+  }
+
+  document.querySelectorAll('[data-split-amount]').forEach(function(input) {
+    input.addEventListener('input', updatePending);
+  });
+
+  $('payment-amount').addEventListener('input', updatePending);
+
+  function addSplit() {
+    var div = document.createElement('div');
+    div.className = 'flex items-center gap-3 px-4 py-3 border-[2px] border-text-muted group';
+    div.style.backgroundColor = 'rgba(240,230,211,0.6)';
+    div.setAttribute('data-split', '');
+    div.innerHTML =
+      '<span class="w-3 h-3 shrink-0" style="background-color:' + (PAYMENT_COLORS[selectedMethod]||'#C9A84C') + ';border:1px solid #2C1810;" data-split-dot></span>' +
+      '<span class="font-sans font-bold text-[13px] w-20 text-espresso">' + (PAYMENT_LABELS[selectedMethod]||'Nuevo') + '</span>' +
+      '<span class="font-mono text-[11px] text-text-muted" data-split-method>' + selectedMethod + '</span>' +
+      '<span class="flex-1"></span>' +
+      '<span class="font-mono text-[13px] font-bold text-text-secondary">$</span>' +
+      '<input type="number" value="0.00" step="0.01" class="w-24 text-right font-mono text-[13px] font-bold px-2 py-1 border-[2px] border-text-muted bg-white focus:border-primary" data-split-amount style="outline:none;border-radius:0;">' +
+      '<button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity text-error" data-remove-split title="Eliminar">&times;</button>';
+
+    div.querySelector('[data-remove-split]').addEventListener('click', function() {
+      div.remove();
+      updatePending();
+    });
+    div.querySelector('[data-split-amount]').addEventListener('input', updatePending);
+    $('split-list').appendChild(div);
+    updatePending();
+  }
+
+  $('add-split').addEventListener('click', addSplit);
+
+  document.querySelectorAll('#split-list [data-remove-split]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      btn.closest('[data-split]').remove();
+      updatePending();
+    });
+  });
+
+  /* ── Register Payment ── */
+  $('register-payment').addEventListener('click', function() {
+    var self = this;
+    var pending = parseFloat($('pending-amount').textContent.replace(/[^0-9.\-]/g,''));
+    if (pending > 0.01) {
+      showConfirmModal('Saldo Pendiente', 'Aun hay un saldo pendiente de:', '$' + pending.toFixed(2), null);
+      $('confirm-modal-btn').style.display = 'none';
+      return;
+    }
+    showConfirmModal('Confirmar Pago', 'Estas por registrar un pago por:', '$' + getTotalWithTip().toFixed(2), function() {
+      self.textContent = 'PAGO REGISTRADO — SELLADO.';
+      self.style.backgroundColor = '#2D4A22';
+      self.style.borderColor = '#2D4A22';
+      self.style.color = '#F0E6D3';
+      self.disabled = true;
+      self.classList.add('wax-seal');
+    });
+  });
+
+  updatePending();
+  toggleCashSection();
+
+  /* ══════════════════════════════════════════ */
+  /* ── NUEVA ORDEN MODAL ── */
+  /* ══════════════════════════════════════════ */
+
+  var newOrderItems = [];
+  window.newOrderTable = 'Mesa 5';
+
+  window.openNewOrder = function() { $('new-order-modal').classList.remove('hidden'); };
+  window.closeNewOrder = function() {
+    $('new-order-modal').classList.add('hidden');
+    resetNewOrder();
+  };
+
+  window.filterProducts = function(btn, cat) {
+    document.querySelectorAll('#product-filters button').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    btn.classList.add('active');
+
+    var filter = cat || 'all';
+    document.querySelectorAll('#product-grid > div').forEach(function(card) {
+      card.style.display = (filter === 'all' || card.dataset.category === filter) ? '' : 'none';
+    });
+  };
+
+  window.addToCart = function(el) {
+    var name = el.dataset.name;
+    var price = parseFloat(el.dataset.price);
+    var existing = newOrderItems.find(function(i) { return i.name === name; });
+    if (existing) { existing.qty++; }
+    else { newOrderItems.push({ name:name, price:price, qty:1 }); }
+    renderCart();
+    el.style.borderColor = '#6B1A2A';
+    el.style.borderWidth = '4px';
+    setTimeout(function() { el.style.borderColor = '#8B7355'; el.style.borderWidth = '2px'; }, 180);
+  };
+
+  window.updateCartQty = function(name, delta) {
+    var item = newOrderItems.find(function(i) { return i.name === name; });
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) newOrderItems = newOrderItems.filter(function(i) { return i.name !== name; });
+    renderCart();
+  };
+
+  function getCartTotal() {
+    return newOrderItems.reduce(function(sum, i) { return sum + i.price * i.qty; }, 0);
+  }
+
+  function renderCart() {
+    var list = $('cart-items');
+    var count = $('cart-count');
+    var total = getCartTotal();
+    count.textContent = newOrderItems.reduce(function(s, i) { return s + i.qty; }, 0);
+    if (!newOrderItems.length) {
+      list.innerHTML = '<p class="font-script text-[15px] text-center py-4 text-text-muted">Selecciona productos para agregar a la orden</p>';
+      $('cart-total').textContent = '$0.00';
+      $('send-order-btn').disabled = true;
+      return;
+    }
+    list.innerHTML = newOrderItems.map(function(item) {
+      return '<div class="flex items-center justify-between py-1.5 border-b-[1px] border-[#D4C4A8]">' +
+        '<div class="flex items-center gap-3">' +
+          '<span class="font-serif font-bold text-[15px] text-espresso">' + item.name + '</span>' +
+          '<span class="font-mono font-bold text-[11px] px-2 py-0.5" style="background-color:rgba(201,168,76,0.15);color:#2C1810;">x' + item.qty + '</span>' +
+        '</div>' +
+        '<span class="font-mono font-bold text-[13px]" style="color:#2D4A22;">$' + (item.price * item.qty).toFixed(2) + '</span>' +
+      '</div>';
+    }).join('');
+    $('cart-total').textContent = '$' + total.toFixed(2);
+    $('send-order-btn').disabled = false;
+  }
+
+  window.sendOrder = function() {
+    if (!newOrderItems.length) return;
+    var total = getCartTotal();
+    var count = newOrderItems.reduce(function(s,i){return s+i.qty;},0);
+    showToast('Orden enviada a cocina — Mesa: ' + window.newOrderTable + ' · ' + count + ' items · $' + total.toFixed(2), 'success');
+    resetNewOrder();
+    closeNewOrder();
+  };
+
+  /* ── Confirmation Modal ── */
+  var confirmCallback = null;
+
+  window.showConfirmModal = function(title, message, amount, callback) {
+    $('confirm-modal').classList.remove('hidden');
+    $('confirm-modal-title').textContent = title;
+    $('confirm-modal-message').textContent = message;
+    var amountEl = $('confirm-modal-amount');
+    if (amount) {
+      amountEl.textContent = amount;
+      amountEl.style.display = '';
+    } else {
+      amountEl.style.display = 'none';
+    }
+    confirmCallback = callback;
+    $('confirm-modal-btn').style.display = '';
+  };
+
+  window.closeConfirmModal = function() {
+    $('confirm-modal').classList.add('hidden');
+    confirmCallback = null;
+  };
+
+  $('confirm-modal-btn').addEventListener('click', function() {
+    if (confirmCallback) confirmCallback();
+    closeConfirmModal();
+  });
+
+  /* ── Cancel Order Modal ── */
+  window.showCancelModal = function() {
+    $('cancel-modal').classList.remove('hidden');
+  };
+
+  window.closeCancelModal = function() {
+    $('cancel-modal').classList.add('hidden');
+  };
+
+  $('cancel-reason').addEventListener('change', function() {
+    $('cancel-reason-other').style.display = (this.value === 'other') ? '' : 'none';
+  });
+
+  $('cancel-confirm-btn').addEventListener('click', function() {
+    var reason = $('cancel-reason').value;
+    if (!reason) {
+      $('cancel-reason').style.borderColor = '#8B1A1A';
+      return;
+    }
+    closeCancelModal();
+    var selected = document.querySelector('#orders-table tbody tr[style*="6B1A2A"]');
+    if (selected) {
+      var statusCell = selected.querySelector('td:last-child span');
+      if (statusCell) {
+        statusCell.textContent = 'CANCELADA';
+        statusCell.style.background = 'rgba(139,26,26,0.15)';
+        statusCell.style.color = '#8B1A1A';
+      }
+      selected.dataset.status = 'cancelada';
+    }
+    $('detail-status').textContent = 'Cancelada';
+    $('detail-status').style.background = 'rgba(139,26,26,0.15)';
+    $('detail-status').style.color = '#8B1A1A';
+    showToast('Orden cancelada correctamente');
+  });
+
+  /* ── Edit Order Modal ── */
+  var editItems = [];
+
+  window.showEditModal = function() {
+    var items = document.querySelectorAll('#detail-items tr');
+    editItems = [];
+    items.forEach(function(row) {
+      var cells = row.querySelectorAll('td');
+      if (cells.length >= 4) {
+        var name = cells[0].textContent.replace(/\s+/g, ' ').trim();
+        var qty = parseInt(cells[1].textContent) || 1;
+        var unitPrice = parseFloat(cells[2].textContent.replace(/[^0-9.]/g, ''));
+        editItems.push({ name: name, qty: qty, price: unitPrice });
+      }
+    });
+    renderEditItems();
+    $('edit-modal').classList.remove('hidden');
+  };
+
+  window.closeEditModal = function() {
+    $('edit-modal').classList.add('hidden');
+  };
+
+  function renderEditItems() {
+    var list = $('edit-items-list');
+    var total = 0;
+    list.innerHTML = editItems.map(function(item, i) {
+      var subtotal = item.price * item.qty;
+      total += subtotal;
+      return '<div class="flex items-center justify-between py-2 border-b border-text-muted/10">' +
+        '<div class="flex-1">' +
+          '<span class="font-serif font-bold text-[16px] text-espresso">' + item.name + '</span>' +
+          '<span class="font-mono text-[13px] text-text-secondary ml-2">$' + item.price.toFixed(2) + ' c/u</span>' +
+        '</div>' +
+        '<div class="flex items-center gap-2">' +
+          '<button onclick="editItemQty(' + i + ',-1)" class="size-7 border-2 border-text-muted/30 flex items-center justify-center font-sans font-bold text-[14px] hover:border-error/50 transition-colors" style="border-radius:0;">-</button>' +
+          '<span class="font-mono font-bold text-[16px] w-8 text-center">' + item.qty + '</span>' +
+          '<button onclick="editItemQty(' + i + ',1)" class="size-7 border-2 border-text-muted/30 flex items-center justify-center font-sans font-bold text-[14px] hover:border-primary/50 transition-colors" style="border-radius:0;">+</button>' +
+          '<button onclick="removeEditItem(' + i + ')" class="ml-2 text-error hover:text-error/80 font-sans font-bold text-[18px] leading-none">&times;</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    $('edit-new-total').textContent = '$' + total.toFixed(2);
+  }
+
+  window.editItemQty = function(i, delta) {
+    editItems[i].qty += delta;
+    if (editItems[i].qty <= 0) editItems.splice(i, 1);
+    renderEditItems();
+  };
+
+  window.removeEditItem = function(i) {
+    editItems.splice(i, 1);
+    renderEditItems();
+  };
+
+  window.showAddProductInEdit = function() {
+    $('new-order-modal').classList.remove('hidden');
+  };
+
+  $('edit-save-btn').addEventListener('click', function() {
+    var total = 0;
+    var html = '';
+    editItems.forEach(function(item) {
+      var subtotal = item.price * item.qty;
+      total += subtotal;
+      html += '<tr><td class="py-2">' + item.name + '</td><td class="py-2 text-center">' + item.qty + '</td><td class="py-2 text-right">$' + item.price.toFixed(2) + '</td><td class="py-2 text-right font-medium">$' + subtotal.toFixed(2) + '</td></tr>';
+    });
+    $('detail-items').innerHTML = html;
+    $('detail-total').textContent = '$' + total.toFixed(2);
+    $('payment-amount').value = total.toFixed(2);
+    currentOrderTotal = total;
+    updateTip();
+    updatePending();
+    closeEditModal();
+    showToast('Orden actualizada correctamente');
+  });
+
+  /* ── Toast ── */
+  function showToast(message, type) {
+    type = type || 'success';
+    var toast = $('toast');
+    toast.textContent = message;
+    toast.className = 'fixed bottom-6 right-6 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] px-4 py-3 z-50 shadow-paper';
+    toast.style.borderRadius = '0';
+    toast.style.transition = 'all 0.3s ease';
+    if (type === 'success') {
+      toast.style.borderColor = '#2D4A22';
+      toast.style.backgroundColor = '#FFFFFF';
+      toast.style.color = '#2D4A22';
+    } else {
+      toast.style.borderColor = '#8B1A1A';
+      toast.style.backgroundColor = '#FFFFFF';
+      toast.style.color = '#8B1A1A';
+    }
+    toast.classList.remove('hidden');
+    setTimeout(function() { toast.classList.add('hidden'); }, 3000);
+  }
+
+  function resetNewOrder() {
+    newOrderItems = [];
+    renderCart();
+    document.querySelectorAll('#product-filters button').forEach(function(b,i) {
+      if (i === 0) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+    document.querySelectorAll('#product-grid > div').forEach(function(c) { c.style.display = ''; });
+  }
+
+})();
+</script>
+
+<!-- CONFIRMATION MODAL -->
+<div id="confirm-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50" onclick="if(event.target===this)closeConfirmModal()">
+  <div class="bg-surface border-[6px] border-primary shadow-paper w-full max-w-sm mx-4" style="border-radius:0;">
+    <div class="px-6 py-4 border-b-[3px] border-accent">
+      <h3 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-espresso" id="confirm-modal-title">Confirmar</h3>
+    </div>
+    <div class="px-6 py-4">
+      <p class="font-sans text-[14px] text-text-secondary mb-1" id="confirm-modal-message"></p>
+      <p class="font-mono font-bold text-[24px] text-forest" id="confirm-modal-amount" style="color:#2D4A22;"></p>
+    </div>
+    <div class="px-6 py-4 border-t-[3px] border-text-muted/20 flex gap-3">
+      <button onclick="closeConfirmModal()" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-text-muted/30 text-text-secondary hover:bg-surface transition-colors" style="border-radius:0;">Cancelar</button>
+      <button id="confirm-modal-btn" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-primary bg-primary text-primary-foreground hover:bg-primary-light transition-colors" style="border-radius:0;">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL ORDER MODAL -->
+<div id="cancel-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50" onclick="if(event.target===this)closeCancelModal()">
+  <div class="bg-surface border-[6px] border-error shadow-paper w-full max-w-md mx-4" style="border-radius:0;">
+    <div class="px-6 py-4 border-b-[3px] border-accent">
+      <h3 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-error">Cancelar Orden</h3>
+    </div>
+    <div class="px-6 py-4 space-y-4">
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1">Motivo de cancelacion</label>
+        <select id="cancel-reason" class="w-full px-3 py-2 border-2 border-text-muted/30 bg-white font-mono text-[14px] focus:border-[4px] focus:border-error" style="border-radius:0;outline:none;">
+          <option value="">Seleccionar motivo...</option>
+          <option value="bad-service">Mal servicio</option>
+          <option value="spoiled-food">Comida danada / echada a perder</option>
+          <option value="waiter-error">Error del mesero</option>
+          <option value="client-cancel">Cliente cancelo</option>
+          <option value="other">Otro</option>
+        </select>
+      </div>
+      <div id="cancel-reason-other" style="display:none;">
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1">Especificar motivo</label>
+        <textarea id="cancel-note" rows="2" class="w-full px-3 py-2 border-2 border-text-muted/30 bg-white font-script text-[16px] focus:border-[4px] focus:border-error" style="border-radius:0;outline:none;" placeholder="Describe el motivo..."></textarea>
+      </div>
+      <p class="font-sans text-[13px] text-text-secondary">Esta accion no se puede deshacer. La orden sera marcada como cancelada.</p>
+    </div>
+    <div class="px-6 py-4 border-t-[3px] border-text-muted/20 flex gap-3">
+      <button onclick="closeCancelModal()" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-text-muted/30 text-text-secondary hover:bg-surface transition-colors" style="border-radius:0;">Volver</button>
+      <button id="cancel-confirm-btn" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-error bg-error text-white hover:bg-error/80 transition-colors" style="border-radius:0;">Cancelar Orden</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT ORDER MODAL -->
+<div id="edit-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50" onclick="if(event.target===this)closeEditModal()">
+  <div class="bg-surface border-[6px] border-primary shadow-paper w-full max-w-2xl mx-4 max-h-[85vh] flex flex-col" style="border-radius:0;">
+    <div class="px-6 py-4 border-b-[3px] border-accent flex items-center justify-between">
+      <h3 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-espresso">Editar Orden</h3>
+      <button onclick="closeEditModal()" class="text-text-muted hover:text-espresso text-2xl leading-none">&times;</button>
+    </div>
+    <div class="flex-1 overflow-y-auto px-6 py-4 space-y-3" id="edit-items-list">
+    </div>
+    <div class="px-6 py-4 border-t-[3px] border-text-muted/20 space-y-3">
+      <button onclick="showAddProductInEdit()" class="w-full py-2 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[2px] border-dashed border-text-muted/30 text-text-secondary hover:border-accent hover:text-accent transition-colors" style="border-radius:0;">
+        + Agregar Producto
+      </button>
+      <div class="flex items-center justify-between">
+        <span class="font-sans font-bold text-[14px] uppercase text-espresso">Nuevo Total</span>
+        <span class="font-mono font-bold text-[28px]" style="color:#2D4A22;" id="edit-new-total">$450.00</span>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeEditModal()" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-text-muted/30 text-text-secondary hover:bg-surface transition-colors" style="border-radius:0;">Cancelar</button>
+        <button id="edit-save-btn" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-primary bg-primary text-primary-foreground hover:bg-primary-light transition-colors" style="border-radius:0;">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="hidden fixed bottom-6 right-6 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] px-4 py-3 z-50 shadow-paper" style="border-radius:0; transition:all 0.3s ease;"></div>
+
+</body>
+</html>
