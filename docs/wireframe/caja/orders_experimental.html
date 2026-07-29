@@ -263,6 +263,16 @@
           </div>
         </div>
 
+        <!-- CANCEL / EDIT ACTIONS -->
+        <div class="flex justify-end mb-4">
+          <button onclick="showCancelModal()" class="text-[12px] font-sans font-bold uppercase tracking-[0.1em] text-error hover:text-error/80 border-b-2 border-transparent hover:border-error transition-colors" style="border-radius:0;">
+            Cancelar Orden
+          </button>
+          <button onclick="showEditModal()" class="text-[12px] font-sans font-bold uppercase tracking-[0.1em] text-accent hover:text-accent/80 border-b-2 border-transparent hover:border-accent transition-colors ml-4" style="border-radius:0;">
+            Editar Orden
+          </button>
+        </div>
+
         <!-- PAYMENT FORM CARD -->
         <div class="shadow-paper p-5 space-y-5" style="background:#EBDCC4; border:6px solid #6B1A2A;">
           <h3 class="font-sans font-bold text-[20px] uppercase tracking-[-0.02em] text-espresso border-b-[3px] border-accent pb-2 mb-1">Registrar Pago</h3>
@@ -710,19 +720,21 @@
 
   /* ── Register Payment ── */
   $('register-payment').addEventListener('click', function() {
+    var self = this;
     var pending = parseFloat($('pending-amount').textContent.replace(/[^0-9.\-]/g,''));
     if (pending > 0.01) {
-      alert('Aún hay un saldo pendiente de $' + pending.toFixed(2));
+      showConfirmModal('Saldo Pendiente', 'Aun hay un saldo pendiente de:', '$' + pending.toFixed(2), null);
+      $('confirm-modal-btn').style.display = 'none';
       return;
     }
-    if (confirm('¿Confirmar el pago por un total de $' + getTotalWithTip().toFixed(2) + '?')) {
-      this.textContent = 'PAGO REGISTRADO — SELLADO.';
-      this.style.backgroundColor = '#2D4A22';
-      this.style.borderColor = '#2D4A22';
-      this.style.color = '#F0E6D3';
-      this.disabled = true;
-      this.classList.add('wax-seal');
-    }
+    showConfirmModal('Confirmar Pago', 'Estas por registrar un pago por:', '$' + getTotalWithTip().toFixed(2), function() {
+      self.textContent = 'PAGO REGISTRADO — SELLADO.';
+      self.style.backgroundColor = '#2D4A22';
+      self.style.borderColor = '#2D4A22';
+      self.style.color = '#F0E6D3';
+      self.disabled = true;
+      self.classList.add('wax-seal');
+    });
   });
 
   updatePending();
@@ -805,10 +817,173 @@
     if (!newOrderItems.length) return;
     var total = getCartTotal();
     var count = newOrderItems.reduce(function(s,i){return s+i.qty;},0);
-    alert('¡Orden enviada a cocina!\n\nMesa: ' + window.newOrderTable + '\nItems: ' + count + '\nTotal: $' + total.toFixed(2));
+    showToast('Orden enviada a cocina — Mesa: ' + window.newOrderTable + ' · ' + count + ' items · $' + total.toFixed(2), 'success');
     resetNewOrder();
     closeNewOrder();
   };
+
+  /* ── Confirmation Modal ── */
+  var confirmCallback = null;
+
+  window.showConfirmModal = function(title, message, amount, callback) {
+    $('confirm-modal').classList.remove('hidden');
+    $('confirm-modal-title').textContent = title;
+    $('confirm-modal-message').textContent = message;
+    var amountEl = $('confirm-modal-amount');
+    if (amount) {
+      amountEl.textContent = amount;
+      amountEl.style.display = '';
+    } else {
+      amountEl.style.display = 'none';
+    }
+    confirmCallback = callback;
+    $('confirm-modal-btn').style.display = '';
+  };
+
+  window.closeConfirmModal = function() {
+    $('confirm-modal').classList.add('hidden');
+    confirmCallback = null;
+  };
+
+  $('confirm-modal-btn').addEventListener('click', function() {
+    if (confirmCallback) confirmCallback();
+    closeConfirmModal();
+  });
+
+  /* ── Cancel Order Modal ── */
+  window.showCancelModal = function() {
+    $('cancel-modal').classList.remove('hidden');
+  };
+
+  window.closeCancelModal = function() {
+    $('cancel-modal').classList.add('hidden');
+  };
+
+  $('cancel-reason').addEventListener('change', function() {
+    $('cancel-reason-other').style.display = (this.value === 'other') ? '' : 'none';
+  });
+
+  $('cancel-confirm-btn').addEventListener('click', function() {
+    var reason = $('cancel-reason').value;
+    if (!reason) {
+      $('cancel-reason').style.borderColor = '#8B1A1A';
+      return;
+    }
+    closeCancelModal();
+    var selected = document.querySelector('#orders-table tbody tr[style*="6B1A2A"]');
+    if (selected) {
+      var statusCell = selected.querySelector('td:last-child span');
+      if (statusCell) {
+        statusCell.textContent = 'CANCELADA';
+        statusCell.style.background = 'rgba(139,26,26,0.15)';
+        statusCell.style.color = '#8B1A1A';
+      }
+      selected.dataset.status = 'cancelada';
+    }
+    $('detail-status').textContent = 'Cancelada';
+    $('detail-status').style.background = 'rgba(139,26,26,0.15)';
+    $('detail-status').style.color = '#8B1A1A';
+    showToast('Orden cancelada correctamente');
+  });
+
+  /* ── Edit Order Modal ── */
+  var editItems = [];
+
+  window.showEditModal = function() {
+    var items = document.querySelectorAll('#detail-items tr');
+    editItems = [];
+    items.forEach(function(row) {
+      var cells = row.querySelectorAll('td');
+      if (cells.length >= 4) {
+        var name = cells[0].textContent.replace(/\s+/g, ' ').trim();
+        var qty = parseInt(cells[1].textContent) || 1;
+        var unitPrice = parseFloat(cells[2].textContent.replace(/[^0-9.]/g, ''));
+        editItems.push({ name: name, qty: qty, price: unitPrice });
+      }
+    });
+    renderEditItems();
+    $('edit-modal').classList.remove('hidden');
+  };
+
+  window.closeEditModal = function() {
+    $('edit-modal').classList.add('hidden');
+  };
+
+  function renderEditItems() {
+    var list = $('edit-items-list');
+    var total = 0;
+    list.innerHTML = editItems.map(function(item, i) {
+      var subtotal = item.price * item.qty;
+      total += subtotal;
+      return '<div class="flex items-center justify-between py-2 border-b border-text-muted/10">' +
+        '<div class="flex-1">' +
+          '<span class="font-serif font-bold text-[16px] text-espresso">' + item.name + '</span>' +
+          '<span class="font-mono text-[13px] text-text-secondary ml-2">$' + item.price.toFixed(2) + ' c/u</span>' +
+        '</div>' +
+        '<div class="flex items-center gap-2">' +
+          '<button onclick="editItemQty(' + i + ',-1)" class="size-7 border-2 border-text-muted/30 flex items-center justify-center font-sans font-bold text-[14px] hover:border-error/50 transition-colors" style="border-radius:0;">-</button>' +
+          '<span class="font-mono font-bold text-[16px] w-8 text-center">' + item.qty + '</span>' +
+          '<button onclick="editItemQty(' + i + ',1)" class="size-7 border-2 border-text-muted/30 flex items-center justify-center font-sans font-bold text-[14px] hover:border-primary/50 transition-colors" style="border-radius:0;">+</button>' +
+          '<button onclick="removeEditItem(' + i + ')" class="ml-2 text-error hover:text-error/80 font-sans font-bold text-[18px] leading-none">&times;</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    $('edit-new-total').textContent = '$' + total.toFixed(2);
+  }
+
+  window.editItemQty = function(i, delta) {
+    editItems[i].qty += delta;
+    if (editItems[i].qty <= 0) editItems.splice(i, 1);
+    renderEditItems();
+  };
+
+  window.removeEditItem = function(i) {
+    editItems.splice(i, 1);
+    renderEditItems();
+  };
+
+  window.showAddProductInEdit = function() {
+    $('new-order-modal').classList.remove('hidden');
+  };
+
+  $('edit-save-btn').addEventListener('click', function() {
+    var total = 0;
+    var html = '';
+    editItems.forEach(function(item) {
+      var subtotal = item.price * item.qty;
+      total += subtotal;
+      html += '<tr><td class="py-2">' + item.name + '</td><td class="py-2 text-center">' + item.qty + '</td><td class="py-2 text-right">$' + item.price.toFixed(2) + '</td><td class="py-2 text-right font-medium">$' + subtotal.toFixed(2) + '</td></tr>';
+    });
+    $('detail-items').innerHTML = html;
+    $('detail-total').textContent = '$' + total.toFixed(2);
+    $('payment-amount').value = total.toFixed(2);
+    currentOrderTotal = total;
+    updateTip();
+    updatePending();
+    closeEditModal();
+    showToast('Orden actualizada correctamente');
+  });
+
+  /* ── Toast ── */
+  function showToast(message, type) {
+    type = type || 'success';
+    var toast = $('toast');
+    toast.textContent = message;
+    toast.className = 'fixed bottom-6 right-6 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] px-4 py-3 z-50 shadow-paper';
+    toast.style.borderRadius = '0';
+    toast.style.transition = 'all 0.3s ease';
+    if (type === 'success') {
+      toast.style.borderColor = '#2D4A22';
+      toast.style.backgroundColor = '#FFFFFF';
+      toast.style.color = '#2D4A22';
+    } else {
+      toast.style.borderColor = '#8B1A1A';
+      toast.style.backgroundColor = '#FFFFFF';
+      toast.style.color = '#8B1A1A';
+    }
+    toast.classList.remove('hidden');
+    setTimeout(function() { toast.classList.add('hidden'); }, 3000);
+  }
 
   function resetNewOrder() {
     newOrderItems = [];
@@ -822,6 +997,82 @@
 
 })();
 </script>
+
+<!-- CONFIRMATION MODAL -->
+<div id="confirm-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50" onclick="if(event.target===this)closeConfirmModal()">
+  <div class="bg-surface border-[6px] border-primary shadow-paper w-full max-w-sm mx-4" style="border-radius:0;">
+    <div class="px-6 py-4 border-b-[3px] border-accent">
+      <h3 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-espresso" id="confirm-modal-title">Confirmar</h3>
+    </div>
+    <div class="px-6 py-4">
+      <p class="font-sans text-[14px] text-text-secondary mb-1" id="confirm-modal-message"></p>
+      <p class="font-mono font-bold text-[24px] text-forest" id="confirm-modal-amount" style="color:#2D4A22;"></p>
+    </div>
+    <div class="px-6 py-4 border-t-[3px] border-text-muted/20 flex gap-3">
+      <button onclick="closeConfirmModal()" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-text-muted/30 text-text-secondary hover:bg-surface transition-colors" style="border-radius:0;">Cancelar</button>
+      <button id="confirm-modal-btn" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-primary bg-primary text-primary-foreground hover:bg-primary-light transition-colors" style="border-radius:0;">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL ORDER MODAL -->
+<div id="cancel-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50" onclick="if(event.target===this)closeCancelModal()">
+  <div class="bg-surface border-[6px] border-error shadow-paper w-full max-w-md mx-4" style="border-radius:0;">
+    <div class="px-6 py-4 border-b-[3px] border-accent">
+      <h3 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-error">Cancelar Orden</h3>
+    </div>
+    <div class="px-6 py-4 space-y-4">
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1">Motivo de cancelacion</label>
+        <select id="cancel-reason" class="w-full px-3 py-2 border-2 border-text-muted/30 bg-white font-mono text-[14px] focus:border-[4px] focus:border-error" style="border-radius:0;outline:none;">
+          <option value="">Seleccionar motivo...</option>
+          <option value="bad-service">Mal servicio</option>
+          <option value="spoiled-food">Comida danada / echada a perder</option>
+          <option value="waiter-error">Error del mesero</option>
+          <option value="client-cancel">Cliente cancelo</option>
+          <option value="other">Otro</option>
+        </select>
+      </div>
+      <div id="cancel-reason-other" style="display:none;">
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1">Especificar motivo</label>
+        <textarea id="cancel-note" rows="2" class="w-full px-3 py-2 border-2 border-text-muted/30 bg-white font-script text-[16px] focus:border-[4px] focus:border-error" style="border-radius:0;outline:none;" placeholder="Describe el motivo..."></textarea>
+      </div>
+      <p class="font-sans text-[13px] text-text-secondary">Esta accion no se puede deshacer. La orden sera marcada como cancelada.</p>
+    </div>
+    <div class="px-6 py-4 border-t-[3px] border-text-muted/20 flex gap-3">
+      <button onclick="closeCancelModal()" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-text-muted/30 text-text-secondary hover:bg-surface transition-colors" style="border-radius:0;">Volver</button>
+      <button id="cancel-confirm-btn" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-error bg-error text-white hover:bg-error/80 transition-colors" style="border-radius:0;">Cancelar Orden</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT ORDER MODAL -->
+<div id="edit-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50" onclick="if(event.target===this)closeEditModal()">
+  <div class="bg-surface border-[6px] border-primary shadow-paper w-full max-w-2xl mx-4 max-h-[85vh] flex flex-col" style="border-radius:0;">
+    <div class="px-6 py-4 border-b-[3px] border-accent flex items-center justify-between">
+      <h3 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-espresso">Editar Orden</h3>
+      <button onclick="closeEditModal()" class="text-text-muted hover:text-espresso text-2xl leading-none">&times;</button>
+    </div>
+    <div class="flex-1 overflow-y-auto px-6 py-4 space-y-3" id="edit-items-list">
+    </div>
+    <div class="px-6 py-4 border-t-[3px] border-text-muted/20 space-y-3">
+      <button onclick="showAddProductInEdit()" class="w-full py-2 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[2px] border-dashed border-text-muted/30 text-text-secondary hover:border-accent hover:text-accent transition-colors" style="border-radius:0;">
+        + Agregar Producto
+      </button>
+      <div class="flex items-center justify-between">
+        <span class="font-sans font-bold text-[14px] uppercase text-espresso">Nuevo Total</span>
+        <span class="font-mono font-bold text-[28px]" style="color:#2D4A22;" id="edit-new-total">$450.00</span>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeEditModal()" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-text-muted/30 text-text-secondary hover:bg-surface transition-colors" style="border-radius:0;">Cancelar</button>
+        <button id="edit-save-btn" class="flex-1 py-2.5 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-primary bg-primary text-primary-foreground hover:bg-primary-light transition-colors" style="border-radius:0;">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="hidden fixed bottom-6 right-6 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] px-4 py-3 z-50 shadow-paper" style="border-radius:0; transition:all 0.3s ease;"></div>
 
 </body>
 </html>
