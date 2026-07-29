@@ -27,7 +27,7 @@
     "db:migrate": "pnpm -F server db:migrate",
     "db:seed": "pnpm -F server db:seed",
     "clean": "rimraf server/dist client/dist",
-    "prepare": "husky"
+    "prepare": "npx husky || exit 0"
   },
   "lint-staged": {
     "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
