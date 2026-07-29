@@ -1,4 +1,4 @@
-# Registro de Riesgos -- SOR
+# Registro de Riesgos -- Alfredo's
 
 ---
 

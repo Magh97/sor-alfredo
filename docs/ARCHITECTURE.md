@@ -1,4 +1,4 @@
-# Arquitectura del Sistema SOR
+# Arquitectura del Alfredo's
 
 ## C4 Nivel 1 -- System Context
 

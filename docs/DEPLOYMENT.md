@@ -1,4 +1,4 @@
-# Despliegue y Entornos -- SOR
+# Despliegue y Entornos -- Alfredo's
 
 ---
 
@@ -150,9 +150,9 @@ services:
   postgres:
     image: postgres:18-alpine
     environment:
-      POSTGRES_DB: sor
-      POSTGRES_USER: sor_user
-      POSTGRES_PASSWORD: sor_pass
+      POSTGRES_DB: Alfredo's
+      POSTGRES_USER: Alfredo's_user
+      POSTGRES_PASSWORD: Alfredo's_pass
     ports:
       - "5432:5432"
     volumes:

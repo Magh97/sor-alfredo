@@ -1,4 +1,4 @@
-# Onboarding -- SOR
+# Onboarding -- Alfredo's
 
 > Tiempo estimado de setup: 10 minutos (con Docker)
 > Stack: Node.js 24 + Express 5 + React 19 + PostgreSQL 18
