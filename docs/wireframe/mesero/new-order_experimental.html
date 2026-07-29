@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SOR — Nueva Orden</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@400;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   { DEFAULT:'#6B1A2A', light:'#8B2535', dark:'#4A0F1B', foreground:'#F0E6D3' },
+            secondary: { DEFAULT:'#2D4A22', light:'#3D6230', dark:'#1C3015', foreground:'#F0E6D3' },
+            accent:    { DEFAULT:'#C9A84C', foreground:'#2C1810' },
+            success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
+            background:'#F0E6D3', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
+            text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
+          },
+          fontFamily: {
+            serif: ["'Playfair Display'", 'Georgia', 'serif'],
+            mono: ["'JetBrains Mono'", "'Courier New'", 'monospace'],
+            sans: ["'DM Sans'", "'Helvetica Neue'", 'sans-serif'],
+            script: ["'Caveat'", 'cursive'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', 'Helvetica Neue', sans-serif; }
+
+    .bg-paper {
+      background-color: #F0E6D3;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04' /%3E%3C/svg%3E");
+    }
+
+    .shadow-paper {
+      box-shadow: 0 1px 0 #C9A84C, 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
+    }
+
+    .card-brutal {
+      clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+    }
+
+    .category-scroll::-webkit-scrollbar { display: none; }
+    .category-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .border-morph { transition: border 200ms ease; }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    .toast-enter { animation: toast-in 200ms ease-out; }
+  </style>
+</head>
+<body class="h-screen flex flex-col bg-paper max-w-lg mx-auto relative select-none">
+
+  <!-- Header -->
+  <header class="shrink-0 px-4 py-3 flex items-center justify-between" style="background:#EBDCC4; border-bottom:6px solid #6B1A2A;">
+    <a href="orders_experimental.html" class="flex items-center gap-2 text-text-primary active:scale-95 transition-transform">
+      <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span class="font-mono font-bold text-[14px] uppercase tracking-[0.05em]">Volver</span>
+    </a>
+    <span class="font-serif font-bold text-[28px] tracking-[-0.01em] text-text-primary">Mesa 5</span>
+    <div class="flex items-center justify-center select-none"
+      style="width:32px; height:32px; background:transparent; border:3px solid #6B1A2A; border-radius:0;"
+      id="item-count-badge">
+      <span class="font-mono font-bold text-[14px] text-text-primary">0</span>
+    </div>
+  </header>
+
+  <!-- Category Chips -->
+  <div class="px-4 pt-3 pb-2">
+    <div class="flex gap-3 category-scroll overflow-x-auto pb-1" id="categories">
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-category="all"
+        style="padding:8px 18px; background:#6B1A2A; color:#F0E6D3; border:2px solid #6B1A2A; border-radius:0;">Todas</button>
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-category="platos"
+        style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Platos</button>
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-category="bebidas"
+        style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Bebidas</button>
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-category="postres"
+        style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Postres</button>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <main class="flex-1 overflow-y-auto px-4 pt-2 pb-4">
+    <div class="grid grid-cols-2 gap-3" id="product-grid">
+
+      <!-- PLATOS -->
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="hamburguesa" data-category="platos" data-name="Hamburguesa Clásica" data-price="120"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Hamburguesa Clásica</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$120.00</span>
+      </div>
+
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="pizza" data-category="platos" data-name="Pizza Margarita" data-price="150"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Pizza Margarita</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$150.00</span>
+      </div>
+
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="tacos" data-category="platos" data-name="Tacos al Pastor" data-price="85"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Tacos al Pastor</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$85.00</span>
+      </div>
+
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="ensalada" data-category="platos" data-name="Ensalada César" data-price="95"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Ensalada César</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$95.00</span>
+      </div>
+
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="pasta" data-category="platos" data-name="Pasta Alfredo" data-price="130"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Pasta Alfredo</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$130.00</span>
+      </div>
+
+      <!-- BEBIDAS -->
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="coca-cola" data-category="bebidas" data-name="Coca-Cola 355ml" data-price="35"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Coca-Cola 355ml</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$35.00</span>
+      </div>
+
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="agua" data-category="bebidas" data-name="Agua Mineral 500ml" data-price="25"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Agua Mineral 500ml</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$25.00</span>
+      </div>
+
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="limonada" data-category="bebidas" data-name="Limonada Natural" data-price="45"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Limonada Natural</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$45.00</span>
+      </div>
+
+      <!-- POSTRES -->
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="flan" data-category="postres" data-name="Flan de Caramelo" data-price="65"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Flan de Caramelo</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$65.00</span>
+      </div>
+
+      <div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"
+        style="background:#EBDCC4; border:0px solid transparent;"
+        data-product="helado" data-category="postres" data-name="Helado de Vainilla" data-price="55"
+        onclick="addToCart(this)">
+        <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">Helado de Vainilla</span>
+        <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$55.00</span>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Cart Tray -->
+  <div class="shrink-0 max-h-[40vh] flex flex-col" style="background:#E5D4B8; border-top:6px solid #6B1A2A;" id="cart-tray">
+    <div id="cart-empty" class="px-4 py-4 text-center select-none">
+      <p class="font-script text-[18px]" style="color:#8B7355;">Toca un platillo para agregarlo</p>
+    </div>
+    <div id="cart-items" class="overflow-y-auto px-4 pt-3 hidden flex-1">
+    </div>
+    <div id="cart-footer" class="hidden px-4 pb-3 pt-1">
+      <div class="flex items-center justify-between mb-3 pt-2" style="border-top:2px solid #C9A84C;">
+        <span class="font-sans font-bold text-[14px] uppercase tracking-[0.1em] text-text-primary">Total</span>
+        <span class="font-mono font-bold text-[28px] tracking-[0.02em]" style="color:#2D4A22;" id="cart-total">$0.00</span>
+      </div>
+      <button onclick="enviarACocina()" class="w-full py-3.5 font-sans font-bold text-[15px] uppercase tracking-[0.1em] select-none active:scale-[0.98] transition-transform"
+        style="background:#F0E6D3; color:#6B1A2A; border:6px solid #6B1A2A; border-radius:0;"
+        onmouseover="this.style.background='#6B1A2A';this.style.color='#F0E6D3';"
+        onmouseout="this.style.background='#F0E6D3';this.style.color='#6B1A2A';">
+        Enviar a Cocina
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-4 left-1/2 z-50 hidden toast-enter px-5 py-3 select-none" style="background:#2D4A22; border:3px solid #1C3015; border-radius:0;">
+    <p class="font-mono font-bold text-[14px] uppercase tracking-[0.05em] text-center" style="color:#F0E6D3;">Orden enviada a cocina</p>
+  </div>
+
+  <script>
+    var cart = {};
+
+    function addToCart(el) {
+      var product = el.dataset.product;
+      var name = el.dataset.name;
+      var price = parseFloat(el.dataset.price);
+
+      if (cart[product]) {
+        cart[product].qty += 1;
+      } else {
+        cart[product] = { name: name, price: price, qty: 1 };
+      }
+
+      el.style.border = '4px solid #6B1A2A';
+
+      renderCart();
+    }
+
+    function removeFromCart(product) {
+      var card = document.querySelector('[data-product="' + product + '"]');
+      if (card) card.style.border = '0px solid transparent';
+
+      delete cart[product];
+      renderCart();
+    }
+
+    function updateQty(product, delta) {
+      if (!cart[product]) return;
+      cart[product].qty += delta;
+      if (cart[product].qty <= 0) {
+        removeFromCart(product);
+        return;
+      }
+      renderCart();
+    }
+
+    function renderCart() {
+      var itemsEl = document.getElementById('cart-items');
+      var emptyEl = document.getElementById('cart-empty');
+      var footerEl = document.getElementById('cart-footer');
+      var badge = document.getElementById('item-count-badge');
+      var badgeSpan = badge.querySelector('span');
+
+      var totalItems = 0;
+      var totalPrice = 0;
+      Object.values(cart).forEach(function(item) {
+        totalItems += item.qty;
+        totalPrice += item.price * item.qty;
+      });
+
+      badgeSpan.textContent = totalItems;
+
+      if (totalItems === 0) {
+        emptyEl.classList.remove('hidden');
+        itemsEl.classList.add('hidden');
+        footerEl.classList.add('hidden');
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+      itemsEl.classList.remove('hidden');
+      footerEl.classList.remove('hidden');
+
+      var html = '';
+      Object.keys(cart).forEach(function(key) {
+        var item = cart[key];
+        html += '<div class="flex items-center gap-3 py-2 select-none" style="border-bottom:2px solid #8B7355;">';
+        html += '  <div class="flex-1 min-w-0">';
+        html += '    <p class="font-serif font-bold text-[18px] tracking-[-0.01em] text-text-primary truncate">' + item.name + '</p>';
+        html += '    <p class="font-mono text-[12px] text-text-muted">$' + item.price.toFixed(2) + ' c/u</p>';
+        html += '  </div>';
+        html += '  <div class="flex items-center gap-1 shrink-0">';
+        html += '    <button onclick="updateQty(\'' + key + '\', -1)" class="font-sans font-bold text-[18px] leading-none active:scale-90 transition-transform select-none" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:transparent;color:#8B7355;border:2px solid #8B7355;border-radius:0;">-</button>';
+        html += '    <span class="font-mono font-bold text-[14px] text-text-primary" style="width:20px;text-align:center;">' + item.qty + '</span>';
+        html += '    <button onclick="updateQty(\'' + key + '\', 1)" class="font-sans font-bold text-[18px] leading-none active:scale-90 transition-transform select-none" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:transparent;color:#6B1A2A;border:2px solid #6B1A2A;border-radius:0;">+</button>';
+        html += '  </div>';
+        html += '  <button onclick="removeFromCart(\'' + key + '\')" class="shrink-0 active:scale-90 transition-transform select-none" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#8B1A1A;">';
+        html += '    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+        html += '  </button>';
+        html += '</div>';
+      });
+      itemsEl.innerHTML = html;
+
+      document.getElementById('cart-total').textContent = '$' + totalPrice.toFixed(2);
+    }
+
+    function enviarACocina() {
+      var totalItems = 0;
+      Object.values(cart).forEach(function(item) { totalItems += item.qty; });
+      if (totalItems === 0) return;
+
+      var toast = document.getElementById('toast');
+      toast.classList.remove('hidden');
+      setTimeout(function() {
+        toast.classList.add('hidden');
+      }, 1800);
+
+      Object.keys(cart).forEach(function(product) {
+        var card = document.querySelector('[data-product="' + product + '"]');
+        if (card) card.style.border = '0px solid transparent';
+      });
+      cart = {};
+      renderCart();
+    }
+
+    document.querySelectorAll('#categories button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#categories button').forEach(function(b) {
+          b.style.background = 'transparent';
+          b.style.color = '#8B7355';
+          b.style.borderColor = '#8B7355';
+        });
+        btn.style.background = '#6B1A2A';
+        btn.style.color = '#F0E6D3';
+        btn.style.borderColor = '#6B1A2A';
+
+        var filter = btn.dataset.category;
+        document.querySelectorAll('#product-grid > div').forEach(function(card) {
+          card.style.display = (filter === 'all' || card.dataset.category === filter) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

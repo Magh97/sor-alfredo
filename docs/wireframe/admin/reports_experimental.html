@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOR — Reportes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary:   { DEFAULT:'#6B1A2A', light:'#8B2535', dark:'#4A0F1B', foreground:'#F0E6D3' },
+        secondary: { DEFAULT:'#2D4A22', light:'#3D6230', dark:'#1C3015', foreground:'#F0E6D3' },
+        accent:    { DEFAULT:'#C9A84C', foreground:'#2C1810' },
+        success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
+        background:'#F0E6D3', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
+        espresso:'#2C1810',
+        text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
+      },
+      fontFamily: {
+        serif: ['"Playfair Display"','Georgia', 'serif'],
+        mono:  ['"JetBrains Mono"','"Courier New"', 'monospace'],
+        sans:  ['"DM Sans"','"Helvetica Neue"', 'sans-serif'],
+        script:['"Caveat"', 'cursive'],
+      },
+    }
+  }
+}
+</script>
+<style>
+  .bg-paper {
+    background-color: #F0E6D3;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+  .shadow-paper {
+    box-shadow: 0 1px 0 #C9A84C, 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
+  }
+  .card-brutal {
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  }
+  input:focus, select:focus { outline:none; }
+  .tab-btn { cursor:pointer; }
+  .tab-btn.active { border-bottom:4px solid #6B1A2A; color:#6B1A2A; background:rgba(107,26,42,0.05); }
+  .ink-note { font-family:'Caveat',cursive; color:#8B7355; }
+  .bar-rect { transition:height 0.4s ease; }
+  .kpi-card { border-top:4px solid #6B1A2A; }
+</style>
+</head>
+<body class="bg-paper min-h-screen flex font-sans text-text-primary">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="w-64 min-h-screen flex flex-col shrink-0" style="background:#2C1810; color:#F0E6D3;">
+  <div class="px-6 py-8 border-b-4 border-accent">
+    <h1 class="font-serif font-bold text-[28px] tracking-tight leading-none" style="color:#C9A84C;">SOR</h1>
+    <p class="font-mono text-[10px] uppercase tracking-[0.2em] mt-1" style="color:#8B7355;">Sistema Operativo de Restaurante</p>
+  </div>
+  <nav class="flex-1 px-0 py-4">
+    <a href="catalog_experimental.html" class="flex items-center gap-3 px-6 py-3 border-l-[6px] border-transparent hover:border-primary/40 text-parchment/70 hover:text-parchment font-sans font-bold text-[12px] uppercase tracking-[0.1em] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="7" height="7" stroke="currentColor" stroke-width="2"/><rect x="10" y="1" width="7" height="7" stroke="currentColor" stroke-width="2"/><rect x="1" y="10" width="7" height="7" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="7" height="7" stroke="currentColor" stroke-width="2"/></svg>
+      Catálogo
+    </a>
+    <a href="users_experimental.html" class="flex items-center gap-3 px-6 py-3 border-l-[6px] border-transparent hover:border-primary/40 text-parchment/70 hover:text-parchment font-sans font-bold text-[12px] uppercase tracking-[0.1em] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="5" r="3" stroke="currentColor" stroke-width="2"/><path d="M2 16c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="currentColor" stroke-width="2"/></svg>
+      Usuarios
+    </a>
+    <a href="reports_experimental.html" class="flex items-center gap-3 px-6 py-3 border-l-[6px] border-primary text-accent font-sans font-bold text-[12px] uppercase tracking-[0.1em]" style="background:rgba(107,26,42,0.20);">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="10" width="4" height="7" stroke="#C9A84C" stroke-width="2"/><rect x="7" y="5" width="4" height="12" stroke="#C9A84C" stroke-width="2"/><rect x="13" y="7" width="4" height="10" stroke="#C9A84C" stroke-width="2"/></svg>
+      Reportes
+    </a>
+    <a href="#" class="flex items-center gap-3 px-6 py-3 border-l-[6px] border-transparent hover:border-primary/40 text-parchment/70 hover:text-parchment font-sans font-bold text-[12px] uppercase tracking-[0.1em] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" stroke="currentColor" stroke-width="2"/><line x1="2" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="2"/><line x1="9" y1="7" x2="9" y2="16" stroke="currentColor" stroke-width="2"/></svg>
+      Órdenes
+    </a>
+    <a href="#" class="flex items-center gap-3 px-6 py-3 border-l-[6px] border-transparent hover:border-primary/40 text-parchment/70 hover:text-parchment font-sans font-bold text-[12px] uppercase tracking-[0.1em] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="2"/></svg>
+      Mesas
+    </a>
+  </nav>
+  <div class="px-6 py-4 border-t-4 border-accent">
+    <p class="font-mono text-[12px]" style="color:#C9A84C;">E. Montenegro</p>
+    <p class="font-mono text-[10px] uppercase tracking-[0.1em]" style="color:#8B7355;">Administrador General</p>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="flex-1 min-h-screen bg-white px-10 py-8">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between pb-6 border-b-[6px] border-primary mb-10">
+    <h1 class="font-sans font-bold text-[36px] uppercase tracking-[-0.02em] text-espresso">Reportes</h1>
+    <div class="flex items-center gap-5">
+      <div class="flex items-center gap-3">
+        <label class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted">Desde</label>
+        <input type="date" id="dateFrom" onchange="applyDateFilter()"
+          class="px-3 py-1.5 font-mono text-[13px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+          style="border-radius:0; outline:none;" value="2026-07-22">
+      </div>
+      <div class="flex items-center gap-3">
+        <label class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted">Hasta</label>
+        <input type="date" id="dateTo" onchange="applyDateFilter()"
+          class="px-3 py-1.5 font-mono text-[13px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+          style="border-radius:0; outline:none;" value="2026-07-29">
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="font-mono text-[14px] text-text-secondary">SOR-ADM-001</span>
+        <div class="w-11 h-11 border-[4px] border-primary flex items-center justify-center font-serif font-bold text-[18px] text-primary">EM</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT TABS -->
+  <div class="flex gap-0 mb-8">
+    <button class="tab-btn active px-6 py-3 font-sans font-bold text-[12px] uppercase tracking-[0.1em] text-text-secondary" onclick="switchTab('ventas', this)" style="border-radius:0;">Ventas</button>
+    <button class="tab-btn px-6 py-3 font-sans font-bold text-[12px] uppercase tracking-[0.1em] text-text-secondary" onclick="switchTab('productos', this)" style="border-radius:0;">Top Productos</button>
+    <button class="tab-btn px-6 py-3 font-sans font-bold text-[12px] uppercase tracking-[0.1em] text-text-secondary" onclick="switchTab('desempeno', this)" style="border-radius:0;">Desempeño</button>
+  </div>
+
+  <!-- ===== TAB: VENTAS ===== -->
+  <div id="tab-ventas">
+
+    <!-- KPI CARDS -->
+    <div class="grid grid-cols-3 gap-6 mb-10">
+      <div class="kpi-card shadow-paper px-6 py-5" style="background:#EBDCC4;">
+        <p class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-2">Ingresos Totales</p>
+        <p class="font-mono font-bold text-[36px] text-espresso leading-none">$48,320.50</p>
+        <p class="font-mono text-[14px] mt-1" style="color:#2D4A22;">+12.4%</p>
+      </div>
+      <div class="kpi-card shadow-paper px-6 py-5" style="background:#EBDCC4;">
+        <p class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-2">Órdenes Totales</p>
+        <p class="font-mono font-bold text-[36px] text-espresso leading-none">342</p>
+        <p class="font-mono text-[14px] mt-1" style="color:#2D4A22;">+8.1%</p>
+      </div>
+      <div class="kpi-card shadow-paper px-6 py-5" style="background:#EBDCC4;">
+        <p class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-2">Ticket Promedio</p>
+        <p class="font-mono font-bold text-[36px] text-espresso leading-none">$141.29</p>
+        <p class="font-mono text-[14px] mt-1" style="color:#8B1A1A;">-2.3%</p>
+      </div>
+    </div>
+
+    <!-- BAR CHART CARD -->
+    <div class="p-6 mb-10" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+      <h3 class="font-sans font-bold text-[14px] uppercase tracking-[0.1em] text-espresso mb-6">Ingresos por Día de la Semana</h3>
+      <div id="barChart" class="flex items-end justify-around gap-3 h-56 px-4">
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="font-mono text-[11px] text-text-muted">$6,200</span>
+          <div class="bar-rect w-full" style="height:140px; background:#6B1A2A;"></div>
+          <span class="font-mono text-[10px] uppercase text-text-muted">Lun</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="font-mono text-[11px] text-text-muted">$5,100</span>
+          <div class="bar-rect w-full" style="height:115px; background:#6B1A2A;"></div>
+          <span class="font-mono text-[10px] uppercase text-text-muted">Mar</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="font-mono text-[11px] text-text-muted">$7,800</span>
+          <div class="bar-rect w-full" style="height:176px; background:#6B1A2A;"></div>
+          <span class="font-mono text-[10px] uppercase text-text-muted">Mié</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="font-mono text-[11px] text-text-muted">$6,500</span>
+          <div class="bar-rect w-full" style="height:147px; background:#6B1A2A;"></div>
+          <span class="font-mono text-[10px] uppercase text-text-muted">Jue</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="font-mono text-[11px] text-text-muted">$9,400</span>
+          <div class="bar-rect w-full" style="height:212px; background:#2D4A22;"></div>
+          <span class="font-mono text-[10px] uppercase text-text-muted">Vie</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="font-mono text-[11px] text-text-muted">$8,200</span>
+          <div class="bar-rect w-full" style="height:185px; background:#2D4A22;"></div>
+          <span class="font-mono text-[10px] uppercase text-text-muted">Sáb</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="font-mono text-[11px] text-text-muted">$5,120</span>
+          <div class="bar-rect w-full" style="height:116px; background:#2D4A22;"></div>
+          <span class="font-mono text-[10px] uppercase text-text-muted">Dom</span>
+        </div>
+      </div>
+      <div class="flex justify-center gap-8 mt-4">
+        <div class="flex items-center gap-2">
+          <div style="width:16px;height:16px;background:#6B1A2A;"></div>
+          <span class="font-mono text-[10px] text-text-muted">LUN–JUE</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div style="width:16px;height:16px;background:#2D4A22;"></div>
+          <span class="font-mono text-[10px] text-text-muted">VIE–DOM</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== TAB: TOP PRODUCTOS ===== -->
+  <div id="tab-productos" class="hidden">
+
+    <!-- TOP PRODUCTS TABLE -->
+    <div style="background:#EBDCC4; border:6px solid #6B1A2A;">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr style="background:rgba(107,26,42,0.08);">
+              <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary" style="width:60px;">#</th>
+              <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Producto</th>
+              <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Vendidos</th>
+              <th class="text-right px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Ingreso</th>
+            </tr>
+          </thead>
+          <tbody id="topProductsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== TAB: DESEMPENO ===== -->
+  <div id="tab-desempeno" class="hidden">
+
+    <!-- PERFORMANCE TABLE -->
+    <div style="background:#EBDCC4; border:6px solid #6B1A2A;">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr style="background:rgba(107,26,42,0.08);">
+              <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Personal</th>
+              <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Órdenes</th>
+              <th class="text-right px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Venta Total</th>
+              <th class="text-right px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Propinas</th>
+              <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Calificación</th>
+            </tr>
+          </thead>
+          <tbody id="performanceBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+const topProducts = [
+  { rank:1, name:'Filete Mignon',           sold:48, revenue:20160.00 },
+  { rank:2, name:'Salmón Glaseado',         sold:39, revenue:14820.00 },
+  { rank:3, name:'Vino Tinto Reserva',      sold:62, revenue:11160.00 },
+  { rank:4, name:'Tiramisú Casero',         sold:45, revenue:6975.00 },
+  { rank:5, name:'Risotto de Hongos',       sold:38, revenue:11020.00 },
+  { rank:6, name:'Negroni Artesanal',       sold:51, revenue:8415.00 },
+  { rank:7, name:'Carpaccio de Res',        sold:32, revenue:6720.00 },
+  { rank:8, name:'Bruschetta Clásica',      sold:44, revenue:6380.00 },
+  { rank:9, name:'Crème Brûlée',            sold:28, revenue:3920.00 },
+  { rank:10,name:'Sopa de Cebolla',         sold:21, revenue:2730.00 },
+];
+
+const performanceData = [
+  { name:'María López',     role:'Mesero', orders:112, sales:15820.00, tips: 2847.60, rating:4.8 },
+  { name:'Diego Ramírez',   role:'Mesero', orders: 87, sales:12340.00, tips: 2221.20, rating:4.2 },
+  { name:'Carlos Ruiz',     role:'Cajero', orders:342, sales:48320.50, tips:    0.00, rating:4.9 },
+  { name:'Ana Martínez',    role:'Cocina', orders:342, sales:48320.50, tips:    0.00, rating:4.7 },
+];
+
+function formatPrice(n) { return '$' + n.toFixed(2); }
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function renderTopProducts() {
+  const tbody = document.getElementById('topProductsBody');
+  tbody.innerHTML = topProducts.map((p,i) => {
+    const bg = i % 2 === 0 ? '#EBDCC4' : '#E5D4B8';
+    const rankColor = p.rank === 1 ? '#C9A84C' : '#8B7355';
+    return `
+      <tr style="background:${bg}; border-bottom:1px solid #8B7355;">
+        <td class="px-6 py-4 text-center">
+          <span class="font-mono font-bold text-[20px]" style="color:${rankColor};">${p.rank}</span>
+        </td>
+        <td class="px-6 py-4">
+          <span class="font-serif font-bold text-[18px] text-espresso">${escapeHtml(p.name)}</span>
+        </td>
+        <td class="px-6 py-4 text-center">
+          <span class="font-mono font-bold text-[16px] text-text-secondary">${p.sold}</span>
+        </td>
+        <td class="px-6 py-4 text-right">
+          <span class="font-mono font-bold text-[16px]" style="color:#2D4A22;">${formatPrice(p.revenue)}</span>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function renderPerformance() {
+  const tbody = document.getElementById('performanceBody');
+  tbody.innerHTML = performanceData.map((s,i) => {
+    const bg = i % 2 === 0 ? '#EBDCC4' : '#E5D4B8';
+    return `
+      <tr style="background:${bg}; border-bottom:1px solid #8B7355;">
+        <td class="px-6 py-4">
+          <span class="font-sans font-bold text-[16px] text-espresso">${escapeHtml(s.name)}</span>
+          <br/><span class="font-mono text-[11px] text-text-muted">${escapeHtml(s.role)}</span>
+        </td>
+        <td class="px-6 py-4 text-center">
+          <span class="font-mono font-bold text-[16px] text-text-secondary">${s.orders}</span>
+        </td>
+        <td class="px-6 py-4 text-right">
+          <span class="font-mono font-bold text-[16px]" style="color:#2D4A22;">${formatPrice(s.sales)}</span>
+        </td>
+        <td class="px-6 py-4 text-right">
+          <span class="font-mono font-bold text-[16px]" style="color:#2D4A22;">${formatPrice(s.tips)}</span>
+        </td>
+        <td class="px-6 py-4 text-center">
+          <span class="font-mono font-bold text-[16px] text-text-secondary">${s.rating.toFixed(1)}</span>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  ['ventas','productos','desempeno'].forEach(id => {
+    document.getElementById('tab-' + id).classList.toggle('hidden', id !== tabId);
+  });
+}
+
+function applyDateFilter() {
+  // Simulated — in a real app this would re-fetch data
+  const from = document.getElementById('dateFrom').value;
+  const to = document.getElementById('dateTo').value;
+  console.log('Filtrando reportes:', from, '–', to);
+}
+
+renderTopProducts();
+renderPerformance();
+</script>
+
+</body>
+</html>
