@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOR — Usuarios</title>
+<title>SOR — Mesas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@ tailwind.config = {
         accent:    { DEFAULT:'#C9A84C', foreground:'#2C1810' },
         success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
         background:'#FFFFFF', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
-        espresso:'#2C1810',
+        espresso:'#2C1810', parchment:'#F0E6D3', burgundy:'#6B1A2A',
         text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
       },
       fontFamily: {
@@ -42,68 +42,79 @@ tailwind.config = {
   .card-brutal {
     clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
   }
-  .toggle-rect { width:44px; height:22px; background:#8B7355; cursor:pointer; transition:background 0.15s; }
-  .toggle-rect.active { background:#2D4A22; }
-  .toggle-rect .knob { width:18px; height:18px; background:#F0E6D3; margin:2px; transition:transform 0.15s; }
-  .toggle-rect.active .knob { transform:translateX(22px); }
+  .border-torn {
+    border-top: 3px solid #6B1A2A;
+    position: relative;
+  }
+  .border-torn::before {
+    content: '';
+    position: absolute;
+    top: -6px; left: 0;
+    width: 100%; height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent, transparent 8px,
+      #F0E6D3 8px, #F0E6D3 12px,
+      transparent 12px, transparent 20px,
+      #F0E6D3 20px, #F0E6D3 22px,
+      transparent 22px, transparent 30px
+    );
+  }
+  .chip-filter { border:2px solid #C9A84C; color:#2C1810; cursor:pointer; }
+  .chip-filter.active { background:#6B1A2A; color:#C9A84C; border-color:#6B1A2A; }
   input:focus, select:focus { outline:none; }
   .modal-overlay { background:rgba(44,24,16,0.65); }
-  .role-badge-admin    { border:2px solid #6B1A2A; color:#6B1A2A; }
-  .role-badge-mesero   { border:2px solid #3A5068; color:#3A5068; }
-  .role-badge-cajero   { border:2px solid #2D4A22; color:#2D4A22; }
-  .role-badge-cocina   { border:2px solid #C9A84C; color:#C9A84C; }
   .ink-note { font-family:'Caveat',cursive; color:#8B7355; }
 </style>
 </head>
 <body class="bg-paper min-h-screen flex font-sans text-text-primary">
 
-<!-- ===== SIDEBAR ===== -->
 <aside class="w-64 min-h-screen bg-espresso text-parchment flex flex-col shrink-0">
   <div class="px-6 py-6 border-b-4 border-accent">
     <h1 class="font-serif font-bold text-2xl tracking-tight text-accent">SOR</h1>
     <p class="text-xs text-text-muted mt-1">Sistema de Ordenes Restaurante</p>
   </div>
-  <nav class="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto">
+  <nav class="flex-1 px-3 py-2 space-y-0.5">
     <div class="px-4 pt-3 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Operaciones</div>
-    <a href="../caja/orders_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+    <a href="../caja/orders_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5 border-l-[6px] border-transparent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       Ordenes
     </a>
-    <a href="../caja/register_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+    <a href="../caja/register_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5 border-l-[6px] border-transparent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15l3 3 7-7"/></svg>
       Caja
     </a>
-    <a href="mesas_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+    <a href="mesas_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider border-l-[6px] border-primary bg-burgundy/20 text-accent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       Mesas
     </a>
 
     <div class="px-4 pt-4 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Catalogo</div>
-    <a href="catalog_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+    <a href="catalog_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5 border-l-[6px] border-transparent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M9 9h6"/></svg>
       Productos
     </a>
-    <a href="categorias_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+    <a href="categorias_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5 border-l-[6px] border-transparent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1" fill="currentColor"/><circle cx="8" cy="12" r="1" fill="currentColor"/><circle cx="8" cy="18" r="1" fill="currentColor"/></svg>
       Categorias
     </a>
 
     <div class="px-4 pt-4 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Personal</div>
-    <a href="users_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider border-l-[6px] border-primary bg-burgundy/20 text-accent">
+    <a href="users_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5 border-l-[6px] border-transparent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
       Usuarios
     </a>
 
     <div class="px-4 pt-4 pb-1 text-[10px] font-sans font-bold uppercase tracking-[0.15em] text-text-muted">Reportes</div>
-    <a href="dashboard_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+    <a href="dashboard_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5 border-l-[6px] border-transparent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
       Dashboard
     </a>
-    <a href="reports_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+    <a href="reports_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5 border-l-[6px] border-transparent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
       Ventas
     </a>
-    <a href="empleados_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5">
+    <a href="empleados_experimental.html" class="flex items-center gap-3 px-4 py-2.5 rounded-none text-xs font-sans font-bold uppercase tracking-wider text-parchment/70 hover:bg-white/5 border-l-[6px] border-transparent">
       <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
       Empleados
     </a>
@@ -121,57 +132,43 @@ tailwind.config = {
   </div>
 </aside>
 
-<!-- ===== MAIN ===== -->
 <main class="flex-1 min-h-screen bg-white px-10 py-8">
 
-  <!-- HEADER -->
-  <div class="flex items-center justify-between pb-6 border-b-[6px] border-primary mb-10">
-    <h1 class="font-sans font-bold text-[36px] uppercase tracking-[-0.02em] text-espresso">Usuarios</h1>
+  <header class="flex items-center justify-between pb-6 border-b-[6px] border-primary mb-10">
+    <h1 class="font-sans font-bold text-[36px] uppercase tracking-[-0.02em] text-espresso">MESAS</h1>
     <div class="flex items-center gap-3">
-      <span class="font-mono text-[14px] text-text-secondary">SOR-ADM-001</span>
+      <span class="font-mono text-[14px] text-text-secondary">SOR-ADM-002</span>
       <div class="w-11 h-11 border-[4px] border-primary flex items-center justify-center font-serif font-bold text-[18px] text-primary">EM</div>
     </div>
-  </div>
+  </header>
 
   <!-- FILTERS CARD -->
   <div class="mb-10 p-6" style="background:#EBDCC4; border:6px solid #6B1A2A;">
     <div class="flex items-center gap-4 flex-wrap">
-      <input type="text" id="searchInput" placeholder="BUSCAR POR NOMBRE O EMAIL..." oninput="applyFilters()"
-        class="px-4 py-2 font-mono text-[13px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary w-64"
-        style="outline:none; border-radius:0;">
-      <select id="roleFilter" onchange="applyFilters()"
-        class="px-4 py-2 font-mono text-[13px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
-        style="outline:none; border-radius:0; -webkit-appearance:none; appearance:none;">
-        <option value="">TODOS LOS ROLES</option>
-        <option value="Admin">Admin</option>
-        <option value="Mesero">Mesero</option>
-        <option value="Cajero">Cajero</option>
-        <option value="Cocina">Cocina</option>
-      </select>
-      <select id="statusFilter" onchange="applyFilters()"
-        class="px-4 py-2 font-mono text-[13px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
-        style="outline:none; border-radius:0; -webkit-appearance:none; appearance:none;">
-        <option value="">TODOS LOS ESTADOS</option>
-        <option value="1">Activo</option>
-        <option value="0">Inactivo</option>
-      </select>
+      <button class="chip-filter active px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterStatus('Todas', this)">TODAS</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterStatus('Libre', this)">LIBRES</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterStatus('Ocupada', this)">OCUPADAS</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterStatus('Reservada', this)">RESERVADAS</button>
       <div class="flex-1"></div>
+      <input type="text" id="searchInput" placeholder="BUSCAR MESA..." oninput="applyFilters()"
+        class="px-4 py-2 font-mono text-[13px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary w-56"
+        style="outline:none; border-radius:0;">
       <button onclick="openModal()"
         class="px-6 py-2.5 border-[4px] border-primary bg-primary text-primary-foreground font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:bg-primary-light transition-colors"
-        style="border-radius:0;">+ AGREGAR</button>
+        style="border-radius:0;">+ NUEVA MESA</button>
     </div>
   </div>
 
-  <!-- USERS TABLE CARD -->
+  <!-- TABLE LIST CARD -->
   <div style="background:#EBDCC4; border:6px solid #6B1A2A;">
     <div class="overflow-x-auto">
-      <table class="w-full border-collapse" id="userTable">
+      <table class="w-full border-collapse" id="tableTable">
         <thead>
           <tr style="background:rgba(107,26,42,0.08);">
-            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Nombre</th>
-            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Email</th>
-            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Rol</th>
-            <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Activo</th>
+            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">N&ordm; Mesa</th>
+            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Capacidad</th>
+            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Estado</th>
+            <th class="text-left px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Ubicaci&oacute;n</th>
             <th class="text-center px-6 py-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso border-b-2 border-primary">Acciones</th>
           </tr>
         </thead>
@@ -182,55 +179,48 @@ tailwind.config = {
 
   <!-- EMPTY STATE -->
   <div id="emptyState" class="hidden p-16 text-center" style="background:#EBDCC4; border:6px solid #6B1A2A; margin-top:0;">
-    <p class="font-script text-[24px] leading-relaxed" style="color:#8B7355;">Esta hoja está en blanco.<br/>El primer trazo es el más importante.</p>
+    <p class="font-script text-[24px] leading-relaxed" style="color:#8B7355;">Sin mesas registradas.<br/>El sal&oacute;n aguarda su primer trazo.</p>
   </div>
 
 </main>
 
-<!-- ===== USER MODAL ===== -->
+<!-- ===== TABLE MODAL ===== -->
 <div id="modalOverlay" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center hidden">
   <div id="modalContent" class="w-full max-w-lg" style="background:#EBDCC4; border:6px solid #6B1A2A;">
     <div class="px-8 py-5 border-b-[4px] border-primary flex items-center justify-between">
-      <h2 id="modalTitle" class="font-sans font-bold text-[20px] uppercase tracking-[-0.01em] text-espresso">AGREGAR USUARIO</h2>
+      <h2 id="modalTitle" class="font-sans font-bold text-[20px] uppercase tracking-[-0.01em] text-espresso">NUEVA MESA</h2>
       <button onclick="closeModal()" class="font-mono text-[20px] text-text-muted hover:text-error leading-none">&times;</button>
     </div>
-    <form id="userForm" class="px-8 py-6 space-y-5" onsubmit="saveUser(event)">
+    <form id="tableForm" class="px-8 py-6 space-y-5" onsubmit="saveTable(event)">
       <input type="hidden" id="editId" value="">
       <div>
-        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Nombre Completo</label>
-        <input type="text" id="userName" required
-          class="w-full px-4 py-2.5 font-sans text-[16px] font-bold bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">N&uacute;mero de Mesa</label>
+        <input type="number" id="tableNumber" required min="1"
+          class="w-full px-4 py-2.5 font-mono text-[16px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
           style="border-radius:0; outline:none;">
       </div>
       <div>
-        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Correo Electrónico</label>
-        <input type="email" id="userEmail" required
-          class="w-full px-4 py-2.5 font-mono text-[14px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Capacidad (comensales)</label>
+        <input type="number" id="tableCapacity" required min="1" max="20"
+          class="w-full px-4 py-2.5 font-mono text-[16px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
           style="border-radius:0; outline:none;">
       </div>
       <div>
-        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Rol</label>
-        <select id="userRole" required
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Ubicaci&oacute;n</label>
+        <input type="text" id="tableLocation" required
+          class="w-full px-4 py-2.5 font-serif text-[16px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
+          style="border-radius:0; outline:none;"
+          placeholder="Terraza, Sal&oacute;n principal, Barra...">
+      </div>
+      <div>
+        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Estado</label>
+        <select id="tableStatus" required
           class="w-full px-4 py-2.5 font-mono text-[14px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
           style="border-radius:0; outline:none; -webkit-appearance:none; appearance:none;">
-          <option value="">-- SELECCIONAR --</option>
-          <option value="Admin">Admin</option>
-          <option value="Mesero">Mesero</option>
-          <option value="Cajero">Cajero</option>
-          <option value="Cocina">Cocina</option>
+          <option value="Libre">LIBRE</option>
+          <option value="Ocupada">OCUPADA</option>
+          <option value="Reservada">RESERVADA</option>
         </select>
-      </div>
-      <div>
-        <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1.5">Contraseña Temporal</label>
-        <input type="password" id="userPassword" required
-          class="w-full px-4 py-2.5 font-mono text-[14px] bg-white border-2 border-text-muted focus:border-[4px] focus:border-primary"
-          style="border-radius:0; outline:none;" placeholder="········">
-      </div>
-      <div class="flex items-center gap-4">
-        <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Activo</span>
-        <div id="toggleActive" class="toggle-rect active" onclick="this.classList.toggle('active')">
-          <div class="knob"></div>
-        </div>
       </div>
       <div class="flex justify-end gap-3 pt-2">
         <button type="button" onclick="closeModal()"
@@ -244,61 +234,59 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- ===== SCRIPTS ===== -->
 <script>
-let users = [
-  { id:1, name:'Fernando Castillo', email:'f.castillo@sor.mx', role:'Admin',  active:true },
-  { id:2, name:'María López',       email:'m.lopez@sor.mx',    role:'Mesero', active:true },
-  { id:3, name:'Carlos Ruiz',       email:'c.ruiz@sor.mx',     role:'Cajero', active:true },
-  { id:4, name:'Ana Martínez',      email:'a.martinez@sor.mx', role:'Cocina', active:true },
-  { id:5, name:'Diego Ramírez',     email:'d.ramirez@sor.mx',  role:'Mesero', active:false },
+let tables = [
+  { id:1, number:1, capacity:4, status:'Ocupada', location:'Terraza' },
+  { id:2, number:2, capacity:2, status:'Libre', location:'Terraza' },
+  { id:3, number:3, capacity:6, status:'Reservada', location:'Terraza' },
+  { id:4, number:4, capacity:4, status:'Ocupada', location:'Sal&oacute;n Interior' },
+  { id:5, number:5, capacity:2, status:'Libre', location:'Sal&oacute;n Interior' },
+  { id:6, number:6, capacity:8, status:'Ocupada', location:'Sal&oacute;n Interior' },
+  { id:7, number:7, capacity:4, status:'Reservada', location:'Barra' },
+  { id:8, number:8, capacity:2, status:'Libre', location:'Barra' },
+  { id:9, number:9, capacity:3, status:'Libre', location:'Barra' },
+  { id:10,number:10,capacity:6, status:'Ocupada', location:'Privado' },
 ];
 
-let nextId = 6;
+let nextId = 11;
+let currentFilter = 'Todas';
 
-function roleBadgeClass(role) {
-  const map = { 'Admin':'admin','Mesero':'mesero','Cajero':'cajero','Cocina':'cocina' };
-  return 'role-badge-' + (map[role] || 'admin');
+function statusColor(s) {
+  if (s === 'Libre') return { bg:'#2D4A22', fg:'#F0E6D3' };
+  if (s === 'Ocupada') return { bg:'#8B1A1A', fg:'#F0E6D3' };
+  if (s === 'Reservada') return { bg:'#C9A84C', fg:'#2C1810' };
+  return { bg:'#8B7355', fg:'#F0E6D3' };
 }
 
 function renderTable(data) {
   const tbody = document.getElementById('tableBody');
   const empty = document.getElementById('emptyState');
-  const table = document.getElementById('userTable').closest('.overflow-x-auto');
+  const tableEl = document.getElementById('tableTable').closest('.overflow-x-auto');
 
   if (data.length === 0) {
     tbody.innerHTML = '';
-    table.style.display = 'none';
+    tableEl.style.display = 'none';
     empty.classList.remove('hidden');
     return;
   }
 
-  table.style.display = '';
+  tableEl.style.display = '';
   empty.classList.add('hidden');
 
-  tbody.innerHTML = data.map((u,i) => {
+  tbody.innerHTML = data.map((t,i) => {
     const bg = i % 2 === 0 ? '#EBDCC4' : '#E5D4B8';
-    const availColor = u.active ? '#2D4A22' : '#8B1A1A';
+    const sc = statusColor(t.status);
     return `
       <tr style="background:${bg}; border-bottom:1px solid #8B7355;">
+        <td class="px-6 py-4 font-mono font-bold text-[20px] text-espresso">${escapeHtml(String(t.number))}</td>
+        <td class="px-6 py-4 font-mono text-[16px] text-text-primary">${t.capacity} pers.</td>
         <td class="px-6 py-4">
-          <span class="font-sans font-bold text-[16px] text-espresso">${escapeHtml(u.name)}</span>
+          <span class="inline-block px-3 py-0.5 font-sans font-bold text-[10px] uppercase tracking-[0.1em]" style="background:${sc.bg}; color:${sc.fg};">${escapeHtml(t.status)}</span>
         </td>
-        <td class="px-6 py-4">
-          <span class="font-mono text-[14px]" style="color:#5C4030;">${escapeHtml(u.email)}</span>
-        </td>
-        <td class="px-6 py-4">
-          <span class="inline-block px-3 py-0.5 font-sans font-bold text-[10px] uppercase tracking-[0.1em] leading-normal ${roleBadgeClass(u.role)}">
-            ${escapeHtml(u.role)}
-          </span>
-        </td>
-        <td class="px-6 py-4 text-center">
-          <div style="display:inline-block;width:12px;height:12px;background:${availColor};"></div>
-          <span class="font-mono text-[11px] ml-2" style="color:${availColor};">${u.active ? 'SI' : 'NO'}</span>
-        </td>
+        <td class="px-6 py-4 font-serif text-[16px] text-text-secondary">${escapeHtml(t.location)}</td>
         <td class="px-6 py-4 text-center space-x-4">
-          <button onclick="editUser(${u.id})" class="font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:underline" style="color:#6B1A2A;">EDITAR</button>
-          <button onclick="toggleUser(${u.id})" class="font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:underline" style="color:#8B1A1A;">DESACTIVAR</button>
+          <button onclick="editTable(${t.id})" class="font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:underline" style="color:#6B1A2A;">EDITAR</button>
+          <button onclick="deleteTable(${t.id})" class="font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:underline" style="color:#8B1A1A;">ELIMINAR</button>
         </td>
       </tr>`;
   }).join('');
@@ -312,36 +300,35 @@ function escapeHtml(s) {
 
 function applyFilters() {
   const search = document.getElementById('searchInput').value.toLowerCase();
-  const role = document.getElementById('roleFilter').value;
-  const status = document.getElementById('statusFilter').value;
-
-  let filtered = users;
+  let filtered = tables;
+  if (currentFilter !== 'Todas') {
+    filtered = filtered.filter(t => t.status === currentFilter);
+  }
   if (search) {
-    filtered = filtered.filter(u => u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search));
-  }
-  if (role) {
-    filtered = filtered.filter(u => u.role === role);
-  }
-  if (status !== '') {
-    const active = status === '1';
-    filtered = filtered.filter(u => u.active === active);
+    filtered = filtered.filter(t =>
+      String(t.number).includes(search) ||
+      t.location.toLowerCase().includes(search)
+    );
   }
   renderTable(filtered);
 }
 
-function openModal(user) {
+function filterStatus(status, btn) {
+  currentFilter = status;
+  document.querySelectorAll('.chip-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function openModal(table) {
   const modal = document.getElementById('modalOverlay');
   const title = document.getElementById('modalTitle');
-  const toggle = document.getElementById('toggleActive');
-
-  document.getElementById('editId').value = user ? user.id : '';
-  document.getElementById('userName').value = user ? user.name : '';
-  document.getElementById('userEmail').value = user ? user.email : '';
-  document.getElementById('userRole').value = user ? user.role : '';
-  document.getElementById('userPassword').value = user ? '••••••••' : '';
-  document.getElementById('userPassword').required = !user;
-  toggle.classList.toggle('active', user ? user.active : true);
-  title.textContent = user ? 'EDITAR USUARIO' : 'AGREGAR USUARIO';
+  document.getElementById('editId').value = table ? table.id : '';
+  document.getElementById('tableNumber').value = table ? table.number : '';
+  document.getElementById('tableCapacity').value = table ? table.capacity : '';
+  document.getElementById('tableLocation').value = table ? table.location : '';
+  document.getElementById('tableStatus').value = table ? table.status : 'Libre';
+  title.textContent = table ? 'EDITAR MESA' : 'NUEVA MESA';
   modal.classList.remove('hidden');
 }
 
@@ -349,38 +336,35 @@ function closeModal() {
   document.getElementById('modalOverlay').classList.add('hidden');
 }
 
-function saveUser(e) {
+function saveTable(e) {
   e.preventDefault();
   const editId = document.getElementById('editId').value;
-  const name = document.getElementById('userName').value.trim();
-  const email = document.getElementById('userEmail').value.trim();
-  const role = document.getElementById('userRole').value;
-  const active = document.getElementById('toggleActive').classList.contains('active');
+  const number = parseInt(document.getElementById('tableNumber').value);
+  const capacity = parseInt(document.getElementById('tableCapacity').value);
+  const location = document.getElementById('tableLocation').value.trim();
+  const status = document.getElementById('tableStatus').value;
 
   if (editId) {
-    const idx = users.findIndex(u => u.id === parseInt(editId));
+    const idx = tables.findIndex(t => t.id === parseInt(editId));
     if (idx >= 0) {
-      users[idx] = { ...users[idx], name, email, role, active };
+      tables[idx] = { ...tables[idx], number, capacity, location, status };
     }
   } else {
-    users.push({ id: nextId++, name, email, role, active });
+    tables.push({ id: nextId++, number, capacity, location, status });
   }
 
   closeModal();
   applyFilters();
 }
 
-function editUser(id) {
-  const u = users.find(u => u.id === id);
-  if (u) openModal(u);
+function editTable(id) {
+  const t = tables.find(t => t.id === id);
+  if (t) openModal(t);
 }
 
-function toggleUser(id) {
-  const u = users.find(u => u.id === id);
-  if (u) {
-    u.active = !u.active;
-    applyFilters();
-  }
+function deleteTable(id) {
+  tables = tables.filter(t => t.id !== id);
+  applyFilters();
 }
 
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
@@ -391,7 +375,9 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeModal();
 });
 
-renderTable(users);
+function logout() {}
+
+renderTable(tables);
 </script>
 
 </body>
