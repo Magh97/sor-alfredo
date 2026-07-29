@@ -1,1032 +1,789 @@
-# Design System -- SOR
+# Design System: SOR
 
-> Stack: React 19 + Vite + Tailwind CSS 4.3 + shadcn/ui + lucide-react
-> Brand: Warm/restaurant (amber primary, green accent)
-> KDS: Dark theme, 24px+ typography, legible a 2m
+> **Última actualización:** 2026-07-28
+> **Stack:** React 19 + Vite + Tailwind CSS 4.3 + shadcn/ui + lucide-react
+> **Fuente de verdad:** Esta biblia rige TODA la generación de código visual.
 
 ---
 
-## 1. Design Tokens
+## 1. Filosofía de Diseño
 
-### 1.1 Colors
+- **Personalidad:** El Artista — Poética, sensorial, imperfecta. Cada pantalla es una página de cuaderno de bocetos. El microcopy usa metáforas sensoriales, descripciones íntimas. Wabi-sabi digital: la imperfección intencional es un feature.
+- **Energía:** Café de Madrid — Animada, conversacional, cálida. Interacciones con ritmo y rebote suave, como un mesero que te conoce por nombre. No hay prisa, pero sí flujo.
+- **Materialidad:** Tela y Hilo — Suave, cosida, orgánica. Superficies de tela digital, esquinas variables como costuras, sombras cálidas como luz de ventana.
+- **Anti-Slop Statement:** "Esta app NUNCA usará gradientes púrpura/azul genéricos de AI, spinners de carga sin personalidad, 'Something went wrong' como error state, paleta de grises fríos sin punto de vista, corners uniformes de 8px en todo, layouts simétricos de 12-columnas, Inter o Roboto como fuente principal, cards-centradas-con-3-features-debajo, ni animaciones fade-in sin dirección."
+
+---
+
+## 2. Paleta de Color — Mañana de Otoño
+
+### 2.1 Tokens CSS (Tailwind v4 `@theme`)
 
 ```css
-/* tailwind.config.ts / app.css @theme */
 @theme {
-  /* Brand */
-  --color-primary: oklch(0.705 0.2 62);           /* amber-600  #d97706 */
-  --color-primary-light: oklch(0.87 0.15 75);      /* amber-400  #fbbf24 */
-  --color-primary-dark: oklch(0.55 0.18 55);        /* amber-800  #92400e */
-  --color-primary-foreground: oklch(0.99 0 0);      /* white      #ffffff */
+  /* === Brand === */
+  --color-primary: oklch(0.52 0.18 38);              /* terracotta    #c2572e */
+  --color-primary-light: oklch(0.65 0.18 42);         /* clay-light    #e07a4d */
+  --color-primary-dark: oklch(0.40 0.14 33);          /* clay-dark     #8c2b17 */
+  --color-primary-foreground: oklch(0.985 0.005 85);  /* warm-white    #fdfaf5 */
 
-  /* Accent */
-  --color-accent: oklch(0.65 0.2 142);              /* green-600  #16a34a */
-  --color-accent-foreground: oklch(0.99 0 0);
+  /* === Secondary (Moss Green) === */
+  --color-secondary: oklch(0.50 0.12 140);            /* moss          #527a34 */
+  --color-secondary-light: oklch(0.63 0.13 138);      /* moss-light    #7b9a4f */
+  --color-secondary-dark: oklch(0.38 0.10 135);       /* moss-dark     #3a4f24 */
+  --color-secondary-foreground: oklch(0.985 0.005 85);
 
-  /* Neutral */
-  --color-neutral-50: oklch(0.985 0 0);
-  --color-neutral-100: oklch(0.97 0 0);
-  --color-neutral-200: oklch(0.92 0 0);
-  --color-neutral-300: oklch(0.87 0 0);
-  --color-neutral-400: oklch(0.71 0 0);
-  --color-neutral-500: oklch(0.55 0 0);
-  --color-neutral-600: oklch(0.44 0 0);
-  --color-neutral-700: oklch(0.37 0 0);
-  --color-neutral-800: oklch(0.27 0 0);
-  --color-neutral-900: oklch(0.21 0 0);
-  --color-neutral-950: oklch(0.13 0 0);
+  /* === Background === */
+  --color-background: oklch(0.985 0.005 85);          /* warm-white    #fdfaf5 */
+  --color-surface: oklch(0.97 0.015 80);              /* linen         #f8f0e2 */
+  --color-surface-elevated: oklch(0.95 0.02 75);      /* linen-deep    #efe3cc */
 
-  /* Semantic */
-  --color-success: oklch(0.65 0.2 142);             /* green-500  */
-  --color-error: oklch(0.55 0.25 25);               /* red-600    */
-  --color-warning: oklch(0.75 0.18 75);             /* amber-500  */
-  --color-info: oklch(0.55 0.22 255);               /* blue-500   */
+  /* === Text === */
+  --color-text-primary: oklch(0.20 0.03 45);          /* deep-espresso #2c1a10 */
+  --color-text-secondary: oklch(0.40 0.03 50);        /* warm-brown    #665448 */
+  --color-text-muted: oklch(0.55 0.02 55);            /* muted-brown   #8a7e72 */
 
-  /* Order Status */
-  --color-order-draft: oklch(0.71 0 0);             /* gray-400   */
-  --color-order-in-kitchen: oklch(0.75 0.18 75);    /* amber-500  */
-  --color-order-ready: oklch(0.55 0.22 255);        /* blue-500   */
-  --color-order-delivered: oklch(0.5 0.2 290);      /* purple-500 */
-  --color-order-paid: oklch(0.65 0.2 142);          /* green-500  */
-  --color-order-partially-paid: oklch(0.68 0.2 45); /* orange-500 */
-  --color-order-closed: oklch(0.55 0 0);            /* gray-500   */
+  /* === Accent (Golden) === */
+  --color-accent: oklch(0.72 0.18 78);                /* golden        #e8a020 */
+  --color-accent-foreground: oklch(0.20 0.03 45);     /* deep-espresso #2c1a10 */
 
-  /* Table Status */
-  --color-table-free: oklch(0.65 0.2 142);          /* green-500  */
-  --color-table-occupied: oklch(0.55 0.25 25);      /* red-600    */
-  --color-table-reserved: oklch(0.75 0.18 75);      /* amber-500  */
-  --color-table-cleaning: oklch(0.55 0.22 255);     /* blue-500   */
+  /* === Semantic === */
+  --color-success: oklch(0.46 0.12 140);              /* deep-moss     #457a38 */
+  --color-error: oklch(0.45 0.16 25);                 /* deep-brick    #b5452e */
+  --color-warning: oklch(0.63 0.16 72);               /* golden-amber  #d49224 */
+  --color-info: oklch(0.50 0.07 240);                 /* dusty-blue    #4e769e */
 
-  /* Radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  /* === Order Status (7 states) === */
+  --color-order-draft: oklch(0.60 0.03 58);           /* muted-brown   */
+  --color-order-in-kitchen: oklch(0.65 0.16 72);      /* golden-amber  */
+  --color-order-ready: oklch(0.52 0.06 240);          /* dusty-blue    */
+  --color-order-delivered: oklch(0.42 0.08 300);      /* muted-purple  */
+  --color-order-paid: oklch(0.48 0.10 140);           /* deep-moss     */
+  --color-order-partially-paid: oklch(0.58 0.17 48);   /* deep-orange   */
+  --color-order-closed: oklch(0.50 0.03 55);          /* warm-gray     */
 
-  /* Shadows */
-  --shadow-card: 0 1px 3px oklch(0 0 0 / 0.1);
-  --shadow-modal: 0 20px 60px oklch(0 0 0 / 0.3);
-  --shadow-kds-card: 0 4px 12px oklch(0 0 0 / 0.5);
+  /* === Table Status === */
+  --color-table-free: oklch(0.48 0.10 140);           /* deep-moss     */
+  --color-table-occupied: oklch(0.48 0.15 25);        /* brick         */
+  --color-table-reserved: oklch(0.65 0.14 72);        /* golden-amber  */
+  --color-table-cleaning: oklch(0.52 0.06 240);       /* dusty-blue    */
+
+  /* === Payment Methods === */
+  --color-payment-cash: oklch(0.48 0.10 140);
+  --color-payment-card: oklch(0.52 0.06 240);
+  --color-payment-transfer: oklch(0.42 0.08 300);
+
+  /* === User Role Badges === */
+  --color-role-waiter: oklch(0.52 0.06 240);          /* dusty-blue    */
+  --color-role-cashier: oklch(0.48 0.10 140);         /* deep-moss     */
+  --color-role-admin: oklch(0.55 0.15 38);            /* terracotta    */
+  --color-role-superadmin: oklch(0.48 0.15 25);       /* brick         */
+
+  /* === KDS Dark Theme === */
+  --color-kds-bg: oklch(0.08 0.01 40);               /* espresso-black (not pure) */
+  --color-kds-surface: oklch(0.14 0.02 38);           /* warm-dark-card  */
+  --color-kds-text: oklch(0.95 0.01 85);             /* warm-cream      */
+  --color-kds-accent: oklch(0.70 0.20 40);            /* terracotta-glow */
+  --color-kds-muted: oklch(0.42 0.03 55);            /* muted-dark-text */
+
+  /* === Radii (Variable - "costuras") === */
+  --radius-control: 0.25rem;                          /* 4px  inputs, buttons */
+  --radius-card: 1rem;                                /* 16px tarjetas */
+  --radius-modal: 1.5rem;                             /* 24px modales, drawers */
+  --radius-chip: 9999px;                              /* full  chips, tags, badges */
+  --radius-kds-card: 0.75rem;                         /* 12px KDS cards */
+
+  /* === Shadows (Cálidas, no duras) === */
+  --shadow-card: 0 2px 8px oklch(0.20 0.03 45 / 0.10);
+  --shadow-card-hover: 0 4px 16px oklch(0.20 0.03 45 / 0.15);
+  --shadow-modal: 0 16px 48px oklch(0.20 0.03 45 / 0.22);
+  --shadow-toast: 0 4px 12px oklch(0.20 0.03 45 / 0.14);
+  --shadow-kds-card: 0 4px 16px oklch(0 0 0 / 0.40);
+
+  /* === Typography Scale (non-standard, organic) === */
+  --font-size-display: 3.815rem;     /* h1 hero       */
+  --font-size-heading-1: 2.441rem;   /* h2            */
+  --font-size-heading-2: 1.953rem;   /* h3            */
+  --font-size-heading-3: 1.563rem;   /* h4            */
+  --font-size-lead: 1.25rem;         /* lead paragraph */
+  --font-size-body: 1rem;            /* base          */
+  --font-size-small: 0.875rem;       /* secondary     */
+  --font-size-caption: 0.75rem;      /* captions      */
+
+  /* KDS Scale (legible a 2m en monitor 32") */
+  --font-size-kds-sm: 1.5rem;        /* 24px  item details  */
+  --font-size-kds-base: 2rem;        /* 32px  order items   */
+  --font-size-kds-lg: 3rem;          /* 48px  table number  */
+  --font-size-kds-xl: 4rem;          /* 64px  order ID      */
+  --font-size-kds-2xl: 5rem;         /* 80px  timer/aging   */
 }
 ```
 
-### 1.2 Typography
+### 2.2 Tabla de Referencia de Color
 
-**Regular scale** (mesero, cajero, admin):
-
-| Token | Size | Line Height | Use |
-|-------|------|-------------|-----|
-| `text-xs` | 12px | 1rem | Captions, timestamps |
-| `text-sm` | 14px | 1.25rem | Secondary text, labels |
-| `text-base` | 16px | 1.5rem | Body, inputs, table cells |
-| `text-lg` | 18px | 1.75rem | Card titles, section headers |
-| `text-xl` | 20px | 1.75rem | Page titles |
-| `text-2xl` | 24px | 2rem | Screen headers |
-| `text-3xl` | 30px | 2.25rem | Dashboard stats |
-| `text-4xl` | 36px | 2.5rem | Hero numbers |
-
-**KDS scale** (min 24px, legible at 2m):
-
-| Token | Size | Line Height | Use |
-|-------|------|-------------|-----|
-| `text-kds-sm` | 24px | 1.2 | Table number, timer |
-| `text-kds-base` | 32px | 1.3 | Item names, quantities |
-| `text-kds-lg` | 48px | 1.2 | Order number, mesa number |
-| `text-kds-xl` | 64px | 1.1 | Headers, elapsed time |
-| `text-kds-2xl` | 80px | 1 | Critical alerts, timer >15min |
-
-Font family: `system-ui, -apple-system, sans-serif`. No custom fonts to avoid loading latency in restaurant network.
-
-### 1.3 Spacing
-
-Standard Tailwind scale. Additional rules:
-
-| Context | Minimum Target | Recommended Padding |
-|---------|---------------|-------------------|
-| Touch (mesero tablet) | 48x48px | `p-3` or `p-4` |
-| Click (cajero/admin desktop) | 32x32px | `p-2` or `p-3` |
-| KDS cards | -- | `p-6` or `p-8` |
-
-### 1.4 Icons
-
-Library: **lucide-react**. Always import individually for tree-shaking.
-
-Sizing per profile:
-
-| Profile | Default Size | Large | Use |
-|---------|-------------|-------|-----|
-| Mesero | `size-6` (24px) | `size-8` (32px) | Touch targets need visible icons |
-| Cajero/Admin | `size-4` (16px) | `size-5` (20px) | Inline with text in tables |
-| KDS | `size-8` (32px) | `size-12` (48px) | Visible at distance |
-
-Convention: always provide `aria-label` when icon has no adjacent text.
-
-```tsx
-<Button aria-label="Enviar a cocina" size="lg">
-  <Send className="size-6" />
-</Button>
-```
+| Token | Hex | OKLCH | Uso |
+|-------|-----|-------|-----|
+| `primary` | `#c2572e` | `oklch(0.55 0.15 38)` | Botones principales, CTAs, links, foco |
+| `primary-light` | `#e07a4d` | `oklch(0.68 0.16 42)` | Hover states, fondos suaves |
+| `primary-dark` | `#8c2b17` | `oklch(0.42 0.12 35)` | Active/pressed states |
+| `secondary` | `#527a34` | `oklch(0.52 0.11 140)` | Acentos secundarios, iconos |
+| `background` | `#fdfaf5` | `oklch(0.97 0.02 80)` | Fondo general |
+| `surface` | `#f8f0e2` | `oklch(0.95 0.02 75)` | Tarjetas, paneles |
+| `text-primary` | `#2c1a10` | `oklch(0.20 0.03 45)` | Títulos, párrafos |
+| `text-secondary` | `#665448` | `oklch(0.45 0.03 55)` | Metadatos, subtítulos |
+| `accent` | `#e8a020` | `oklch(0.72 0.16 75)` | Highlights, badges, activos |
+| `success` | `#457a38` | `oklch(0.48 0.10 140)` | Confirmaciones, pagos completados |
+| `error` | `#b5452e` | `oklch(0.48 0.15 25)` | Errores (con calidez, no agresivo) |
+| `warning` | `#d49224` | `oklch(0.65 0.14 72)` | Advertencias, aging < 10min |
+| `info` | `#4e769e` | `oklch(0.52 0.06 240)` | Información contextual |
 
 ---
 
-## 2. Screen Profiles
+## 3. Tipografía
 
-### 2.1 Breakpoints
+### 3.1 Fuentes
+
+| Rol | Fuente | Peso | Uso |
+|-----|--------|------|-----|
+| **Display/Heading** | `'Space Grotesk', system-ui, sans-serif` | 700 | H1-H4, hero text, KDS orders |
+| **Body** | `system-ui, -apple-system, 'Segoe UI', sans-serif` | 400 | Párrafos, labels, inputs |
+| **Lead** | `'Space Grotesk', system-ui, sans-serif` | 500 | Párrafos destacados, CTAs |
+| **Mono** | `'JetBrains Mono', 'Fira Code', monospace` | 400 | Datos, precios, IDs de orden |
+
+> **Importación Google Fonts:** `@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');`
+> **Variable font:** Si, Space Grotesk es variable (weight axis 300-700).
+> **Fallback chain para headings negrita:** `'Space Grotesk', 'Inter', system-ui, sans-serif`
+
+### 3.2 Escala Tipográfica
+
+| Token | Tamaño | Line-height | Letter-spacing | Uso |
+|-------|--------|-------------|----------------|-----|
+| `display` | 3.815rem (61px) | 1.1 | -0.02em | H1, hero (solo admin/KDS) |
+| `heading-1` | 2.441rem (39px) | 1.2 | -0.015em | H2, títulos de página |
+| `heading-2` | 1.953rem (31px) | 1.25 | -0.01em | H3, títulos de sección |
+| `heading-3` | 1.563rem (25px) | 1.3 | -0.005em | H4, títulos de tarjeta |
+| `lead` | 1.25rem (20px) | 1.5 | 0 | Párrafos introductorios |
+| `body` | 1rem (16px) | 1.55 | 0 | Body text |
+| `small` | 0.875rem (14px) | 1.5 | 0 | Metadatos, etiquetas |
+| `caption` | 0.75rem (12px) | 1.4 | 0.01em | Captions, timestamps |
+
+### 3.3 KDS Scale
+
+| Token | Tamaño | Line-height | Peso | Uso |
+|-------|--------|-------------|------|-----|
+| `kds-sm` | 1.5rem (24px) | 1.3 | 500 | Detalles de items |
+| `kds-base` | 2rem (32px) | 1.2 | 700 | Items de orden |
+| `kds-lg` | 3rem (48px) | 1.1 | 700 | Número de mesa |
+| `kds-xl` | 4rem (64px) | 1.0 | 700 | ID de orden |
+| `kds-2xl` | 5rem (80px) | 1.0 | 700 | Timer de aging |
+
+> **Regla:** Todos los KDS headings usan `Space Grotesk Bold` (700). Body en KDS usa `Space Grotesk Medium` (500). No usar system-ui en KDS; la tipografía bold es parte central de la identidad.
+
+---
+
+## 4. Espaciado — Escala Orgánica
+
+### 4.1 Tokens de Espaciado
 
 ```css
-/* Tailwind defaults + custom for KDS */
 @theme {
-  --breakpoint-tablet: 640px;    /* sm */
-  --breakpoint-desktop: 1024px;  /* lg */
-  --breakpoint-kds: 1920px;      /* 1080p / Full HD */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;   /* 4px   */
+  --spacing-2: 0.5rem;    /* 8px   */
+  --spacing-3: 0.875rem;  /* 14px  ─── no 12px, la escala respira */
+  --spacing-4: 1.25rem;   /* 20px  ─── no 16px, más generoso */
+  --spacing-5: 1.75rem;   /* 28px  */
+  --spacing-6: 2.5rem;    /* 40px  */
+  --spacing-7: 3.5rem;    /* 56px  */
+  --spacing-8: 5rem;      /* 80px  */
 }
 ```
 
-### 2.2 Mesero (Tablet 10", Portrait, Touch)
+> La escala es deliberadamente no-aritmética. Como intervalos musicales, no grid militar. Esto crea ritmo visual orgánico.
 
-```
-┌──────────────────────────┐
-│ ██████ Mesa 5 ██████████ │  ← Top bar: mesa actual + boton nueva mesa
-├──────────────────────────┤
-│                          │
-│ ┌────────┐ ┌────────┐   │
-│ │  Item  │ │  Item  │   │  ← Product grid: 2 cols, large touch cards
-│ │ $120   │ │  $85   │   │
-│ └────────┘ └────────┘   │
-│ ┌────────┐ ┌────────┐   │
-│ │  Item  │ │  Item  │   │
-│ └────────┘ └────────┘   │
-│                          │
-├──────────────────────────┤
-│ 🍔 Ordenes │ 🏠 Mesas │ 👤 │  ← Bottom nav: fixed, tall targets
-└──────────────────────────┘
-```
+### 4.2 Reglas de Aplicación
 
-**Layout rules:**
-- Max-width: `max-w-lg` on desktop breakpoint (don't stretch content on large screens)
-- Bottom nav: always visible, `h-16`, fixed position
-- Product cards: min-height 120px, tappable, no hover effects (touch only)
-- `overscroll-behavior: contain` on scroll areas
-- No text inputs if avoidable (prefer selects, toggles, number steppers)
+| Contexto | Token | Valor | Tailwind |
+|----------|-------|-------|----------|
+| Gap entre items de lista | `--spacing-3` | 14px | `gap-3` |
+| Padding de tarjeta | `--spacing-4` | 20px | `p-4` |
+| Padding de tarjeta en KDS | `--spacing-6` | 40px | `p-6` |
+| Separación de secciones | `--spacing-5` | 28px | `mb-5` |
+| Padding de página | `--spacing-4` | 20px | `p-4` |
+| Padding de modal | `--spacing-5` | 28px | `p-5` |
+| Gap de grid de productos | `--spacing-3` | 14px | `gap-3` |
+| Container max-width | — | 960px | `max-w-[960px]` |
+| Container KDS | — | 100% | `w-full` |
 
-### 2.3 Cajero (PC Desktop)
+### 4.3 Touch Targets
 
-```
-┌──────────┬──────────────────────────────────────┐
-│          │  🔔 Cajero  │  Turno: 14:00-22:00     │
-│  Logo    ├──────────────────────────────────────┤
-│          │                                      │
-│ 📋 Ordenes│  ┌──────────┬──────────────────────┐│
-│          │  │ Search   │  Filters: Status ▾   ││
-│ 💰 Caja  │  ├──────────┼──────────────────────┤│
-│          │  │ Table    │ Detail / Payment     ││
-│ 📊 Reporte│  │ (orders) │ Form                ││
-│          │  │          │                      ││
-│          │  │          │                      ││
-│ ⚙️ Ajustes│  └──────────┴──────────────────────┘│
-└──────────┴──────────────────────────────────────┘
-```
-
-**Layout rules:**
-- Sidebar: `w-64`, fixed, icons + labels
-- Content: flex-1, scrollable
-- Tables: striped rows, hover state, clickable rows for detail
-- Split view: order list (left 40%) + payment detail (right 60%)
-
-### 2.4 Admin (PC Desktop)
-
-Same sidebar layout as Cajero, with different nav items:
-
-- Catalog (productos, categorias, modificadores)
-- Users (gestion de personal)
-- Configuracion (propinas, metodos de pago)
-- Reportes (ventas, desempeno)
-
-### 2.5 KDS (32" 1080p, Wall-Mounted, Dark Theme)
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  🕐 15:42  │  🔴 6 Activas  │  ✅ 23 Completadas Hoy    │
-├────────────┬────────────┬────────────┬──────────────────┤
-│  #42       │  #43       │  #44       │  #45             │
-│  MESA 5    │  MESA 8    │  MESA 2    │  MESA 11         │
-│  ⏱ 3 min  │  ⏱ 8 min  │  ⏱ 1 min  │  ⏱ 12 min 🔶    │
-│            │            │            │                  │
-│  2x Burger │  1x Pasta  │  3x Tacos  │  1x Parrillada   │
-│  -sin ceb  │  +extra Q  │            │  2x Cerveza      │
-│  1x Cola   │            │            │  -sin hielo      │
-│            │            │            │                  │
-│  [LISTA]   │  [LISTA]   │  [LISTA]   │  [LISTA]         │
-├────────────┼────────────┼────────────┼──────────────────┤
-│  #46       │  #47       │            │                  │
-│  MESA 3    │  MESA 7    │            │                  │
-│  ⏱ 18 min 🔴│  ⏱ 5 min  │            │                  │
-│  4x Pizza  │  2x Ensal. │            │                  │
-│  2x Agua   │            │            │                  │
-│            │            │            │                  │
-│  [LISTA]   │  [LISTA]   │            │                  │
-└────────────┴────────────┴────────────┴──────────────────┘
-```
-
-**Layout rules:**
-- CSS Grid: `grid-cols-4` for 4-column layout (fits 6-8 orders on 32" 1080p)
-- Order cards fill grid cells, equal height (`min-height: 300px` on 1080p)
-- FIFO ordering: oldest top-left → newest bottom-right
-- New order: scale-in animation (300ms) + amber pulse
-- Completed: slide-out + fade (500ms), then remove from grid
-- Header: always visible, clock + counters
-- Fullscreen: `requestFullscreen()` on mount
-- Wake lock: prevent screen sleep
+| Dispositivo | Objetivo mínimo | Tailwind |
+|-------------|-----------------|----------|
+| Mesero (tablet 10") | 48x48px | `min-h-[48px] min-w-[48px]` |
+| Cajero/Admin (desktop) | 36x36px | `min-h-[36px] min-w-[36px]` |
+| KDS (32" monitor) | 72x72px | `min-h-[72px] min-w-[72px]` |
 
 ---
 
-## 3. Color Semantics
+## 5. Bordes y Radios — Variable ("Como Costuras")
 
-### 3.1 Order Status
+| Elemento | Radios | Border | Nota |
+|----------|--------|--------|------|
+| Botones (primary/secondary) | `--radius-control` (4px) | none | Contraste intencional con tarjetas suaves |
+| Botones chip/tag | `--radius-chip` (full) | none | Pastillas amigables |
+| Inputs, selects, textareas | `--radius-control` (4px) | 1px `text-muted` | Focus border cambia a `primary` |
+| Tarjetas (cards) | `--radius-card` (16px) | none | Sombras suaves dan profundidad |
+| Modales, drawers, sheets | `--radius-modal` (24px) | none | |
+| Avatares, badges de rol | `--radius-chip` (full) | none | Circulares |
+| KDS tarjetas | `--radius-kds-card` (12px) | 1px `kds-surface` | Sutil en tema oscuro |
+| Imágenes de producto | `--radius-card` (16px) | none | |
 
-| Status | Color | Badge Class | Icon (lucide) |
-|--------|-------|-------------|---------------|
-| `draft` | gray-400 `🟢` | `bg-gray-100 text-gray-700` | `ClipboardList` |
-| `in_kitchen` | amber-500 `🟡` | `bg-amber-100 text-amber-800` | `CookingPot` |
-| `ready` | blue-500 `🔵` | `bg-blue-100 text-blue-800` | `CheckCircle` |
-| `delivered` | purple-500 `🟣` | `bg-purple-100 text-purple-800` | `Truck` |
-| `paid` | green-500 `🟢` | `bg-green-100 text-green-800` | `Banknote` |
-| `partially_paid` | orange-500 `🟠` | `bg-orange-100 text-orange-800` | `CreditCard` |
-| `closed` | gray-500 `⚫` | `bg-gray-100 text-gray-700` | `Archive` |
-
-### 3.2 Table Status
-
-| Status | Color | Map Pin |
-|--------|-------|---------|
-| `free` | green-500 | Green circle |
-| `occupied` | red-600 | Red circle with order count |
-| `reserved` | amber-500 | Amber circle with clock |
-| `cleaning` | blue-500 | Blue circle with brush |
-
-### 3.3 Payment Methods
-
-| Method | Icon | Color |
-|--------|------|-------|
-| `cash` | `Banknote` | green-500 |
-| `card` | `CreditCard` | blue-500 |
-| `transfer` | `ArrowLeftRight` | purple-500 |
-
-### 3.4 User Roles
-
-| Role | Badge Color |
-|------|------------|
-| `waiter` | blue-100/blue-800 |
-| `cashier` | green-100/green-800 |
-| `admin` | amber-100/amber-800 |
-| `superadmin` | red-100/red-800 |
-
-### 3.5 KDS: Order Aging
-
-Orders that stay in `in_kitchen` too long get visual warnings:
-
-| Time | Visual | Class |
-|------|--------|-------|
-| < 5 min | Normal | `border-neutral-700` |
-| 5-10 min | Amber border | `border-amber-500` |
-| 10-15 min | Orange border + pulse | `border-orange-500 animate-pulse` |
-| > 15 min | Red border + pulse + icon | `border-red-600 animate-pulse` + `AlertTriangle` icon |
-
-Aging implementation:
-
-```tsx
-function useOrderAge(createdAt: string) {
-  const [minutes, setMinutes] = useState(0);
-
-  useEffect(() => {
-    const update = () => {
-      setMinutes((Date.now() - new Date(createdAt).getTime()) / 60000);
-    };
-    update();
-    const id = setInterval(update, 10000); // Update every 10s
-    return () => clearInterval(id);
-  }, [createdAt]);
-
-  return minutes;
-}
-
-const kdsVariant = minutes > 15 ? 'critical'
-  : minutes > 10 ? 'warning'
-  : minutes > 5 ? 'attention'
-  : 'normal';
-```
+> **Principio:** La variación en radios es intencional y refleja la materialidad de "tela cosida" — diferentes partes del "vestido" tienen diferentes curvas.
 
 ---
 
-## 4. Component Catalog
+## 6. Sombras y Profundidad — "Luz de Ventana"
 
-### 4.1 Primitives (shadcn/ui base)
+| Nivel | Sombras | Uso |
+|-------|---------|-----|
+| Flat | `none` | Background, texto, separadores |
+| Elevated 1 | `0 2px 8px oklch(0.20 0.03 45 / 0.10)` | Tarjetas (default) |
+| Elevated 2 | `0 4px 16px oklch(0.20 0.03 45 / 0.15)` | Tarjetas (hover), dropdowns |
+| Elevated 3 | `0 16px 48px oklch(0.20 0.03 45 / 0.22)` | Modales, sheets |
+| Elevated 4 | `0 4px 12px oklch(0.20 0.03 45 / 0.14)` | Toasts, notificaciones |
+| KDS Card | `0 4px 16px oklch(0 0 0 / 0.40)` | Tarjetas en KDS |
 
-These are the shadcn/ui components used throughout. Customize via Tailwind classes, never modify shadcn source directly. Override in `components/ui/`.
+> **Principio:** Las sombras usan el color de texto primario (espresso) en vez de negro puro. Esto da calidez incluso a la profundidad.
 
-| Component | Customization | Use |
-|-----------|--------------|-----|
-| `Button` | Add `kds` variant + sizes | All interactions |
-| `Input` | Larger padding for tablet | Forms |
-| `Badge` | Order status variants | Status everywhere |
-| `Card` | `Card.Header/Body/Footer` compound | Containers |
-| `Dialog` | Full-screen on tablet | Modals, confirmations |
-| `Table` | Striped rows, clickable | Data lists |
-| `Select` | Native on tablet (better UX) | Dropdowns |
-| `Tabs` | Large touch targets | Navigation |
-| `Sheet` | Side panel for detail | Order detail on tablet |
-| `Toast` | Bottom position on tablet | Notifications |
-| `Skeleton` | Match card dimensions | Loading states |
-| `ScrollArea` | Custom scrollbar styling | Long lists |
+---
 
-### 4.2 Domain Components
+## 7. Motion & Animation
 
-#### `OrderCard`
+### 7.1 Principios
 
-Compound component for displaying an order in lists and KDS.
+- **Personalidad "Café de Madrid":** Animaciones con ritmo y rebote, no mecánicas.
+- **Duración por defecto:** 150-200ms para micro-interacciones, 300-400ms para transiciones de página.
+- **Easing:** `cubic-bezier(0.34, 1.56, 0.64, 1)` para rebote suave en interacciones. `cubic-bezier(0.4, 0, 0.2, 1)` para entradas/salidas direccionales.
+- **`prefers-reduced-motion`:** Respetar siempre. Desactivar animaciones, usar opacidad directa.
 
-```tsx
-// client/src/components/orders/OrderCard.tsx
-interface OrderCardProps {
-  order: Order;
-  variant?: 'default' | 'kds';
-  onMarkReady?: () => void;
-  onViewDetail?: () => void;
-}
+### 7.2 Catálogo de Animaciones
 
-function OrderCard({ order, variant = 'default', onMarkReady, onViewDetail }: OrderCardProps) {
-  if (variant === 'kds') {
-    return <KDSOrderCard order={order} onMarkReady={onMarkReady} />;
-  }
+| Tipo | Especificación | Duración | Técnica |
+|------|----------------|----------|---------|
+| **Page transition** | Slide horizontal (dirección del flujo) con fade | 300ms | CSS `transform` + `opacity` |
+| **Card enter** | Scale 0.95→1 + fade in, staggered (50ms entre cards) | 200ms | CSS `@keyframes` |
+| **Button hover** | Scale 1.02 + shadow grow | 150ms | Tailwind `hover:scale-[1.02] transition-transform` |
+| **Button press** | Scale 0.97 | 100ms | `active:scale-[0.97]` |
+| **Modal open** | Scale 0.92→1 + fade, con overshoot suave | 300ms | CSS animation |
+| **Toast enter** | Slide from top-right + fade | 250ms | CSS animation |
+| **Toast exit** | Slide to right + fade | 200ms | CSS animation |
+| **KDS new order** | Slide from top + scale bounce + terracotta glow pulse (300ms) luego settle | 500ms total | CSS + Tailwind |
+| **KDS order done** | Slide out right + fade + scale-down | 400ms | CSS animation |
+| **KDS aging pulse** | `animate-pulse` en warning/critical (>10 min) | 2s loop | Tailwind `animate-pulse` |
+| **Skeleton loading** | "Shimmer textil" — gradiente diagonal sutil con patrón de tela | 1.5s loop | CSS `background-image` con gradiente animado |
+| **Empty state icon** | Fade in + float suave (translateY -4px loop) | 3s loop | CSS animation |
+| **Drag to reorder** | Translate sigue cursor + snap back si se suelta | real-time | DnD library (dnd-kit) |
 
-  return (
-    <Card
-      className={cn(
-        'cursor-pointer transition-shadow hover:shadow-md',
-        'min-h-[120px]', // Touch target
-      )}
-      onClick={onViewDetail}
-    >
-      <Card.Header>
-        <div className="flex items-center justify-between">
-          <span className="text-lg font-semibold">Mesa {order.tableId}</span>
-          <StatusBadge status={order.status} />
-        </div>
-      </Card.Header>
-      <Card.Body>
-        <p className="text-sm text-neutral-500">
-          {order.items.length} items · {formatCurrency(order.totalAmount)}
-        </p>
-      </Card.Body>
-      <Card.Footer className="text-xs text-neutral-400">
-        {formatTime(order.createdAt)}
-      </Card.Footer>
-    </Card>
-  );
-}
+### 7.3 Rotaciones — "Diario Personal"
 
-OrderCard.Header = CardHeader;
-OrderCard.Body = CardBody;
-OrderCard.Footer = CardFooter;
+Las tarjetas y elementos pueden tener rotaciones sutiles (1-2°) para evocar la estructura de "collage pegado a mano":
+
+```css
+/* Aplicar aleatoriamente vía nth-child en grids */
+.card-rotate-1 { transform: rotate(0.5deg); }
+.card-rotate-2 { transform: rotate(-0.8deg); }
+.card-rotate-3 { transform: rotate(1.2deg); }
+.card-rotate-4 { transform: rotate(-0.3deg); }
 ```
 
-#### `KDSOrderCard`
+> **Regla:** Solo aplicar rotaciones en grids de tarjetas (mesas, órdenes). NO en inputs, modales, tablas de datos, o KDS. Las rotaciones son decorativas, no funcionales.
 
-Oversized card for kitchen display. Dark theme only.
+---
 
-```tsx
-// client/src/components/kds/KDSOrderCard.tsx
-function KDSOrderCard({ order, onMarkReady }: { order: Order; onMarkReady: () => void }) {
-  const minutes = useOrderAge(order.createdAt);
-  const agingClass = minutes > 15 ? 'border-red-600 animate-pulse'
-    : minutes > 10 ? 'border-orange-500 animate-pulse'
-    : minutes > 5 ? 'border-amber-500'
-    : 'border-neutral-700';
+## 8. Texturas y Detalles Orgánicos
 
-  return (
-    <div className={cn(
-      'bg-neutral-900 border-2 rounded-xl p-6 flex flex-col justify-between',
-      'min-h-[300px]',
-      agingClass,
-      'transition-all duration-500',
-    )}>
-      <div>
-        <div className="flex justify-between items-start mb-4">
-          <span className="text-kds-lg font-bold text-neutral-50">
-            #{order.id}
-          </span>
-          <span className="text-kds-sm text-neutral-400">
-            MESA {order.tableId}
-          </span>
-        </div>
+### 8.1 Fondo de "Tela"
 
-        <div className="text-kds-sm text-amber-400 mb-4">
-          ⏱ {Math.floor(minutes)} min
-        </div>
-
-        <ul className="space-y-3">
-          {order.items.map(item => (
-            <li key={item.id} className="text-kds-base text-neutral-100 flex justify-between">
-              <span>
-                {item.quantity}x {item.productName}
-                {item.modifications && item.modifications !== 'null' && (
-                  <span className="text-kds-sm text-amber-300 ml-2 block">
-                    {item.modifications}
-                  </span>
-                )}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <Button
-        size="kds"
-        onClick={onMarkReady}
-        className="mt-4 text-kds-sm"
-      >
-        <CheckCircle className="size-8 mr-3" />
-        LISTA
-      </Button>
-    </div>
-  );
+```css
+/* Textura sutil tipo lienzo — aplicar a .bg-texture o body */
+.bg-texture {
+  background-image:
+    radial-gradient(ellipse at 20% 50%, oklch(0.72 0.16 75 / 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, oklch(0.55 0.15 38 / 0.02) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q35 30 30 55' stroke='%233d2b1f' stroke-width='0.3' fill='none' opacity='0.03'/%3E%3C/svg%3E");
 }
 ```
 
-#### `TableMap`
+> Solo aplicar al fondo de las pantallas de mesero y admin. No en KDS (distrae). No en modales (rompe jerarquía). La textura debe ser casi invisible — detectable pero no nombrable.
 
-Interactive grid of restaurant tables.
+### 8.2 Bordes de "Hilo"
 
-```tsx
-// client/src/components/tables/TableMap.tsx
-function TableMap({ tables, onSelectTable }: TableMapProps) {
-  return (
-    <div className="grid gap-4 p-4" style={{
-      gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))'
-    }}>
-      {tables.map(table => (
-        <button
-          key={table.id}
-          onClick={() => onSelectTable(table)}
-          className={cn(
-            'aspect-square rounded-xl flex flex-col items-center justify-center',
-            'text-lg font-bold transition-transform active:scale-95',
-            'min-h-[120px] min-w-[120px]',
-            TABLE_STATUS_STYLES[table.status],
-          )}
-        >
-          <span className="text-2xl">{table.number}</span>
-          <span className="text-sm mt-1 capitalize">{table.status}</span>
-          {table.activeOrderId && (
-            <span className="text-xs mt-1 bg-white/30 px-2 py-0.5 rounded-full">
-              #{table.activeOrderId}
-            </span>
-          )}
-        </button>
-      ))}
-    </div>
-  );
-}
+Para separadores o bordes decorativos, usar gradientes lineales que simulan hilo:
 
-const TABLE_STATUS_STYLES: Record<string, string> = {
-  free: 'bg-green-100 text-green-800 border-2 border-green-300',
-  occupied: 'bg-red-100 text-red-800 border-2 border-red-300',
-  reserved: 'bg-amber-100 text-amber-800 border-2 border-amber-300',
-  cleaning: 'bg-blue-100 text-blue-800 border-2 border-blue-300',
-};
-```
-
-#### `ProductSelector`
-
-Search + category filter + product grid for order taking.
-
-```tsx
-// client/src/components/orders/ProductSelector.tsx
-function ProductSelector({ onAddToOrder }: ProductSelectorProps) {
-  const [search, setSearch] = useState('');
-  const [categoryId, setCategoryId] = useState<number | null>(null);
-
-  return (
-    <div className="flex flex-col h-full">
-      {/* Search bar */}
-      <SearchBar value={search} onChange={setSearch} />
-
-      {/* Category tabs - horizontal scroll on tablet */}
-      <ScrollArea orientation="horizontal" className="py-2">
-        <div className="flex gap-2">
-          <CategoryTab active={!categoryId} onClick={() => setCategoryId(null)}>
-            Todos
-          </CategoryTab>
-          {categories.map(cat => (
-            <CategoryTab
-              key={cat.id}
-              active={categoryId === cat.id}
-              onClick={() => setCategoryId(cat.id)}
-            >
-              {cat.name}
-            </CategoryTab>
-          ))}
-        </div>
-      </ScrollArea>
-
-      {/* Product grid */}
-      <div className="grid grid-cols-2 gap-3 overflow-y-auto flex-1 p-2">
-        {products.map(product => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAdd={() => onAddToOrder(product)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ProductCard({ product, onAdd }: { product: Product; onAdd: () => void }) {
-  return (
-    <button
-      onClick={onAdd}
-      disabled={!product.isAvailable}
-      className={cn(
-        'rounded-xl border-2 p-4 text-left active:scale-95 transition-transform',
-        'min-h-[120px]',
-        product.isAvailable
-          ? 'border-neutral-200 hover:border-amber-300 active:border-amber-500'
-          : 'border-neutral-100 bg-neutral-50 opacity-50 cursor-not-allowed',
-      )}
-    >
-      <p className="text-lg font-semibold">{product.name}</p>
-      <p className="text-sm text-neutral-500 mt-1">{product.description}</p>
-      <p className="text-xl font-bold text-amber-700 mt-2">
-        {formatCurrency(product.basePrice)}
-      </p>
-    </button>
-  );
+```css
+.border-stitch {
+  border-image: repeating-linear-gradient(
+    90deg,
+    oklch(0.55 0.15 38 / 0.15) 0px,
+    oklch(0.55 0.15 38 / 0.15) 3px,
+    transparent 3px,
+    transparent 8px
+  ) 1;
 }
 ```
 
-#### `ModifierPicker`
+> Uso: Bordes inferiores de headers, separadores de sección, bordes de tarjetas destacadas. No abusar.
 
-Toggle grid for adding/removing modifiers from a product.
+---
 
-```tsx
-// client/src/components/orders/ModifierPicker.tsx
-function ModifierPicker({ modifiers, selected, onToggle }: ModifierPickerProps) {
-  return (
-    <div className="space-y-2">
-      <h3 className="text-lg font-semibold">Complementos</h3>
-      <div className="grid grid-cols-1 gap-2">
-        {modifiers.map(mod => (
-          <label
-            key={mod.id}
-            className={cn(
-              'flex items-center justify-between p-3 rounded-lg border-2 cursor-pointer',
-              'min-h-[48px]', // Touch target
-              selected.has(mod.id)
-                ? 'border-amber-500 bg-amber-50'
-                : 'border-neutral-200',
-            )}
-          >
-            <span className="text-base">{mod.name}</span>
-            {mod.priceAdjustment > 0 && (
-              <span className="text-sm text-amber-700 ml-2">
-                +{formatCurrency(mod.priceAdjustment)}
-              </span>
-            )}
-            <input
-              type="checkbox"
-              checked={selected.has(mod.id)}
-              onChange={() => onToggle(mod)}
-              className="sr-only" // Hidden, label is the touch target
-            />
-          </label>
-        ))}
-      </div>
-    </div>
-  );
+## 9. Componentes Base
+
+### 9.1 Botones
+
+```css
+/* Primary — Terracotta bold */
+.btn-primary {
+  @apply bg-primary text-primary-foreground font-bold;
+  @apply px-4 py-3 rounded-[var(--radius-control)];
+  @apply shadow-[var(--shadow-card)];
+  @apply transition-all duration-150 ease-out;
+  @apply hover:bg-primary-light hover:scale-[1.02] hover:shadow-[var(--shadow-card-hover)];
+  @apply active:bg-primary-dark active:scale-[0.97];
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+  /* loading state handled by component */
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  letter-spacing: 0.01em;
 }
 ```
 
-#### `PaymentForm`
-
-Cash register payment form.
-
-```tsx
-// client/src/components/cash/PaymentForm.tsx
-function PaymentForm({ order, onSubmit }: PaymentFormProps) {
-  const [method, setMethod] = useState<PaymentMethod>('cash');
-  const [amount, setAmount] = useState<string>(String(order.totalAmount));
-  const [tip, setTip] = useState<string>('');
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Order summary */}
-      <div className="bg-neutral-50 rounded-lg p-4">
-        <h3 className="text-lg font-semibold">Mesa {order.tableId}</h3>
-        <p className="text-2xl font-bold mt-2">{formatCurrency(order.totalAmount)}</p>
-        <p className="text-sm text-neutral-500">{order.items.length} items</p>
-      </div>
-
-      {/* Payment method */}
-      <div className="grid grid-cols-3 gap-3">
-        {PAYMENT_METHODS.map(m => (
-          <button
-            key={m.value}
-            type="button"
-            onClick={() => setMethod(m.value)}
-            className={cn(
-              'flex flex-col items-center gap-2 p-4 rounded-lg border-2',
-              method === m.value ? 'border-amber-500 bg-amber-50' : 'border-neutral-200',
-            )}
-          >
-            <m.icon className="size-6" />
-            <span className="text-sm">{m.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Amount */}
-      <div>
-        <Label htmlFor="amount">Monto</Label>
-        <Input
-          id="amount"
-          type="number"
-          value={amount}
-          onChange={e => setAmount(e.target.value)}
-          className="text-2xl h-16"
-        />
-      </div>
-
-      {/* Tip */}
-      <div>
-        <Label htmlFor="tip">Propina</Label>
-        <div className="flex gap-2">
-          {[10, 15, 20].map(pct => (
-            <Button
-              key={pct}
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setTip(String(order.totalAmount * pct / 100))}
-            >
-              {pct}%
-            </Button>
-          ))}
-        </div>
-        <Input
-          id="tip"
-          type="number"
-          value={tip}
-          onChange={e => setTip(e.target.value)}
-          className="mt-2"
-        />
-      </div>
-
-      <Button type="submit" size="lg" className="w-full text-lg h-14">
-        Registrar Pago
-      </Button>
-    </form>
-  );
+```css
+/* Secondary — Moss outline */
+.btn-secondary {
+  @apply bg-transparent text-secondary border border-secondary font-semibold;
+  @apply px-4 py-3 rounded-[var(--radius-control)];
+  @apply transition-all duration-150 ease-out;
+  @apply hover:bg-secondary hover:text-secondary-foreground hover:scale-[1.02];
+  @apply active:bg-secondary-dark active:scale-[0.97];
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
 }
-
-const PAYMENT_METHODS = [
-  { value: 'cash' as const, label: 'Efectivo', icon: Banknote },
-  { value: 'card' as const, label: 'Tarjeta', icon: CreditCard },
-  { value: 'transfer' as const, label: 'Transferencia', icon: ArrowLeftRight },
-];
 ```
 
-#### `StatusBadge`
+```css
+/* Ghost — Para acciones secundarias minimalistas */
+.btn-ghost {
+  @apply bg-transparent text-text-secondary font-medium;
+  @apply px-3 py-2 rounded-[var(--radius-control)];
+  @apply transition-colors duration-150;
+  @apply hover:bg-surface hover:text-text-primary;
+  @apply active:scale-[0.97];
+}
+```
 
-Reusable status badge for orders, tables, and payments.
+```css
+/* Icon Button — Solo icono, con aria-label OBLIGATORIO */
+.btn-icon {
+  @apply inline-flex items-center justify-center;
+  @apply text-text-secondary hover:text-text-primary;
+  @apply rounded-[var(--radius-control)];
+  @apply transition-all duration-150;
+  @apply hover:bg-surface hover:scale-110;
+  @apply active:scale-95;
+}
+```
 
-```tsx
-// client/src/components/shared/StatusBadge.tsx
-const ORDER_STATUS_CONFIG: Record<OrderStatus, { label: string; className: string; icon: LucideIcon }> = {
-  draft:         { label: 'Borrador',           className: 'bg-gray-100 text-gray-700',         icon: ClipboardList },
-  in_kitchen:   { label: 'En Cocina',          className: 'bg-amber-100 text-amber-800',       icon: CookingPot },
-  ready:         { label: 'Lista',              className: 'bg-blue-100 text-blue-800',         icon: CheckCircle },
-  delivered:     { label: 'Entregada',          className: 'bg-purple-100 text-purple-800',     icon: Truck },
-  paid:          { label: 'Pagada',             className: 'bg-green-100 text-green-800',       icon: Banknote },
-  partially_paid:{ label: 'Pago Parcial',       className: 'bg-orange-100 text-orange-800',     icon: CreditCard },
-  closed:        { label: 'Cerrada',            className: 'bg-gray-100 text-gray-700',         icon: Archive },
-};
+### 9.2 Inputs
 
-function StatusBadge({ status }: { status: OrderStatus }) {
-  const config = ORDER_STATUS_CONFIG[status];
-  const Icon = config.icon;
+```css
+.input-text {
+  @apply w-full px-4 py-3;
+  @apply bg-surface border border-text-muted/30 rounded-[var(--radius-control)];
+  @apply text-text-primary placeholder:text-text-muted;
+  @apply transition-all duration-150;
+  @apply focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
 
-  return (
-    <span className={cn(
-      'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium',
-      config.className,
-    )}>
-      <Icon className="size-3" />
-      {config.label}
-    </span>
-  );
+.input-error {
+  @apply border-error focus:ring-error/20;
+}
+```
+
+### 9.3 Tags / Chips / Badges
+
+```css
+.badge {
+  @apply inline-flex items-center gap-1.5;
+  @apply px-3 py-1 rounded-[var(--radius-chip)];
+  @apply text-sm font-medium;
+  @apply transition-colors duration-150;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  letter-spacing: 0.01em;
+}
+```
+
+**Status Badge colors (orden):**
+
+| Status | bg | text | Icono (lucide) |
+|--------|-----|------|-----------------|
+| `draft` | `bg-text-muted/15` | `text-text-secondary` | `Pencil` |
+| `in_kitchen` | `bg-warning/15` | `text-warning` | `CookingPot` |
+| `ready` | `bg-info/15` | `text-info` | `CheckCircle` |
+| `delivered` | `bg-purple-200` | `text-purple-800` | `Truck` |
+| `paid` | `bg-success/15` | `text-success` | `Banknote` |
+| `partially_paid` | `bg-orange-200` | `text-order-partially-paid` | `CreditCard` |
+| `closed` | `bg-text-muted/15` | `text-text-secondary` | `Archive` |
+
+**Role Badge colors:**
+
+| Rol | bg | text |
+|-----|-----|------|
+| `waiter` | `bg-info/15` | `text-info` |
+| `cashier` | `bg-success/15` | `text-success` |
+| `admin` | `bg-primary/15` | `text-primary` |
+| `superadmin` | `bg-error/15` | `text-error` |
+
+### 9.4 Cards (Tarjeta "Tela")
+
+```css
+.card {
+  @apply bg-surface rounded-[var(--radius-card)];
+  @apply shadow-[var(--shadow-card)];
+  @apply transition-all duration-200 ease-out;
+  @apply hover:shadow-[var(--shadow-card-hover)];
+}
+
+/* Rotación sutil en grids (aplicar vía nth-child) */
+.card:nth-child(odd)  { transform: rotate(0.6deg); }
+.card:nth-child(even) { transform: rotate(-0.4deg); }
+```
+
+### 9.5 Modal
+
+```css
+.modal-overlay {
+  @apply fixed inset-0 bg-text-primary/30 backdrop-blur-sm;
+  @apply flex items-center justify-center;
+  @apply z-50;
+}
+
+.modal-content {
+  @apply bg-surface rounded-[var(--radius-modal)] shadow-[var(--shadow-modal)];
+  @apply w-full max-w-lg p-5;
+  @apply animate-[modal-in_300ms_cubic-bezier(0.34,1.56,0.64,1)];
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 ```
 
 ---
 
-## 5. Layout Patterns
+## 10. Estados Especiales — Anti-Slop Zone
 
-### 5.1 Mesero Layout (`/mesero`)
+### 10.1 Empty States
 
-```tsx
-// client/src/app/mesero/layout.tsx
-export default function MeseroLayout({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
+> Cada empty state usa microcopy con la voz de "El Artista". Metáforas, calidez, humanidad. NUNCA "No data found".
 
-  return (
-    <div className="flex flex-col h-dvh bg-neutral-50">
-      {/* Content */}
-      <main className="flex-1 overflow-y-auto max-w-lg mx-auto w-full">
-        {children}
-      </main>
+**Mesas (mesero):**
+> *"Aún no hay mesas activas. Cuando asignes tu primera mesa del turno, aparecerá aquí como un lienzo en blanco listo para ser pintado."*
+> → Icono: `Palette` (lucide), animación float suave. Botón opcional: "Asignar mesa".
 
-      {/* Bottom Navigation */}
-      <nav className="h-16 bg-white border-t flex items-center justify-around shrink-0">
-        <NavItem href="/mesero/orders" icon={Utensils} label="Ordenes" active={pathname.includes('orders')} />
-        <NavItem href="/mesero/tables" icon={LayoutGrid} label="Mesas" active={pathname.includes('tables')} />
-        <NavItem href="/mesero/profile" icon={User} label="Perfil" active={pathname.includes('profile')} />
-      </nav>
-    </div>
+**Órdenes (mesero):**
+> *"El silencio antes del primer plato. Toca '+' para crear una nueva orden y darle sabor a la cocina."*
+> → Icono: `UtensilsCrossed`, animación float. Botón: "Nueva orden".
+
+**Órdenes (cajero):**
+> *"Todo en calma. Cuando llegue una cuenta por cobrar, la verás aquí — lista para cerrar el círculo."*
+> → Icono: `Coffee`, animación float.
+
+**Búsqueda sin resultados:**
+> *"Nada coincide con tu búsqueda. ¿Quizás lo anotaron con otro nombre? Prueba con menos letras."*
+> → Icono: `SearchX`.
+
+### 10.2 Error States
+
+> NUNCA "Something went wrong". Cada error cuenta una historia mínima.
+
+**Error de conexión:**
+> *"Parece que perdimos la señal. La cocina sigue trabajando — tus órdenes en borrador están a salvo. ¿Reintentamos?"*
+> → Icono: `WifiOff`. Botón: "Reintentar".
+
+**Error de servidor (500):**
+> *"Algo se enredó en el hilo. No es tu culpa — nuestro equipo ya lo está desenredando."*
+> → Icono: `Frown`. Botón: "Volver al inicio".
+
+**Error de validación:**
+> *"{Campo} necesita un poco de amor. {Mensaje específico}."*
+> → Sin icono. Mensaje inline con border-error en el input.
+
+**Error de autorización (403):**
+> *"Esta sección es solo para {rol}. Si crees que deberías verla, pídele a tu administrador que ajuste los hilos."*
+> → Icono: `Lock`.
+
+### 10.3 Loading States
+
+> NUNCA spinners genéricos. Usar "shimmer textil" (gradiente diagonal que evoca hilo).
+
+```css
+/* Shimmer textil — alterna entre dorado cálido y terracota sutil */
+.skeleton {
+  @apply bg-surface rounded-[var(--radius-card)] overflow-hidden;
+  background: linear-gradient(
+    110deg,
+    oklch(0.95 0.02 75) 30%,     /* linen */
+    oklch(0.72 0.16 75 / 0.15) 50%,  /* golden shimmer */
+    oklch(0.95 0.02 75) 70%      /* linen */
   );
+  background-size: 200% 100%;
+  animation: shimmer-textil 1.5s ease-in-out infinite;
 }
 
-function NavItem({ href, icon: Icon, label, active }: NavItemProps) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        'flex flex-col items-center justify-center gap-1 h-full px-6',
-        'min-w-[64px] min-h-[64px]',
-        active ? 'text-amber-600' : 'text-neutral-400',
-      )}
-    >
-      <Icon className="size-6" />
-      <span className="text-xs">{label}</span>
-    </Link>
-  );
-}
-```
-
-### 5.2 Cajero/Admin Layout (`/caja`, `/admin`)
-
-```tsx
-// client/src/components/layout/SidebarLayout.tsx
-interface SidebarLayoutProps {
-  navigation: { href: string; icon: LucideIcon; label: string }[];
-  children: ReactNode;
-}
-
-export function SidebarLayout({ navigation, children }: SidebarLayoutProps) {
-  const pathname = usePathname();
-
-  return (
-    <div className="flex h-screen bg-neutral-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r flex flex-col shrink-0">
-        <div className="h-16 flex items-center px-6 border-b">
-          <h1 className="text-xl font-bold text-amber-700">SOR</h1>
-        </div>
-        <nav className="flex-1 py-4">
-          {navigation.map(item => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 px-6 py-3 text-sm font-medium',
-                pathname === item.href
-                  ? 'bg-amber-50 text-amber-700 border-r-2 border-amber-600'
-                  : 'text-neutral-600 hover:bg-neutral-50',
-              )}
-            >
-              <item.icon className="size-5" />
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </aside>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="h-16 bg-white border-b flex items-center justify-end px-6 shrink-0">
-          <UserMenu />
-        </header>
-        <main className="flex-1 overflow-y-auto p-6">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
+@keyframes shimmer-textil {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 ```
 
-### 5.3 KDS Layout (`/kds`)
+**Variantes:**
+- `skeleton-card` → dimensiones de OrderCard (ancho del contenedor, alto 140px)
+- `skeleton-table-row` → dimensiones de fila de tabla (ancho completo, alto 56px)
+- `skeleton-kds` → dimensiones de KDSOrderCard (grid cell, alto 280px)
+- `skeleton-button` → dimensiones de botón (ancho 120px, alto 44px)
 
-```tsx
-// client/src/app/kds/page.tsx
-export default function KDSPage() {
-  const { orders } = useKDSOrders();
+### 10.4 Success States
 
-  // Fullscreen on mount
-  useEffect(() => {
-    document.documentElement.requestFullscreen?.();
-  }, []);
+**Orden enviada a cocina:**
+> *"¡A cocinar! Tu orden #{id} ya está en manos del chef. La magia comienza."*
+> → Toast con icono `ChefHat`, animación slide-in desde top-right, auto-dismiss 3s.
 
-  // Wake lock to prevent screen sleep
-  useEffect(() => {
-    let wakeLock: WakeLockSentinel | null = null;
-    async function acquireWakeLock() {
-      try {
-        wakeLock = await navigator.wakeLock?.request('screen');
-      } catch {}
-    }
-    acquireWakeLock();
-    return () => { wakeLock?.release(); };
-  }, []);
+**Pago completado:**
+> *"Cuenta saldada. Mesa {número} lista para su próxima historia."*
+> → Toast verde musgo, icono `CheckCircle`.
 
-  const inKitchen = orders.filter(o => o.status === 'in_kitchen');
+**Onboarding completado:**
+> *"Ya estás listo. El restaurante es tu escenario — a brillar."*
+> → Full-screen success con animación, redirige a home en 2s.
 
-  return (
-    <div className="h-screen bg-neutral-950 flex flex-col overflow-hidden">
-      {/* KDS Header */}
-      <header className="h-20 bg-neutral-900 border-b border-neutral-800 flex items-center justify-between px-8 shrink-0">
-        <h1 className="text-kds-lg font-bold text-neutral-50">COCINA</h1>
-        <div className="flex items-center gap-8">
-          <span className="text-kds-base text-neutral-300">{formatTime(new Date())}</span>
-          <span className="text-kds-base text-amber-400">
-            {inKitchen.length} Activas
-          </span>
-        </div>
-      </header>
+### 10.5 Dropdowns, Popovers, Tooltips
 
-      {/* Order Grid */}
-      <main className="flex-1 p-4 overflow-hidden">
-        {inKitchen.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <EmptyState
-              icon={Coffee}
-              title="Sin ordenes pendientes"
-              description="Las ordenes entrantes apareceran aqui"
-              variant="kds"
-            />
-          </div>
-        ) : (
-          <div className="grid grid-cols-4 gap-4 h-full">
-            {inKitchen.map(order => (
-              <KDSOrderCard
-                key={order.id}
-                order={order}
-                onMarkReady={() => markAsReady(order.id)}
-              />
-            ))}
-          </div>
-        )}
-      </main>
-    </div>
-  );
+```css
+.dropdown-content {
+  @apply bg-surface rounded-[var(--radius-card)] shadow-[var(--shadow-card-hover)];
+  @apply border border-text-muted/10;
+  @apply py-1 min-w-[180px];
+  @apply animate-[dropdown-in_150ms_ease-out];
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dropdown-item {
+  @apply px-4 py-2 mx-1 rounded-[var(--radius-control)];
+  @apply text-text-primary text-sm cursor-pointer;
+  @apply transition-colors duration-100;
+  @apply hover:bg-primary/10;
 }
 ```
 
 ---
 
-## 6. States
+## 11. Layout Patterns
 
-### 6.1 Loading States
+### 11.1 Mesero (Tablet 10", Touch)
 
-Use skeleton components, never spinners for content areas.
-
-```tsx
-// Orders loading
-function OrdersSkeleton() {
-  return (
-    <div className="grid gap-3">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <Card key={i} className="min-h-[120px]">
-          <Card.Header>
-            <Skeleton className="h-6 w-32" />
-          </Card.Header>
-          <Card.Body>
-            <Skeleton className="h-4 w-48" />
-          </Card.Body>
-          <Card.Footer>
-            <Skeleton className="h-3 w-24" />
-          </Card.Footer>
-        </Card>
-      ))}
-    </div>
-  );
-}
+```
+┌──────────────────────────────┐
+│  Header: Title + User avatar  │  h-14
+├──────────────────────────────┤
+│                              │
+│  Main Content                │  flex-1, max-w-[960px] mx-auto
+│  (padding p-4)               │  gap-3 grid-cols-2 (productos)
+│  (productos: grid de tarjetas
+│   con rotación sutil)        │
+│                              │
+├──────────────────────────────┤
+│  Bottom Nav: 3-4 items       │  h-16, icon + label
+│  (Mesas | Órdenes | Perfil)  │  btn-ghost activo → primary
+└──────────────────────────────┘
 ```
 
-### 6.2 Empty States
+- No hover effects (touch no tiene hover). Usar `active:` states.
+- Touch targets min 48x48px.
+- Swipe gestures para navegación entre tabs.
+- Fondo con textura de tela sutil.
 
-```tsx
-// client/src/components/shared/EmptyState.tsx
-interface EmptyStateProps {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  action?: { label: string; onClick: () => void };
-  variant?: 'default' | 'kds';
-}
+### 11.2 Cajero / Admin (Desktop)
 
-function EmptyState({ icon: Icon, title, description, action, variant = 'default' }: EmptyStateProps) {
-  return (
-    <div className={cn(
-      'flex flex-col items-center justify-center text-center p-8',
-      variant === 'kds' ? 'text-neutral-500 gap-6' : 'text-neutral-400 gap-4',
-    )}>
-      <Icon className={variant === 'kds' ? 'size-20 opacity-20' : 'size-16 opacity-30'} />
-      <h3 className={cn('font-semibold', variant === 'kds' ? 'text-kds-lg' : 'text-lg')}>
-        {title}
-      </h3>
-      <p className={cn('max-w-xs', variant === 'kds' ? 'text-kds-base' : 'text-sm')}>
-        {description}
-      </p>
-      {action && (
-        <Button onClick={action.onClick} variant="outline" size={variant === 'kds' ? 'kds' : 'default'}>
-          {action.label}
-        </Button>
-      )}
-    </div>
-  );
-}
+```
+┌──────────┬──────────────────────────────────┐
+│ Sidebar  │  Header: Page title + SearchBar   │
+│ w-64     ├──────────────────────────────────┤
+│          │                                  │
+│ Nav      │  Main Content                    │
+│ links    │  flex-1, max-w-[960px] mx-auto   │
+│ + logo   │  Tablas con striped (alternan)    │
+│          │  bg-surface / bg-background       │
+│          │  Hover en filas: bg-primary/5     │
+│          │                                  │
+│          │  Split-panel view (cajero):       │
+│          │  lista izq + detalle der          │
+│          │                                  │
+│ User     │  Footer: status bar              │
+│ menu     │                                  │
+└──────────┴──────────────────────────────────┘
 ```
 
-### 6.3 Error States
+- Sidebar con logo arriba, nav links con `Space Grotesk`, item activo → `bg-primary/10 text-primary`.
+- Sidebar fondo `surface`, separado del contenido con borde "hilo" (border-stitch).
+- Hover states en filas de tabla y botones.
+- Focus visible para keyboard nav.
 
-```tsx
-// client/src/components/shared/ErrorAlert.tsx
-function ErrorAlert({ message, onRetry }: { message: string; onRetry?: () => void }) {
-  return (
-    <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-      <AlertCircle className="size-5 text-red-500 mt-0.5 shrink-0" />
-      <div className="flex-1">
-        <p className="text-sm font-medium text-red-800">Error</p>
-        <p className="text-sm text-red-600 mt-1">{message}</p>
-        {onRetry && (
-          <Button variant="outline" size="sm" onClick={onRetry} className="mt-3">
-            Reintentar
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-}
+### 11.3 KDS (32" 1080p Monitor, Pared)
+
+```
+┌────────────────────────────────────────────────────┐
+│  KDS Header: Restaurante + Hora + Órdenes activas   │  h-20
+│  bg-kds-bg, text-kds-text                           │
+├────────────────────────────────────────────────────┤
+│                                                     │
+│  Grid de órdenes: grid-cols-4 gap-6 p-6             │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐   │
+│  │ Mesa 3  │ │ Mesa 7  │ │ Mesa 1  │ │ Mesa 12 │   │
+│  │ 2 items │ │ 4 items │ │ 1 item  │ │ 5 items │   │
+│  │ 2:34 ⏱  │ │ 0:15 ⏱  │ │ 8:45 ⚠  │ │ 14:02 🚨│   │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘   │
+│                                                     │
+│  New orders: slide-in from top + amber glow         │
+│  Done orders: slide-out right + fade                │
+│                                                     │
+└────────────────────────────────────────────────────┘
 ```
 
-### 6.4 Optimistic Updates
+**Reglas KDS:**
+- Dark theme: `bg-kds-bg`, `text-kds-text`, `border-kds-surface`.
+- Tipografía: `Space Grotesk Bold` en TODO (headings y body). No system-ui.
+- `cursor: none` en pantalla completa.
+- `data-kds` attribute en el root para scoping de estilos oscuros.
+- Auto `fullscreen()` + `wakeLock` on mount.
+- Grid `grid-cols-4`, tarjetas con `rounded-[var(--radius-kds-card)]`.
+- No textura de fondo. No rotaciones. Esto es funcional, no decorativo.
 
-For status changes (mark ready, send to kitchen), update UI immediately, then sync with server:
+**KDS Order Aging (Dark Theme):**
 
-```tsx
-function useOptimisticOrder(orderId: number) {
-  const queryClient = useQueryClient();
+| Tiempo | Indicador | Estilo |
+|--------|-----------|--------|
+| `<5 min` | Normal | `border-kds-surface` |
+| `5-10 min` | Atención | `border-accent animate-pulse` |
+| `10-15 min` | Warning | `border-warning animate-pulse` + icono `AlertTriangle` |
+| `>15 min` | Crítico | `border-error animate-pulse` + icono `AlertTriangle` + fondo `error/15` |
 
-  const updateStatus = useMutation({
-    mutationFn: (newStatus: OrderStatus) =>
-      api.put(`/api/orders/${orderId}/status`, { status: newStatus }),
-    onMutate: async (newStatus) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['orders'] });
+### 11.4 Breakpoints
 
-      // Snapshot previous value
-      const previousOrders = queryClient.getQueryData<Order[]>(['orders']);
+| Nombre | Min-width | Dispositivo |
+|--------|-----------|-------------|
+| `sm` | 640px | Tablet portrait |
+| `md` | 768px | Tablet landscape |
+| `lg` | 1024px | Desktop |
+| `xl` | 1280px | Desktop wide |
+| `kds` | 1920px | KDS monitor |
 
-      // Optimistically update
-      queryClient.setQueryData<Order[]>(['orders'], old =>
-        old?.map(o => o.id === orderId ? { ...o, status: newStatus } : o),
-      );
+### 11.5 Login Screen
 
-      return { previousOrders };
-    },
-    onError: (_err, _newStatus, context) => {
-      // Rollback on error
-      queryClient.setQueryData(['orders'], context?.previousOrders);
-      toast({ title: 'Error al actualizar estado', variant: 'destructive' });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['orders'] });
-    },
-  });
-
-  return updateStatus;
-}
+```
+┌─────────────────────────────────────┐
+│                                     │
+│           [Logo SOR]                │
+│      "Bienvenido de vuelta"         │
+│                                     │
+│    ┌─────────────────────────┐      │
+│    │  Email                   │      │
+│    ├─────────────────────────┤      │
+│    │  Contraseña              │      │
+│    ├─────────────────────────┤      │
+│    │  [  Entrar al restaurante ]│    │
+│    └─────────────────────────┘      │
+│                                     │
+│   Textura de fondo: tela sutil      │
+│   Card centrada, sombra modal       │
+│   "Entrar al restaurante" no "Login"│
+└─────────────────────────────────────┘
 ```
 
 ---
 
-## 7. shadcn/ui Configuration
+## 12. Assets Visuales
 
-### 7.1 Theme Override
+### 12.1 Iconos
 
-```json
-// components.json (shadcn/ui init)
+- **Librería:** `lucide-react` (árbol sacudido, import individual).
+- **Estilo:** Linear, stroke-width 2.
+
+| Contexto | Tamaño | Tailwind |
+|----------|--------|----------|
+| Mesero (tablet, touch) | 24px | `size-6` |
+| Cajero/Admin (desktop) | 16px | `size-4` |
+| KDS | 32px | `size-8` |
+| Icono en botón | igual que texto (~20px) | `size-5` |
+| Icono decorative (empty state) | 48px | `size-12` |
+
+> **Reglas:** Icon-only buttons requieren `aria-label` SIEMPRE. No usar iconos sin texto en navegación principal (bottom nav, sidebar).
+
+### 12.2 Ilustraciones
+
+- **Empty states:** SVG inline minimalistas, trazo irregular (como boceto a mano). Colores: `text-muted` con opacidad variable.
+- **Error states:** Mismo estilo, tono `error` suave.
+- **Sin fotografías de stock.** Si se necesita imagen de producto, placeholder con textura.
+
+### 12.3 Tratamiento de Imágenes
+
+- Productos: `rounded-[var(--radius-card)]`, con ligero `shadow-[var(--shadow-card)]`.
+- Avatares: Circulares (`rounded-full`), border 2px `primary/20`.
+- Sin filtros. Sin overlays de color sobre imágenes.
+
+---
+
+## 13. Prohibiciones Explícitas — Anti-Slop Manifesto
+
+Esta app NUNCA usará:
+
+- [ ] Gradiente púrpura/azul genérico de AI
+- [ ] Spinner de carga genérico (usar skeleton textil)
+- [ ] "No data found" como empty state
+- [ ] "Something went wrong" como error state
+- [ ] Paleta de grises fríos sin punto de vista emocional
+- [ ] Radios uniformes de 8px en todos los elementos
+- [ ] Layout simétrico de 12-columnas en todos lados
+- [ ] Animaciones fade-in genéricas sin dirección ni propósito
+- [ ] Iconos de Material Design sin personalización (usamos lucide)
+- [ ] Hero centrado con un CTA y tres features cards debajo
+- [ ] Cards sin rotación en grids de mesero
+- [ ] Tipografía sin bold en headings (Space Grotesk Bold es OBLIGATORIO en títulos)
+- [ ] Negro puro `#000` o `oklch(0 0 0)` en ninguna parte (usar espresso `#2c1a10`)
+- [ ] Blanco puro `#fff` como fondo (usar parchment `#fdfaf5`)
+- [ ] Scrollbars default del browser (estilizar con warm tones)
+
+---
+
+## 14. Referencias Visuales
+
+Sitios y apps que capturan la esencia de este design system:
+
+1. **[Goodfight](https://goodfight.com)** — Tipografía bold + texturas orgánicas, layout editorial con rotaciones
+2. **[Are.na](https://are.na)** — Estructura tipo "collage pegado a mano", bordes variables, personalidad de cuaderno
+3. **[Everlane](https://everlane.com)** — Paleta terrosa, calidez, textil como inspiración material
+4. **[Klim Type Foundry](https://klim.co.nz)** — Bold typography as hero, imperfect grid
+5. **[Restaurant Noma](https://noma.dk)** — Fotografía y color: terracotas, musgos, cremas, otoño nórdico
+
+---
+
+## 15. Implementación: shadcn/ui Theme
+
+```jsonc
+// components.json
 {
   "$schema": "https://ui.shadcn.com/schema.json",
   "style": "new-york",
@@ -1034,50 +791,92 @@ function useOptimisticOrder(orderId: number) {
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "src/app/globals.css",
+    "css": "src/app/index.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
   "aliases": {
     "components": "@/components",
-    "utils": "@/lib/utils",
     "ui": "@/components/ui",
     "lib": "@/lib",
-    "hooks": "@/hooks"
+    "hooks": "@/hooks",
+    "utils": "@/lib/utils"
   }
 }
 ```
 
-### 7.2 Button Variants Extension
+> **Nota:** shadcn/ui se usa SOLO para primitivas (Button, Dialog, Sheet, Select, etc.). Todos los tokens visuales son nuestros (definidos en este documento). Los componentes shadcn se sobreescriben vía CSS variables de Tailwind `@theme`, nunca modificando el source de shadcn directamente.
 
-Add KDS variants to the base Button:
+### Tailwind Config (app.css)
 
-```tsx
-// client/src/components/ui/button.tsx
-// Extend buttonVariants with KDS sizes
-const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:pointer-events-none disabled:opacity-50',
-  {
-    variants: {
-      variant: {
-        // ... shadcn defaults
-        kds: 'bg-amber-600 text-white shadow hover:bg-amber-500 active:scale-95 transition-transform',
-      },
-      size: {
-        // ... shadcn defaults
-        kds: 'h-14 rounded-xl px-8 text-kds-sm font-bold', // 56px + 32px font
-        'kds-lg': 'h-20 rounded-xl px-12 text-kds-lg font-bold', // 80px + 48px font
-      },
-    },
-  },
-);
+```css
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
+@theme {
+  /* === Colores (ver sección 2.1 para lista completa) === */
+  /* Hereda todos los --color-* definidos arriba */
+
+  /* === Radios variables === */
+  --radius: 1rem; /* default → card */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 9999px;
+
+  /* === Sombras === */
+  /* Hereda --shadow-* */
+
+  /* === Fuentes === */
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* === Scrollbar con personalidad === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(0.95 0.02 75); /* linen */
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.60 0.03 58); /* muted-brown */
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.45 0.03 55); /* text-secondary */
+}
+
+/* === prefers-reduced-motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* === KDS dark theme scope === */
+[data-kds] {
+  color-scheme: dark;
+}
+[data-kds] ::-webkit-scrollbar-track {
+  background: oklch(0.15 0.02 38);
+}
+[data-kds] ::-webkit-scrollbar-thumb {
+  background: oklch(0.45 0.02 55);
+}
 ```
 
-### 7.3 `cn()` Utility
+---
 
-```tsx
-// client/src/lib/utils.ts
+## 16. Utilidades
+
+```typescript
+// lib/utils.ts
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -1089,129 +888,24 @@ export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('es-MX', {
     style: 'currency',
     currency: 'MXN',
+    minimumFractionDigits: 2,
   }).format(amount);
 }
 
-export function formatTime(date: Date | string): string {
+export function formatTime(date: string | Date): string {
   return new Intl.DateTimeFormat('es-MX', {
     hour: '2-digit',
     minute: '2-digit',
   }).format(new Date(date));
 }
-```
 
----
-
-## 8. Accessibility (a11y) Checklist
-
-Per screen profile:
-
-| Rule | Mesero | Cajero/Admin | KDS |
-|------|--------|-------------|-----|
-| Touch target min 48x48px | Required | Recommended | N/A (no interaction beyond buttons) |
-| Color contrast ratio 4.5:1 | Required | Required | Required (dark theme tests) |
-| Focus visible (keyboard nav) | N/A (touch only) | Required | Required |
-| `aria-label` on icon-only buttons | Required | Required | Required |
-| Screen reader announcements | Required (order sent, status change) | Required (payment confirmed) | Required (new order) |
-| `role` attributes | `role="button"` on custom controls | `role="table"`, `role="row"` | `role="list"`, `role="listitem"` |
-| `aria-live` for dynamic content | `polite` for status changes | `polite` for payment updates | `assertive` for new orders |
-
----
-
-## 9. Development Setup
-
-```bash
-# Initialize shadcn/ui
-npx shadcn@latest init
-
-# Add primitives as needed
-npx shadcn@latest add button
-npx shadcn@latest add card
-npx shadcn@latest add dialog
-npx shadcn@latest add table
-npx shadcn@latest add badge
-npx shadcn@latest add input
-npx shadcn@latest add select
-npx shadcn@latest add tabs
-npx shadcn@latest add sheet
-npx shadcn@latest add toast
-npx shadcn@latest add skeleton
-npx shadcn@latest add scroll-area
-
-# Install icons
-npm install lucide-react
-```
-
-### Tailwind v4 Custom Theme
-
-```css
-/* client/src/app/globals.css */
-@import "tailwindcss";
-
-@theme {
-  /* Colors -- see Section 1.1 */
-  --color-primary: oklch(0.705 0.2 62);
-  --color-primary-light: oklch(0.87 0.15 75);
-  --color-primary-dark: oklch(0.55 0.18 55);
-  /* ... remaining tokens ... */
-
-  /* KDS typography scale */
-  --font-size-kds-sm: 1.5rem;    /* 24px */
-  --font-size-kds-base: 2rem;    /* 32px */
-  --font-size-kds-lg: 3rem;      /* 48px */
-  --font-size-kds-xl: 4rem;      /* 64px */
-  --font-size-kds-2xl: 5rem;     /* 80px */
-}
-
-/* Dark theme for KDS */
-@variant kds (&:where([data-kds] *));
-
-@layer base {
-  body {
-    @apply bg-neutral-50 text-neutral-900 antialiased;
-  }
-
-  [data-kds] {
-    @apply bg-neutral-950 text-neutral-50;
-    font-size: var(--font-size-kds-base);
-    -webkit-font-smoothing: antialiased;
-    cursor: none; /* Hide cursor for touchless KDS */
-  }
+/** Aplica rotación pseudo-aleatoria basada en índice para efecto "diario personal" */
+export function cardRotation(index: number): string {
+  const rotations = [0.6, -0.4, 0.3, -0.7, 0.9, -0.5, 0.2, -0.8];
+  return `rotate(${rotations[index % rotations.length]}deg)`;
 }
 ```
 
 ---
 
-## 10. Component Inventory (MVP Scope)
-
-| Component | Type | Screen | Priority |
-|-----------|------|--------|----------|
-| `Button` | Primitive (shadcn extended) | All | P0 |
-| `Input` | Primitive | All | P0 |
-| `Badge` | Primitive (status variants) | All | P0 |
-| `Card` | Primitive (compound) | All | P0 |
-| `Dialog` | Primitive | All | P0 |
-| `Table` | Primitive | Cajero, Admin | P0 |
-| `Select` | Primitive | All | P1 |
-| `Tabs` | Primitive | Mesero (categories) | P1 |
-| `Sheet` | Primitive | Mesero (order detail) | P1 |
-| `Toast` | Primitive | All | P1 |
-| `Skeleton` | Primitive | All | P1 |
-| `ScrollArea` | Primitive | All | P2 |
-| `OrderCard` | Domain | Mesero | P0 |
-| `KDSOrderCard` | Domain | KDS | P0 |
-| `TableMap` | Domain | Mesero | P0 |
-| `ProductSelector` | Domain | Mesero | P0 |
-| `ModifierPicker` | Domain | Mesero | P0 |
-| `PaymentForm` | Domain | Cajero | P0 |
-| `CashRegister` | Domain | Cajero | P1 |
-| `StatusBadge` | Shared | All | P0 |
-| `SearchBar` | Shared | All | P1 |
-| `EmptyState` | Shared | All | P1 |
-| `ErrorAlert` | Shared | All | P1 |
-| `UserMenu` | Shared | All | P1 |
-| `SidebarLayout` | Layout | Cajero, Admin | P0 |
-| `BottomNavLayout` | Layout | Mesero | P0 |
-| `KDSLayout` | Layout | KDS | P0 |
-
-P0 = MVP (Fase 1), P1 = Consolidacion (Fase 2), P2 = Optimizacion (Fase 3)
+> **Este documento es la fuente de verdad visual del proyecto SOR. Todo PR de UI debe justificarse contra estas reglas.**

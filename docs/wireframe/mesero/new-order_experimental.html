@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SOR — Nueva Orden</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@400;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   { DEFAULT:'#6B1A2A', light:'#8B2535', dark:'#4A0F1B', foreground:'#F0E6D3' },
+            secondary: { DEFAULT:'#2D4A22', light:'#3D6230', dark:'#1C3015', foreground:'#F0E6D3' },
+            accent:    { DEFAULT:'#C9A84C', foreground:'#2C1810' },
+            success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
+            background:'#FFFFFF', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
+            text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
+          },
+          fontFamily: {
+            serif: ["'Playfair Display'", 'Georgia', 'serif'],
+            mono: ["'JetBrains Mono'", "'Courier New'", 'monospace'],
+            sans: ["'DM Sans'", "'Helvetica Neue'", 'sans-serif'],
+            script: ["'Caveat'", 'cursive'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', 'Helvetica Neue', sans-serif; }
+
+    .bg-paper {
+      background-color: #FFFFFF;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04' /%3E%3C/svg%3E");
+    }
+
+    .shadow-paper {
+      box-shadow: 0 1px 0 #C9A84C, 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
+    }
+
+    .card-brutal {
+      clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+    }
+
+    .category-scroll::-webkit-scrollbar { display: none; }
+    .category-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .border-morph { transition: border 200ms ease; }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    .toast-enter { animation: toast-in 200ms ease-out; }
+
+    .qty-btn {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+      font-weight: 700; font-size: 16px;
+      border: 2px solid #6B1A2A; border-radius: 0;
+      background: transparent; color: #6B1A2A;
+      cursor: pointer; user-select: none;
+      line-height: 1;
+    }
+    .qty-btn:active { transform: scale(0.9); }
+
+    .add-btn {
+      padding: 6px 14px;
+      font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+      font-weight: 700; font-size: 13px;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #8B7355; background: transparent;
+      border: 2px solid #8B7355; border-radius: 0;
+      cursor: pointer; user-select: none;
+    }
+    .add-btn:active { transform: scale(0.95); }
+  </style>
+</head>
+<body class="h-screen max-w-lg mx-auto relative select-none bg-paper">
+
+  <!-- ==================== STEP 1: Product Selection ==================== -->
+  <div id="step-1" class="flex flex-col h-full">
+    <!-- Header -->
+    <header class="shrink-0 px-4 py-3 flex items-center justify-between" style="background:#EBDCC4; border-bottom:6px solid #6B1A2A;">
+      <a href="orders_experimental.html" class="flex items-center gap-2 text-text-primary active:scale-95 transition-transform">
+        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span class="font-mono font-bold text-[14px] uppercase tracking-[0.05em]">Volver</span>
+      </a>
+      <span class="font-serif font-bold text-[28px] tracking-[-0.01em] text-text-primary">Mesa 5</span>
+      <div class="flex items-center justify-center" id="item-count-badge"
+        style="width:32px; height:32px; background:transparent; border:3px solid #6B1A2A; border-radius:0;">
+        <span class="font-mono font-bold text-[14px] text-text-primary" id="badge-count">0</span>
+      </div>
+    </header>
+
+    <!-- Category Chips -->
+    <div class="shrink-0 px-4 pt-3 pb-2">
+      <div class="flex gap-3 category-scroll overflow-x-auto pb-1" id="categories">
+        <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-category="all"
+          style="padding:8px 18px; background:#6B1A2A; color:#F0E6D3; border:2px solid #6B1A2A; border-radius:0;">Todas</button>
+        <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-category="platos"
+          style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Platos</button>
+        <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-category="bebidas"
+          style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Bebidas</button>
+        <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-category="postres"
+          style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Postres</button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <main class="flex-1 overflow-y-auto px-4 pt-2 pb-2">
+      <div class="grid grid-cols-2 gap-3" id="product-grid"></div>
+    </main>
+
+    <!-- Bottom Bar -->
+    <div class="shrink-0 px-4 pb-4 pt-0" style="background:#E5D4B8; border-top:3px solid #C9A84C;">
+      <div class="flex items-center justify-center gap-2 py-2">
+        <span class="font-mono font-bold text-[14px] tracking-[0.02em] text-text-primary" id="bottom-items">0 items</span>
+        <span class="font-mono text-[14px] text-text-muted">·</span>
+        <span class="font-mono font-bold text-[18px] tracking-[0.02em] text-text-primary" id="bottom-total">$0.00</span>
+      </div>
+      <button id="btn-revisar" onclick="goToStep2()" disabled
+        class="w-full py-3.5 font-sans font-bold text-[15px] uppercase tracking-[0.1em] select-none transition-all flex items-center justify-center gap-2"
+        style="background:#F0E6D3; color:#6B1A2A; border:6px solid #6B1A2A; border-radius:0; opacity:0.4; cursor:default;"
+        onmouseover="if(!this.disabled){this.style.background='#6B1A2A';this.style.color='#F0E6D3';}"
+        onmouseout="if(!this.disabled){this.style.background='#F0E6D3';this.style.color='#6B1A2A';}">
+        REVISAR ORDEN
+        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== STEP 2: Cart Summary ==================== -->
+  <div id="step-2" class="flex flex-col h-full" style="display:none;">
+    <!-- Header -->
+    <header class="shrink-0 px-4 py-3 flex items-center justify-center relative" style="background:#EBDCC4; border-bottom:6px solid #6B1A2A;">
+      <button onclick="goToStep1()" class="absolute left-4 flex items-center gap-2 text-text-primary active:scale-95 transition-transform">
+        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span class="font-mono font-bold text-[14px] uppercase tracking-[0.05em]">Volver</span>
+      </button>
+      <span class="font-serif font-bold text-[24px] tracking-[-0.01em] text-text-primary">Revisar</span>
+    </header>
+
+    <div class="flex-1 overflow-y-auto px-4 pt-4 pb-2 flex flex-col gap-4" id="step2-content">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Send Button -->
+    <div class="shrink-0 px-4 pb-4 pt-1">
+      <button onclick="enviarACocina()"
+        class="w-full py-3.5 font-sans font-bold text-[15px] uppercase tracking-[0.1em] select-none active:scale-[0.98] transition-all"
+        style="background:#F0E6D3; color:#6B1A2A; border:6px solid #6B1A2A; border-radius:0;"
+        onmouseover="this.style.background='#6B1A2A';this.style.color='#F0E6D3';"
+        onmouseout="this.style.background='#F0E6D3';this.style.color='#6B1A2A';">
+        ENVIAR A COCINA
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-4 left-1/2 z-50 hidden toast-enter px-5 py-3 select-none" style="background:#2D4A22; border:3px solid #1C3015; border-radius:0;">
+    <p class="font-mono font-bold text-[14px] uppercase tracking-[0.05em] text-center" style="color:#F0E6D3;">Orden enviada a cocina</p>
+  </div>
+
+  <script>
+    var products = [
+      { id: 'hamburguesa', category: 'platos',   name: 'Hamburguesa Clásica', price: 120, modifier: 'Sin cebolla' },
+      { id: 'pizza',        category: 'platos',   name: 'Pizza Margarita',     price: 150, modifier: 'Extra queso' },
+      { id: 'tacos',        category: 'platos',   name: 'Tacos al Pastor',     price: 85,  modifier: '' },
+      { id: 'ensalada',     category: 'platos',   name: 'Ensalada César',      price: 95,  modifier: '' },
+      { id: 'pasta',        category: 'platos',   name: 'Pasta Alfredo',       price: 130, modifier: '' },
+      { id: 'coca-cola',    category: 'bebidas',  name: 'Coca-Cola 355ml',     price: 35,  modifier: '' },
+      { id: 'agua',         category: 'bebidas',  name: 'Agua Mineral 500ml',  price: 25,  modifier: '' },
+      { id: 'limonada',     category: 'bebidas',  name: 'Limonada Natural',    price: 45,  modifier: 'Sin azúcar' },
+      { id: 'flan',         category: 'postres',  name: 'Flan de Caramelo',    price: 65,  modifier: '' },
+      { id: 'helado',       category: 'postres',  name: 'Helado de Vainilla',  price: 55,  modifier: '' },
+    ];
+
+    var cart = {};
+    var currentFilter = 'all';
+
+    function getCartTotals() {
+      var totalItems = 0;
+      var totalPrice = 0;
+      Object.values(cart).forEach(function(item) {
+        totalItems += item.qty;
+        totalPrice += item.price * item.qty;
+      });
+      return { items: totalItems, price: totalPrice };
+    }
+
+    function addToCart(productId) {
+      var prod = products.find(function(p) { return p.id === productId; });
+      if (!prod) return;
+
+      if (cart[productId]) {
+        cart[productId].qty += 1;
+      } else {
+        cart[productId] = { name: prod.name, price: prod.price, qty: 1, modifier: prod.modifier };
+      }
+
+      renderAll();
+    }
+
+    function updateQty(productId, delta) {
+      if (!cart[productId]) return;
+
+      cart[productId].qty += delta;
+      if (cart[productId].qty <= 0) {
+        removeFromCart(productId);
+        return;
+      }
+
+      renderAll();
+    }
+
+    function removeFromCart(productId) {
+      delete cart[productId];
+      renderAll();
+    }
+
+    function renderAll() {
+      renderBadge();
+      renderProductGrid(currentFilter);
+      renderBottomBar();
+      renderStep2();
+    }
+
+    function renderBadge() {
+      var t = getCartTotals();
+      document.getElementById('badge-count').textContent = t.items;
+    }
+
+    function renderProductGrid(filter) {
+      var grid = document.getElementById('product-grid');
+      var filtered = products.filter(function(p) {
+        return filter === 'all' || p.category === filter;
+      });
+
+      var html = '';
+      filtered.forEach(function(p) {
+        var inCart = !!cart[p.id];
+        var qty = inCart ? cart[p.id].qty : 0;
+        var border = inCart ? '4px solid #6B1A2A' : '0px solid transparent';
+
+        var actionHtml = '';
+        if (inCart) {
+          actionHtml =
+            '<div style="display:flex;align-items:center;gap:8px;">' +
+            '  <button onclick="event.stopPropagation();updateQty(\'' + p.id + '\',-1)" class="qty-btn">&mdash;</button>' +
+            '  <span style="font-family:\'JetBrains Mono\',\'Courier New\',monospace;font-weight:700;font-size:16px;color:#2C1810;min-width:22px;text-align:center;">' + qty + '</span>' +
+            '  <button onclick="event.stopPropagation();updateQty(\'' + p.id + '\',1)" class="qty-btn">+</button>' +
+            '</div>';
+        } else {
+          actionHtml =
+            '<button onclick="event.stopPropagation();addToCart(\'' + p.id + '\')" class="add-btn">+ Agregar</button>';
+        }
+
+        html +=
+          '<div class="card-brutal shadow-paper p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative border-morph select-none"' +
+          '  style="background:#EBDCC4; border:' + border + ';"' +
+          '  data-product="' + p.id + '" data-category="' + p.category + '"' +
+          '  onclick="addToCart(\'' + p.id + '\')">' +
+          '  <span class="font-serif font-bold text-[20px] tracking-[-0.01em] leading-tight" style="color:#6B1A2A;">' + p.name + '</span>' +
+          '  <span class="font-mono font-bold text-[22px] tracking-[0.02em]" style="color:#2D4A22;">$' + p.price.toFixed(2) + '</span>' +
+          '  ' + actionHtml +
+          '</div>';
+      });
+
+      grid.innerHTML = html;
+      currentFilter = filter;
+    }
+
+    function renderBottomBar() {
+      var t = getCartTotals();
+      document.getElementById('bottom-items').textContent = t.items + ' items';
+      document.getElementById('bottom-total').textContent = '$' + t.price.toFixed(2);
+
+      var btn = document.getElementById('btn-revisar');
+      if (t.items === 0) {
+        btn.disabled = true;
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'default';
+        btn.style.background = '#F0E6D3';
+        btn.style.color = '#6B1A2A';
+      } else {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+      }
+    }
+
+    function goToStep2() {
+      var t = getCartTotals();
+      if (t.items === 0) return;
+
+      document.getElementById('step-1').style.display = 'none';
+      document.getElementById('step-2').style.display = 'flex';
+      renderStep2();
+    }
+
+    function goToStep1() {
+      document.getElementById('step-2').style.display = 'none';
+      document.getElementById('step-1').style.display = 'flex';
+      renderProductGrid(currentFilter);
+    }
+
+    function renderStep2() {
+      var step2El = document.getElementById('step2-content');
+      if (!step2El) return;
+
+      var t = getCartTotals();
+      if (t.items === 0) {
+        step2El.innerHTML =
+          '<div class="flex-1 flex items-center justify-center">' +
+          '  <p class="font-script text-[20px]" style="color:#8B7355;">El carrito está vacío</p>' +
+          '</div>';
+        return;
+      }
+
+      var tip = t.price * 0.15;
+      var total = t.price + tip;
+
+      var itemsHtml = '';
+      var keys = Object.keys(cart);
+      keys.forEach(function(key, idx) {
+        var item = cart[key];
+        var sub = item.price * item.qty;
+
+        itemsHtml +=
+          '<div class="py-3 select-none"' + (idx < keys.length - 1 ? ' style="border-bottom:2px solid #C9A84C;"' : '') + '>' +
+
+          '  <div class="flex items-center justify-between mb-1">' +
+          '    <div class="flex-1 min-w-0">' +
+          '      <div class="flex items-center gap-3">' +
+          '        <span class="font-serif font-bold text-[18px] tracking-[-0.01em] text-text-primary truncate">' + item.name + '</span>' +
+          '        <div class="flex items-center gap-1.5 shrink-0">' +
+          '          <button onclick="event.stopPropagation();updateQty(\'' + key + '\',-1);renderStep2();"' +
+          '            style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-family:\'DM Sans\';font-weight:700;font-size:14px;color:#6B1A2A;background:transparent;border:2px solid #6B1A2A;border-radius:0;cursor:pointer;line-height:1;">&mdash;</button>' +
+          '          <span style="font-family:\'JetBrains Mono\';font-weight:700;font-size:14px;color:#2C1810;min-width:18px;text-align:center;">' + item.qty + '</span>' +
+          '          <button onclick="event.stopPropagation();updateQty(\'' + key + '\',1);renderStep2();"' +
+          '            style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-family:\'DM Sans\';font-weight:700;font-size:14px;color:#6B1A2A;background:transparent;border:2px solid #6B1A2A;border-radius:0;cursor:pointer;line-height:1;">+</button>' +
+          '        </div>' +
+          '      </div>' +
+          '    </div>' +
+          '    <button onclick="event.stopPropagation();removeFromCart(\'' + key + '\');renderStep2();"' +
+          '      class="shrink-0 active:scale-90 transition-transform ml-2" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#8B1A1A;cursor:pointer;">' +
+          '      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+          '    </button>' +
+          '  </div>' +
+
+          '  <div class="flex items-center justify-between">' +
+          '    <span class="font-mono text-[12px] text-text-muted">$' + item.price.toFixed(2) + ' c/u</span>' +
+          '    <span class="font-mono font-bold text-[15px] tracking-[0.02em] text-text-primary">$' + sub.toFixed(2) + '</span>' +
+          '  </div>' +
+
+          (item.modifier ?
+            '  <p class="font-script text-[15px] mt-1" style="color:#5C4030; margin-left:4px;">&mdash; ' + item.modifier + '</p>'
+            : '') +
+
+          '</div>';
+      });
+
+      var html =
+        '<div class="font-mono text-[13px] text-text-muted px-1 mb-1">' +
+        '  <span>Mesa 5</span>' +
+        '  <span class="mx-2">|</span>' +
+        '  <span>Mesero: Miguel</span>' +
+        '</div>' +
+
+        '<div class="card-brutal shadow-paper p-4 flex flex-col"' +
+        '  style="background:#EBDCC4; border:6px solid #6B1A2A;">' +
+        itemsHtml +
+        '  <div style="border-top:2px solid #C9A84C; margin-top:8px; padding-top:12px;">' +
+        '    <div class="flex items-center justify-between mb-1">' +
+        '      <span class="font-mono text-[13px] text-text-secondary">Subtotal</span>' +
+        '      <span class="font-mono font-bold text-[16px] tracking-[0.02em] text-text-primary">$' + t.price.toFixed(2) + '</span>' +
+        '    </div>' +
+        '    <div class="flex items-center justify-between mb-1">' +
+        '      <span class="font-mono text-[13px] text-text-secondary">Propina sugerida (15%)</span>' +
+        '      <span class="font-mono font-bold text-[16px] tracking-[0.02em] text-text-primary">$' + tip.toFixed(2) + '</span>' +
+        '    </div>' +
+        '    <div class="flex items-center justify-between pt-2" style="border-top:2px dashed #C9A84C; margin-top:4px;">' +
+        '      <span class="font-sans font-bold text-[14px] uppercase tracking-[0.1em] text-text-primary">Total</span>' +
+        '      <span class="font-mono font-bold text-[28px] tracking-[0.02em]" style="color:#2D4A22;">$' + total.toFixed(2) + '</span>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>' +
+
+        '<div class="card-brutal shadow-paper p-4"' +
+        '  style="background:#EBDCC4; border:6px solid #6B1A2A;">' +
+        '  <label class="font-sans font-bold text-[13px] uppercase tracking-[0.1em] text-text-primary mb-2 block">Nota para cocina:</label>' +
+        '  <textarea id="kitchen-note" rows="2" placeholder="Instrucciones especiales..."' +
+        '    class="w-full resize-none font-script text-[17px] p-2"' +
+        '    style="color:#5C4030; background:#FFFFFF; border:2px solid #C9A84C; border-radius:0; outline:none;"' +
+        '    onfocus="this.style.borderColor=\'#6B1A2A\';"' +
+        '    onblur="this.style.borderColor=\'#C9A84C\';"' +
+        '  ></textarea>' +
+        '</div>';
+
+      step2El.innerHTML = html;
+    }
+
+    function enviarACocina() {
+      var t = getCartTotals();
+      if (t.items === 0) return;
+
+      var toast = document.getElementById('toast');
+      toast.classList.remove('hidden');
+      setTimeout(function() {
+        toast.classList.add('hidden');
+      }, 1800);
+
+      cart = {};
+      document.getElementById('kitchen-note').value = '';
+      goToStep1();
+      renderAll();
+    }
+
+    // Category filter
+    document.querySelectorAll('#categories button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#categories button').forEach(function(b) {
+          b.style.background = 'transparent';
+          b.style.color = '#8B7355';
+          b.style.borderColor = '#8B7355';
+        });
+        btn.style.background = '#6B1A2A';
+        btn.style.color = '#F0E6D3';
+        btn.style.borderColor = '#6B1A2A';
+
+        currentFilter = btn.dataset.category;
+        renderProductGrid(currentFilter);
+      });
+    });
+
+    // Initial render
+    renderProductGrid('all');
+  </script>
+</body>
+</html>

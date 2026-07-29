@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOR — Sistema de Órdenes para Restaurantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          'sor-primary': '#6B1A2A',
+          'sor-primary-light': '#8B2535',
+          'sor-primary-dark': '#4A0F1B',
+          'sor-primary-fg': '#F0E6D3',
+          'sor-secondary': '#2D4A22',
+          'sor-secondary-light': '#3D6230',
+          'sor-secondary-dark': '#1C3015',
+          'sor-bg': '#F0E6D3',
+          'sor-surface': '#EBDCC4',
+          'sor-surface-elevated': '#E5D4B8',
+          'sor-text': '#2C1810',
+          'sor-text-secondary': '#5C4030',
+          'sor-text-muted': '#8B7355',
+          'sor-accent': '#C9A84C',
+          'sor-accent-fg': '#2C1810',
+          'sor-success': '#2D4A22',
+          'sor-error': '#8B1A1A',
+          'sor-warning': '#C9A84C',
+          'sor-info': '#3A5068',
+          'sor-carbon': '#1A1410',
+          'sor-carbon-surface': '#2A1F18',
+          'sor-kds-text': '#F0E6D3',
+        },
+        fontFamily: {
+          'serif-display': ["'Playfair Display'", 'Georgia', 'serif'],
+          'mono': ["'JetBrains Mono'", "'Courier New'", 'monospace'],
+          'sans-bold': ["'DM Sans'", "'Helvetica Neue'", 'sans-serif'],
+          'script': ["'Caveat'", 'cursive'],
+        },
+        fontWeight: {
+          'semi': '600',
+        },
+      }
+    }
+  };
+</script>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── Paper noise texture via SVG filter ── */
+  .bg-paper {
+    background-color: #FFFFFF;
+    position: relative;
+  }
+  .bg-paper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    z-index: 0;
+  }
+
+  /* ── Paper shadow: 3 layer ── */
+  .shadow-paper {
+    box-shadow:
+      0 1px 0 #C9A84C,
+      0 2px 0 #A08030,
+      0 3px 4px rgba(44, 24, 16, 0.15);
+  }
+
+  /* ── Typewriter animation ── */
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  /* ── Morph button hover ── */
+  .btn-morph {
+    background-color: #6B1A2A;
+    transition: background-color 400ms ease;
+  }
+  .btn-morph:hover {
+    background-color: #2D4A22;
+  }
+
+  /* ── Focus border expansion ── */
+  .input-brutal {
+    border: 2px solid #8B7355;
+    outline: none;
+    transition: border-width 150ms ease, border-color 150ms ease;
+  }
+  .input-brutal:focus {
+    border-width: 4px;
+    border-color: #6B1A2A;
+  }
+
+  /* ── Role badge card appear ── */
+  @keyframes card-in {
+    0% {
+      transform: scale(0.85);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  #role-badge {
+    display: none;
+    animation: card-in 500ms ease forwards;
+  }
+
+  #role-badge.visible {
+    display: block;
+  }
+
+  /* ── Ink-spill error ── */
+  .ink-spill {
+    background:
+      radial-gradient(ellipse 80px 60px at 15% 40%, rgba(107,26,42,0.09) 0%, transparent 70%),
+      radial-gradient(ellipse 40px 30px at 70% 60%, rgba(107,26,42,0.06) 0%, transparent 70%);
+  }
+
+  /* ── Lacre seal ── */
+  .seal-lacre {
+    position: relative;
+    display: inline-block;
+    border: 3px solid #8B1A1A;
+    color: #8B1A1A;
+    padding: 6px 18px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    clip-path: polygon(
+      6px 0%, calc(100% - 4px) 0%, 100% 6px,
+      100% calc(100% - 8px), calc(100% - 6px) 100%,
+      4px 100%, 0% calc(100% - 4px), 0% 8px
+    );
+  }
+</style>
+</head>
+<body class="bg-paper flex items-center justify-center min-h-screen">
+
+  <!-- ── MAIN CONTAINER ── -->
+  <div class="relative z-10 w-full max-w-lg mx-auto px-6">
+
+    <!-- LOGIN CARD -->
+    <div id="login-card" class="bg-sor-surface p-12 shadow-paper" style="border: 6px solid #6B1A2A; border-radius: 0;">
+
+      <!-- TITLE -->
+      <h1 class="font-serif-display font-[900] text-sor-primary text-center leading-none" style="font-size: 8vw; letter-spacing: -0.02em;">
+        SOR
+      </h1>
+
+      <!-- SUBTITLE -->
+      <p class="font-mono font-bold text-xs uppercase text-sor-text-secondary tracking-[0.18em] text-center mt-2 mb-8" style="font-size: 14px;">
+        Sistema de &Oacute;rdenes para Restaurantes
+      </p>
+
+      <!-- FORM -->
+      <form id="login-form" class="flex flex-col gap-6" onsubmit="return false;">
+
+        <!-- EMAIL -->
+        <div class="flex flex-col gap-1">
+          <label for="email" class="font-sans-bold font-bold uppercase text-sor-text text-xs tracking-[0.12em]" style="font-size: 14px;">
+            Correo Electr&oacute;nico
+          </label>
+          <input id="email" type="email" class="input-brutal w-full px-4 py-3 bg-sor-bg font-mono text-sor-text text-sm placeholder:text-sor-text-muted" style="border-radius: 0; font-size: 15px;" placeholder="mesero@restaurante.mx" autocomplete="off" />
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="flex flex-col gap-1">
+          <label for="password" class="font-sans-bold font-bold uppercase text-sor-text text-xs tracking-[0.12em]" style="font-size: 14px;">
+            Contrase&ntilde;a
+          </label>
+          <input id="password" type="password" class="input-brutal w-full px-4 py-3 bg-sor-bg font-mono text-sor-text text-sm placeholder:text-sor-text-muted" style="border-radius: 0; font-size: 15px;" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="off" />
+        </div>
+
+        <!-- BUTTON -->
+        <button type="submit" onclick="handleLogin()"
+          class="btn-morph w-full py-4 text-center uppercase font-sans-bold font-bold text-sor-primary-fg tracking-[0.12em] mt-4"
+          style="border: 4px solid #4A0F1B; border-radius: 0; font-size: 16px; cursor: pointer;">
+          Entrar al Restaurante
+        </button>
+      </form>
+
+      <!-- KDS LINK -->
+      <div class="mt-8 pt-6 text-center border-dashed border-t-2 border-sor-text-muted">
+        <a href="kds_experimental.html" class="font-mono font-bold text-sor-text-secondary hover:text-sor-primary uppercase tracking-[0.14em]" style="font-size: 12px; text-decoration: none;">
+          Acceso Cocina &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- ROLE BADGE CARD (hidden by default) -->
+    <div id="role-badge" class="mt-8 bg-sor-surface p-10 shadow-paper" style="border: 6px solid #6B1A2A; border-radius: 0;">
+      <p class="font-sans-bold font-bold uppercase tracking-[0.14em] text-xs text-sor-text-muted" style="font-size: 14px;">
+        Rol Detectado
+      </p>
+
+      <div id="role-indicator" class="mt-4 py-2 px-4 inline-block font-sans-bold font-bold uppercase tracking-[0.14em] text-sm" style="border: 3px solid; border-radius: 0;">
+        <!-- filled by JS -->
+      </div>
+
+      <h2 id="role-user-name" class="font-serif-display font-bold italic text-sor-text mt-4" style="font-size: 30px; letter-spacing: -0.01em;">
+        <!-- filled by JS -->
+      </h2>
+
+      <p id="role-email-display" class="font-mono font-bold text-sor-text-muted mt-1 text-xs tracking-[0.05em]" style="font-size: 12px;">
+        <!-- filled by JS -->
+      </p>
+
+      <button onclick="resetForm()"
+        class="mt-8 w-full py-3 text-center uppercase font-sans-bold font-bold text-sor-primary tracking-[0.12em]"
+        style="border: 4px solid #6B1A2A; border-radius: 0; font-size: 14px; cursor: pointer; background: transparent; transition: background-color 300ms;"
+        onmouseover="this.style.backgroundColor='#F0E6D3'" onmouseout="this.style.backgroundColor='transparent'">
+        Cambiar Usuario
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    var roles = [
+      { email: 'ana@restaurante.mx', name: 'Ana Mar&iacute;a L&oacute;pez', role: 'MESERO',   color: '#3A5068' },
+      { email: 'luis@restaurante.mx', name: 'Luis &Aacute;ngel Vargas',  role: 'MESERO',   color: '#3A5068' },
+      { email: 'carlos@restaurante.mx', name: 'Carlos Mendoza',    role: 'MESERO',   color: '#3A5068' },
+      { email: 'laura@restaurante.mx', name: 'Laura Jim&eacute;nez',     role: 'CAJERO',   color: '#2D4A22' },
+      { email: 'admin@restaurante.mx', name: 'Ricardo Fuentes',    role: 'ADMIN',    color: '#6B1A2A' },
+      { email: 'cocina@restaurante.mx', name: 'Chef Elena',        role: 'COCINA',   color: '#C9A84C' },
+    ];
+
+    function handleLogin() {
+      var email = document.getElementById('email').value.trim().toLowerCase();
+      var user = null;
+      for (var i = 0; i < roles.length; i++) {
+        if (roles[i].email === email) { user = roles[i]; break; }
+      }
+
+      if (!user) {
+        // Default fallback: first found on partial match or mesero demo
+        if (email.indexOf('mesero') !== -1) { user = roles[0]; }
+        else if (email.indexOf('cajero') !== -1) { user = roles[3]; }
+        else if (email.indexOf('admin') !== -1) { user = roles[4]; }
+        else if (email.indexOf('cocina') !== -1) { user = roles[5]; }
+        else { user = roles[0]; } // default to first mesero
+      }
+
+      showRoleBadge(user);
+    }
+
+    function showRoleBadge(user) {
+      document.getElementById('login-card').style.display = 'none';
+
+      var badge = document.getElementById('role-badge');
+      badge.classList.add('visible');
+
+      var indicator = document.getElementById('role-indicator');
+      indicator.textContent = user.role;
+      indicator.style.borderColor = user.color;
+      indicator.style.color = user.color;
+
+      document.getElementById('role-user-name').textContent = user.name;
+      document.getElementById('role-email-display').textContent = user.email;
+    }
+
+    function resetForm() {
+      document.getElementById('role-badge').classList.remove('visible');
+      document.getElementById('role-badge').style.display = 'none';
+      document.getElementById('login-card').style.display = 'block';
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+    }
+
+    // Preset demo: mesero
+    document.getElementById('email').value = 'ana@restaurante.mx';
+    document.getElementById('password').value = 'mesero123';
+  </script>
+</body>
+</html>

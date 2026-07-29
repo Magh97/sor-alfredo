@@ -226,7 +226,7 @@ function Card({ children, className, onClick }: CardProps) {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <CardContext value={{ isHovered, setIsHovered }}>
-      <article className={cn('rounded-lg border bg-white', isHovered && 'shadow-md', className)}
+      <article className={cn('rounded-[var(--radius-card)] bg-surface shadow-card', isHovered && 'shadow-card-hover', className)}
         onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onClick={onClick}>
         {children}
       </article>
@@ -332,7 +332,7 @@ const [data, total] = await Promise.all([
 ```typescript
 // cn() for conditional Tailwind classes
 import { cn } from '@/lib/utils';
-<button className={cn('px-4 py-2 rounded', variant==='primary' && 'bg-amber-600 text-white', disabled && 'opacity-50')} />
+<button className={cn('px-4 py-2 rounded-[var(--radius-control)] font-display font-bold', variant==='primary' && 'bg-primary text-primary-foreground', disabled && 'opacity-50')} />
 
 // formatCurrency — always use this, never inline formatting
 import { formatCurrency, formatTime } from '@/lib/utils';

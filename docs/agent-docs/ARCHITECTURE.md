@@ -1,5 +1,16 @@
 # ARCHITECTURE
 
+## Design Systems
+
+Two design systems exist in parallel:
+
+| System | Branch | Docs | Aesthetic |
+|--------|--------|------|-----------|
+| Standard | `develop` | `docs/DESIGN_SYSTEM.md` | Warm artisan (terracotta, cream, Space Grotesk) |
+| Experimental | `feature/ux-experimental` | `docs/DESIGN_SYSTEM_EXPERIMENTAL.md` | Victorian brutalist (burgundy, paper, 4-font collage) |
+
+Wireframes: standard in `docs/wireframe/*.html`, experimental in `docs/wireframe/*_experimental.html`.
+
 ## Dependency Graph
 
 ```

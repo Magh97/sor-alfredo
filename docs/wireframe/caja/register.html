@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOR — Cajero · Caja</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   { DEFAULT: '#c2572e', light: '#e07a4d', dark: '#8c2b17', foreground: '#fdfaf5' },
+            secondary: { DEFAULT: '#527a34', light: '#7b9a4f', dark: '#3a4f24', foreground: '#fdfaf5' },
+            accent:    { DEFAULT: '#e8a020', foreground: '#2c1a10' },
+            success:   '#457a38',
+            error:     '#b5452e',
+            warning:   '#d49224',
+            info:      '#4e769e',
+            background:'#fdfaf5',
+            surface:   '#f8f0e2',
+            text:      { primary: '#2c1a10', secondary: '#665448', muted: '#8a7e72' },
+          },
+        },
+      },
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; }
+    .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+  </style>
+</head>
+<body class="h-screen flex bg-background">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-surface border-r flex flex-col shrink-0">
+    <div class="h-16 flex items-center px-6 border-b">
+      <h1 class="text-xl font-bold text-primary font-display">SOR</h1>
+    </div>
+    <nav class="flex-1 py-4 space-y-1">
+      <a href="orders.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium text-text-secondary hover:bg-background">
+        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+        Órdenes
+      </a>
+      <a href="register.html" class="flex items-center gap-3 px-6 py-3 text-sm font-medium bg-primary/10 text-primary border-r-2 border-primary">
+        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15l3 3 7-7"/></svg>
+        Caja
+      </a>
+    </nav>
+    <div class="p-4 border-t text-xs text-text-muted">
+      SOR v0.1
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-16 bg-surface border-b flex items-center justify-between px-6 shrink-0">
+      <h2 class="text-lg font-semibold text-text-primary font-display">Caja</h2>
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-text-secondary">Carlos</span>
+        <div class="size-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-sm font-bold">C</div>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-6 space-y-6 bg-white">
+
+      <!-- Shift Status Card -->
+      <div class="bg-surface rounded-[16px] border border-text-muted/20 shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <div class="size-12 rounded-full bg-success/15 flex items-center justify-center">
+                <div class="size-4 rounded-full bg-success shadow-[0_0_0_4px_rgba(69,122,56,0.15)] animate-pulse"></div>
+              </div>
+            </div>
+            <div>
+              <p class="text-lg font-bold text-success font-display">Turno ABIERTO</p>
+              <p class="text-sm text-text-secondary">Inicio: 14:00 &middot; Duraci&oacute;n: <span id="shift-duration">2h 35m</span></p>
+            </div>
+          </div>
+          <button id="close-shift" class="bg-error text-white rounded-[4px] px-6 py-3 font-semibold hover:bg-error/80 active:scale-95 transition-all font-display">
+            Cerrar Turno
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="size-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+            <p class="text-sm font-medium text-text-secondary">Ventas</p>
+          </div>
+          <p class="text-3xl font-bold text-text-primary font-display">$6,250.00</p>
+          <p class="text-sm text-success mt-1">12 pagos procesados</p>
+        </div>
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="size-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
+            <p class="text-sm font-medium text-text-secondary">Propinas</p>
+          </div>
+          <p class="text-3xl font-bold text-text-primary font-display">$825.00</p>
+          <p class="text-sm text-text-muted mt-1">Promedio 13.2%</p>
+        </div>
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5 hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="size-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <p class="text-sm font-medium text-text-secondary">Efectivo en Caja</p>
+          </div>
+          <p class="text-3xl font-bold text-text-primary font-display">$3,100.00</p>
+          <p class="text-sm text-text-muted mt-1">Inicial: $500.00</p>
+        </div>
+      </div>
+
+      <!-- Split Row: Breakdown + Profit -->
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Payment Methods Breakdown -->
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5">
+          <h3 class="text-base font-semibold text-text-primary font-display mb-4">Desglose por M&eacute;todo</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between bg-background rounded-[4px] px-4 py-3">
+              <div class="flex items-center gap-3">
+                <span class="size-3 rounded-full bg-success"></span>
+                <span class="text-sm font-medium">Efectivo</span>
+              </div>
+              <div class="text-right">
+                <p class="font-bold">$3,100.00</p>
+                <p class="text-xs text-text-muted">7 pagos</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between bg-background rounded-[4px] px-4 py-3">
+              <div class="flex items-center gap-3">
+                <span class="size-3 rounded-full bg-info"></span>
+                <span class="text-sm font-medium">Tarjeta</span>
+              </div>
+              <div class="text-right">
+                <p class="font-bold">$2,450.00</p>
+                <p class="text-xs text-text-muted">3 pagos</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between bg-background rounded-[4px] px-4 py-3">
+              <div class="flex items-center gap-3">
+                <span class="size-3 rounded-full bg-purple-500"></span>
+                <span class="text-sm font-medium">Transferencia</span>
+              </div>
+              <div class="text-right">
+                <p class="font-bold">$700.00</p>
+                <p class="text-xs text-text-muted">2 pagos</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profit / Loss -->
+        <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5">
+          <h3 class="text-base font-semibold text-text-primary font-display mb-4">Balance del Turno</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Ventas totales</span>
+              <span class="font-medium">$6,250.00</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Propinas</span>
+              <span class="font-medium">$825.00</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">Efectivo inicial</span>
+              <span class="font-medium">$500.00</span>
+            </div>
+            <div class="border-t border-text-muted/20 pt-3 mt-1">
+              <div class="flex justify-between text-sm">
+                <span class="text-text-secondary">Efectivo esperado</span>
+                <span class="font-medium">$3,600.00</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-text-secondary">Efectivo real</span>
+                <span class="font-bold text-success">$3,100.00</span>
+              </div>
+            </div>
+            <div class="border-t border-text-muted/20 pt-3">
+              <div class="flex justify-between">
+                <span class="text-sm font-semibold text-text-primary">Diferencia</span>
+                <span class="text-sm font-bold text-error">-$500.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Payments -->
+      <div class="bg-surface rounded-[16px] border border-text-muted/20 p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-semibold text-text-primary font-display">Pagos Recientes</h3>
+          <a href="orders.html" class="text-sm text-primary font-medium hover:underline font-display">Ver todas &rarr;</a>
+        </div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-text-secondary text-left border-b bg-background/50">
+              <th class="py-2.5 px-3 font-medium">#</th>
+              <th class="py-2.5 px-3 font-medium">Mesa</th>
+              <th class="py-2.5 px-3 font-medium">M&eacute;todo</th>
+              <th class="py-2.5 px-3 font-medium text-right">Monto</th>
+              <th class="py-2.5 px-3 font-medium text-right">Propina</th>
+              <th class="py-2.5 px-3 font-medium">Hora</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr class="hover:bg-background/50">
+              <td class="py-3 px-3 font-medium">#35</td>
+              <td class="py-3 px-3">Mesa 4</td>
+              <td class="py-3 px-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="size-2 rounded-full bg-success"></span> Efectivo
+                </span>
+              </td>
+              <td class="py-3 px-3 text-right font-medium">$295.00</td>
+              <td class="py-3 px-3 text-right">$45.00</td>
+              <td class="py-3 px-3 text-text-muted">16:30</td>
+            </tr>
+            <tr class="hover:bg-background/50">
+              <td class="py-3 px-3 font-medium">#34</td>
+              <td class="py-3 px-3">Mesa 1</td>
+              <td class="py-3 px-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="size-2 rounded-full bg-info"></span> Tarjeta
+                </span>
+              </td>
+              <td class="py-3 px-3 text-right font-medium">$520.00</td>
+              <td class="py-3 px-3 text-right">$78.00</td>
+              <td class="py-3 px-3 text-text-muted">16:15</td>
+            </tr>
+            <tr class="hover:bg-background/50">
+              <td class="py-3 px-3 font-medium">#33</td>
+              <td class="py-3 px-3">Mesa 9</td>
+              <td class="py-3 px-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="size-2 rounded-full bg-success"></span> Efectivo
+                </span>
+              </td>
+              <td class="py-3 px-3 text-right font-medium">$180.00</td>
+              <td class="py-3 px-3 text-right">$20.00</td>
+              <td class="py-3 px-3 text-text-muted">15:50</td>
+            </tr>
+            <tr class="hover:bg-background/50">
+              <td class="py-3 px-3 font-medium">#32</td>
+              <td class="py-3 px-3">Mesa 6</td>
+              <td class="py-3 px-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="size-2 rounded-full bg-purple-500"></span> Transf.
+                </span>
+              </td>
+              <td class="py-3 px-3 text-right font-medium">$700.00</td>
+              <td class="py-3 px-3 text-right">$100.00</td>
+              <td class="py-3 px-3 text-text-muted">15:30</td>
+            </tr>
+            <tr class="hover:bg-background/50">
+              <td class="py-3 px-3 font-medium">#31</td>
+              <td class="py-3 px-3">Mesa 2</td>
+              <td class="py-3 px-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="size-2 rounded-full bg-info"></span> Tarjeta
+                </span>
+              </td>
+              <td class="py-3 px-3 text-right font-medium">$410.00</td>
+              <td class="py-3 px-3 text-right">$60.00</td>
+              <td class="py-3 px-3 text-text-muted">15:10</td>
+            </tr>
+            <tr class="hover:bg-background/50">
+              <td class="py-3 px-3 font-medium">#30</td>
+              <td class="py-3 px-3">Mesa 7</td>
+              <td class="py-3 px-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="size-2 rounded-full bg-success"></span> Efectivo
+                </span>
+              </td>
+              <td class="py-3 px-3 text-right font-medium">$185.00</td>
+              <td class="py-3 px-3 text-right">$25.00</td>
+              <td class="py-3 px-3 text-text-muted">14:50</td>
+            </tr>
+            <tr class="hover:bg-background/50">
+              <td class="py-3 px-3 font-medium">#29</td>
+              <td class="py-3 px-3">Mesa 3</td>
+              <td class="py-3 px-3">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="size-2 rounded-full bg-info"></span> Tarjeta
+                </span>
+              </td>
+              <td class="py-3 px-3 text-right font-medium">$320.00</td>
+              <td class="py-3 px-3 text-right">$48.00</td>
+              <td class="py-3 px-3 text-text-muted">14:30</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    (function() {
+      var shiftOpen = true;
+
+      function updateDuration() {
+        var now = new Date();
+        var start = new Date();
+        start.setHours(14, 0, 0, 0);
+        var diff = Math.floor((now - start) / 1000);
+        var h = Math.floor(diff / 3600);
+        var m = Math.floor((diff % 3600) / 60);
+        var el = document.getElementById('shift-duration');
+        if (el) el.textContent = h + 'h ' + m + 'm';
+      }
+      updateDuration();
+      setInterval(updateDuration, 30000);
+
+      document.getElementById('close-shift').addEventListener('click', function() {
+        if (!shiftOpen) return;
+        if (!confirm('\u00bfEst\u00e1s seguro de cerrar el turno? Se generar\u00e1 un reporte de cierre.')) return;
+        shiftOpen = false;
+
+        var card = this.closest('.bg-surface');
+        var dotEl = card.querySelector('.bg-success');
+        if (dotEl) {
+          dotEl.className = 'size-4 rounded-full bg-text-muted shadow-[0_0_0_4px_rgba(138,126,114,0.15)]';
+        }
+        var statusEl = card.querySelector('.text-success');
+        if (statusEl) {
+          statusEl.className = 'text-lg font-bold text-text-muted font-display';
+          statusEl.textContent = 'Turno CERRADO';
+        }
+        this.textContent = 'Turno Cerrado \u2713';
+        this.className = 'bg-text-muted text-white rounded-[4px] px-6 py-3 font-semibold font-display cursor-not-allowed';
+        this.disabled = true;
+      });
+    })();
+  </script>
+</body>
+</html>

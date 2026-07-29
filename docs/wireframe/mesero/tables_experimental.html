@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SOR — Mesas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@400;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   { DEFAULT:'#6B1A2A', light:'#8B2535', dark:'#4A0F1B', foreground:'#F0E6D3' },
+            secondary: { DEFAULT:'#2D4A22', light:'#3D6230', dark:'#1C3015', foreground:'#F0E6D3' },
+            accent:    { DEFAULT:'#C9A84C', foreground:'#2C1810' },
+            success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
+            background:'#FFFFFF', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
+            text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
+          },
+          fontFamily: {
+            serif: ["'Playfair Display'", 'Georgia', 'serif'],
+            mono: ["'JetBrains Mono'", "'Courier New'", 'monospace'],
+            sans: ["'DM Sans'", "'Helvetica Neue'", 'sans-serif'],
+            script: ["'Caveat'", 'cursive'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'DM Sans', 'Helvetica Neue', sans-serif; }
+
+    .bg-paper {
+      background-color: #FFFFFF;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04' /%3E%3C/svg%3E");
+    }
+
+    .shadow-paper {
+      box-shadow: 0 1px 0 #C9A84C, 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
+    }
+
+    .card-brutal {
+      clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+    }
+
+    .table-card { transition: transform 0.12s ease; }
+    .table-card:active { transform: scale(0.96); }
+
+    @keyframes dropdown-in {
+      from { opacity: 0; transform: translateY(-2px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .dropdown-enter { animation: dropdown-in 120ms ease-out; }
+  </style>
+</head>
+<body class="h-screen flex flex-col bg-paper max-w-lg mx-auto select-none">
+
+  <!-- Header -->
+  <header class="shrink-0 px-4 pt-4 pb-3 flex items-center justify-between" style="border-bottom:6px solid #6B1A2A;">
+    <h1 class="font-sans font-bold text-[36px] uppercase tracking-[-0.02em] text-text-primary leading-none">
+      MESAS
+    </h1>
+
+    <button onclick="toggleReservas()" class="mr-2 px-4 py-2 font-sans font-bold text-[13px] uppercase tracking-[0.1em] select-none active:scale-95 transition-all"
+      style="background:transparent; color:#C9A84C; border:2px solid #C9A84C; border-radius:0;">
+      Reservas
+    </button>
+
+    <div class="relative" id="profile-container">
+      <button onclick="toggleProfile()" class="size-10 flex items-center justify-center text-base font-bold active:scale-95 transition-transform font-sans"
+        style="background:#6B1A2A; color:#F0E6D3; border:4px solid #4A0F1B; border-radius:0; clip-path:polygon(4px 0%,100% 0%,100% calc(100%-4px),calc(100%-4px) 100%,0% 100%,0% 4px);">
+        M
+      </button>
+      <div id="profile-dropdown" class="hidden dropdown-enter absolute right-0 top-full mt-2 w-56 bg-surface z-30 shadow-paper"
+        style="border:4px solid #6B1A2A; border-radius:0;">
+        <div class="p-4" style="border-bottom:2px solid #8B7355;">
+          <div class="flex items-center gap-3">
+            <div class="size-12 flex items-center justify-center text-lg font-bold font-sans"
+              style="background:#6B1A2A; color:#F0E6D3; border:4px solid #4A0F1B; border-radius:0; clip-path:polygon(4px 0%,100% 0%,100% calc(100%-4px),calc(100%-4px) 100%,0% 100%,0% 4px);">M</div>
+            <div>
+              <p class="text-sm font-bold text-text-primary font-sans">Miguel G.</p>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-bold uppercase tracking-[0.1em] font-sans"
+                style="background:#3A5068; color:#F0E6D3; border:2px solid #2A3F50; border-radius:0;">
+                Mesero
+              </span>
+            </div>
+          </div>
+          <div class="mt-3 space-y-1 text-xs font-mono text-text-secondary">
+            <p>mesero1@restaurant.com</p>
+            <div class="flex justify-between"><span>Turno</span><span class="font-bold text-text-primary">14:00 — 22:00</span></div>
+            <div class="flex justify-between"><span>Órdenes hoy</span><span class="font-bold text-text-primary">14</span></div>
+          </div>
+        </div>
+        <button onclick="toggleProfile()" class="w-full text-left px-4 py-3 text-sm font-bold font-sans uppercase tracking-[0.1em] hover:opacity-80 active:opacity-60 transition-opacity flex items-center gap-2"
+          style="color:#8B1A1A;">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filter Chips -->
+  <div class="px-4 pt-3 pb-2">
+    <div class="flex gap-3 overflow-x-auto" id="filters">
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-status="all"
+        style="padding:8px 18px; background:#6B1A2A; color:#F0E6D3; border:2px solid #6B1A2A; border-radius:0;">Todos</button>
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-status="libre"
+        style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Libres</button>
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-status="ocupada"
+        style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Ocupadas</button>
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-status="reservada"
+        style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Reservadas</button>
+      <button class="shrink-0 font-sans font-bold text-[14px] uppercase tracking-[0.1em] select-none" data-status="limpieza"
+        style="padding:8px 18px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Limpieza</button>
+    </div>
+  </div>
+
+  <!-- Reservations Panel -->
+  <div id="reservas-panel" class="hidden px-4 pb-4">
+    <div class="bg-surface shadow-paper p-4 mb-3" style="border:6px solid #6B1A2A; border-radius:0;">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-espresso">Reservas de Hoy</h2>
+        <a href="new-reserva_experimental.html" class="px-3 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-white active:scale-95 transition-all"
+          style="background:#6B1A2A; border:2px solid #4A0F1B; border-radius:0;">+ Nueva</a>
+      </div>
+      <div id="reservas-list" class="space-y-2">
+        <div class="flex items-center justify-between py-2" style="border-bottom:1px solid #8B7355;">
+          <div>
+            <span class="font-sans font-bold text-[15px] text-text-primary">20:00 — Juan Pérez</span>
+            <span class="font-mono text-[12px] text-text-secondary ml-2">4 pers · Mesa 5</span>
+          </div>
+          <span class="font-sans font-bold text-[10px] uppercase tracking-[0.1em] select-none"
+            style="padding:2px 10px; background:#C9A84C; color:#2C1810; border:2px solid #A08030; border-radius:0;">Confirmada</span>
+        </div>
+        <div class="flex items-center justify-between py-2" style="border-bottom:1px solid #8B7355;">
+          <div>
+            <span class="font-sans font-bold text-[15px] text-text-primary">20:30 — María López</span>
+            <span class="font-mono text-[12px] text-text-secondary ml-2">2 pers · Sin mesa</span>
+          </div>
+          <span class="font-sans font-bold text-[10px] uppercase tracking-[0.1em] select-none"
+            style="padding:2px 10px; background:transparent; color:#8B7355; border:2px solid #8B7355; border-radius:0;">Pendiente</span>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <div>
+            <span class="font-sans font-bold text-[15px] text-text-primary">19:00 — Carlos Ruiz</span>
+            <span class="font-mono text-[12px] text-text-secondary ml-2">6 pers · Mesa 7</span>
+          </div>
+          <span class="font-sans font-bold text-[10px] uppercase tracking-[0.1em] select-none"
+            style="padding:2px 10px; background:#2D4A22; color:#F0E6D3; border:2px solid #1C3015; border-radius:0;">Sentada</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Grid -->
+  <main class="flex-1 overflow-y-auto px-4 pt-2 pb-4" id="table-grid">
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav class="h-16 shrink-0 flex items-center justify-around" style="background:#EBDCC4; border-top:4px solid #6B1A2A;">
+    <a href="orders_experimental.html" class="flex flex-col items-center justify-center gap-1 h-full min-w-[80px]" style="color:#8B7355;">
+      <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <span class="font-sans text-[12px] uppercase tracking-[0.1em]">Órdenes</span>
+    </a>
+    <a href="tables_experimental.html" class="flex flex-col items-center justify-center gap-1 h-full min-w-[80px]" style="color:#6B1A2A;">
+      <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span class="font-sans font-bold text-[12px] uppercase tracking-[0.1em]">Mesas</span>
+    </a>
+  </nav>
+
+  <!-- TABLE ACTION MODAL -->
+  <div id="table-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onclick="if(event.target===this)closeTableModal()">
+    <div class="bg-surface border-[6px] border-primary shadow-paper w-full max-w-xs" style="border-radius:0;">
+      <div class="px-6 py-4 border-b-[3px] border-accent flex items-center justify-between">
+        <div>
+          <h3 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-espresso">Mesa <span id="table-modal-num"></span></h3>
+          <span id="table-modal-status" class="inline-block mt-1 font-sans font-bold text-[11px] uppercase tracking-[0.1em] select-none"
+            style="padding:2px 10px; border:2px solid; border-radius:0;"></span>
+        </div>
+        <button onclick="closeTableModal()" class="text-text-muted hover:text-espresso text-2xl leading-none">&times;</button>
+      </div>
+      <div class="px-6 pb-1 space-y-1">
+        <p class="font-mono text-[13px] text-text-secondary"><span id="table-modal-seats"></span> personas</p>
+        <p id="table-modal-order" class="font-mono font-bold text-[14px] text-primary"></p>
+      </div>
+      <div class="px-6 py-4 space-y-2" id="table-modal-actions"></div>
+      <div class="px-6 py-4 border-t-[3px] border-text-muted/20">
+        <button onclick="closeTableModal()" class="w-full py-3 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-text-muted/30 text-text-secondary" style="border-radius:0;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] px-4 py-3 z-50 shadow-paper" style="border-radius:0;transition:all 0.3s ease;"></div>
+
+  <script>
+    var tables = [
+      { num: 1,  seats: 4, status: 'libre',     order: null },
+      { num: 2,  seats: 2, status: 'ocupada',   order: '#42' },
+      { num: 3,  seats: 2, status: 'libre',     order: null },
+      { num: 4,  seats: 6, status: 'limpieza',  order: null },
+      { num: 5,  seats: 4, status: 'ocupada',   order: null },
+      { num: 6,  seats: 8, status: 'reservada', order: null },
+      { num: 7,  seats: 6, status: 'reservada', order: null },
+      { num: 8,  seats: 2, status: 'libre',     order: null },
+      { num: 9,  seats: 4, status: 'ocupada',   order: '#44' },
+      { num: 10, seats: 4, status: 'libre',     order: null },
+      { num: 11, seats: 2, status: 'limpieza',  order: null },
+      { num: 12, seats: 6, status: 'ocupada',   order: '#45' },
+    ];
+
+    var statusLabels = { libre:'Libre', ocupada:'Ocupada', reservada:'Reservada', limpieza:'Limpieza' };
+    var statusColors = {
+      libre:     { border: '#2D4A22', labelBg: '#2D4A22', labelFg: '#F0E6D3', labelBorder: '#1C3015' },
+      ocupada:   { border: '#6B1A2A', labelBg: '#6B1A2A', labelFg: '#F0E6D3', labelBorder: '#4A0F1B' },
+      reservada: { border: '#C9A84C', labelBg: '#C9A84C', labelFg: '#2C1810', labelBorder: '#A08030' },
+      limpieza:  { border: '#3A5068', labelBg: '#3A5068', labelFg: '#F0E6D3', labelBorder: '#2A3F50' },
+    };
+
+    function renderTableCards(list) {
+      var grid = document.getElementById('table-grid');
+      if (!list.length) {
+        grid.innerHTML = '<div class="flex flex-col items-center justify-center text-center py-16 text-text-muted"><p class="font-script text-[24px]" style="color:#8B7355;">Esta hoja est&aacute; en blanco.</p></div>';
+        return;
+      }
+      grid.innerHTML = '<div class="grid grid-cols-2 gap-3">' + list.map(function(t) {
+        var c = statusColors[t.status];
+        return '<div class="table-card card-brutal shadow-paper p-4 cursor-pointer" data-num="' + t.num + '" data-status="' + t.status + '" data-order="' + (t.order || '') + '" data-seats="' + t.seats + '" onclick="showTableActions(this)"' +
+          ' style="background:#EBDCC4; border-left:4px solid ' + c.border + '; border-radius:0;">' +
+          '<span class="block font-serif font-bold text-[48px] text-center leading-none text-text-primary">' + t.num + '</span>' +
+          '<div class="flex justify-center mt-1">' +
+            '<span class="inline-block font-sans font-bold text-[12px] uppercase tracking-[0.1em] select-none"' +
+              ' style="padding:2px 12px; background:' + c.labelBg + '; color:' + c.labelFg + '; border:2px solid ' + c.labelBorder + '; border-radius:0;">' +
+              statusLabels[t.status] +
+            '</span>' +
+          '</div>' +
+          '<p class="font-mono text-[12px] text-text-muted text-center mt-2">' + t.seats + ' personas</p>' +
+          (t.order
+            ? '<div class="flex justify-center mt-2"><span class="font-mono font-bold text-[16px] text-text-primary"' +
+              ' style="padding:2px 12px; background:transparent; color:#6B1A2A; border:2px solid #6B1A2A; border-radius:0;">' +
+              t.order + '</span></div>'
+            : '<div class="mt-2" style="height:24px;"></div>') +
+        '</div>';
+      }).join('') + '</div>';
+    }
+
+    function toggleReservas() {
+      document.getElementById('reservas-panel').classList.toggle('hidden');
+    }
+
+    function toggleProfile() {
+      document.getElementById('profile-dropdown').classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', function(e) {
+      var container = document.getElementById('profile-container');
+      if (container && !container.contains(e.target)) {
+        document.getElementById('profile-dropdown').classList.add('hidden');
+      }
+    });
+
+    document.querySelectorAll('#filters button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#filters button').forEach(function(b) {
+          b.style.background = 'transparent';
+          b.style.color = '#8B7355';
+          b.style.borderColor = '#8B7355';
+        });
+        btn.style.background = '#6B1A2A';
+        btn.style.color = '#F0E6D3';
+        btn.style.borderColor = '#6B1A2A';
+
+        var filter = btn.dataset.status;
+        var filtered = filter === 'all' ? tables : tables.filter(function(t) { return t.status === filter; });
+        renderTableCards(filtered);
+        activeFilter = filter;
+      });
+    });
+
+    var activeFilter = 'all';
+    var currentTableData = null;
+
+    function showTableActions(card) {
+      var num = card.dataset.num;
+      var status = card.dataset.status;
+      var order = card.dataset.order;
+      var seats = card.dataset.seats;
+      currentTableData = { card: card, num: num, status: status, order: order, seats: seats };
+
+      document.getElementById('table-modal-num').textContent = num;
+      document.getElementById('table-modal-seats').textContent = seats;
+      document.getElementById('table-modal-order').textContent = order ? 'Orden ' + order : 'Sin orden activa';
+
+      var statusEl = document.getElementById('table-modal-status');
+      statusEl.textContent = statusLabels[status];
+      var sc = statusColors[status];
+      statusEl.style.background = sc.labelBg;
+      statusEl.style.color = sc.labelFg;
+      statusEl.style.borderColor = sc.labelBorder;
+
+      var actionsEl = document.getElementById('table-modal-actions');
+      var html = '';
+
+      if (status === 'libre') {
+        html += '<button onclick="changeTableStatus(\'ocupada\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#6B1A2A; border-color:#4A0F1B; border-radius:0;">Ocupar Mesa</button>';
+      }
+      if (status === 'ocupada' && !order) {
+        html += '<button onclick="createOrderForTable()" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] active:scale-95 transition-all" style="background:#C9A84C; color:#2C1810; border-color:#A08030; border-radius:0;">Crear Orden</button>';
+        html += '<button onclick="changeTableStatus(\'limpieza\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#3A5068; border-color:#2A3F50; border-radius:0;">Marcar Limpieza</button>';
+      }
+      if (status === 'ocupada' && order) {
+        html += '<a href="orders_experimental.html" class="block w-full py-3 text-center font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] active:scale-95 transition-all" style="background:#C9A84C; color:#2C1810; border-color:#A08030; border-radius:0;">Ver Orden ' + order + '</a>';
+        html += '<button onclick="changeTableStatus(\'limpieza\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#3A5068; border-color:#2A3F50; border-radius:0;">Marcar Limpieza</button>';
+      }
+      if (status === 'reservada') {
+        html += '<button onclick="changeTableStatus(\'ocupada\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#6B1A2A; border-color:#4A0F1B; border-radius:0;">Ocupar Mesa</button>';
+      }
+      if (status === 'limpieza') {
+        html += '<button onclick="changeTableStatus(\'libre\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#2D4A22; border-color:#1C3015; border-radius:0;">Marcar Libre</button>';
+      }
+      if (status !== 'reservada') {
+        html += '<button onclick="changeTableStatus(\'reservada\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] active:scale-95 transition-all" style="background:transparent; color:#C9A84C; border-color:#C9A84C; border-radius:0;">Reservar Mesa</button>';
+      }
+
+      actionsEl.innerHTML = html;
+      document.getElementById('table-modal').classList.remove('hidden');
+    }
+
+    function closeTableModal() {
+      document.getElementById('table-modal').classList.add('hidden');
+      currentTableData = null;
+    }
+
+    function changeTableStatus(newStatus) {
+      if (!currentTableData) return;
+      var num = parseInt(currentTableData.num);
+      var table = tables.find(function(t) { return t.num === num; });
+      if (!table) return;
+
+      table.status = newStatus;
+      if (newStatus === 'libre') table.order = null;
+      if (newStatus === 'limpieza') table.order = null;
+      if (newStatus === 'reservada') table.order = null;
+
+      var messages = { libre:'Mesa ' + num + ' libre', ocupada:'Mesa ' + num + ' ocupada', limpieza:'Mesa ' + num + ' — Limpieza', reservada:'Mesa ' + num + ' reservada' };
+      showToast(messages[newStatus] || 'Estado actualizado', 'success');
+
+      closeTableModal();
+      var filtered = activeFilter === 'all' ? tables : tables.filter(function(t) { return t.status === activeFilter; });
+      renderTableCards(filtered);
+    }
+
+    function createOrderForTable() {
+      if (!currentTableData) return;
+      closeTableModal();
+      window.location.href = 'new-order_experimental.html?mesa=' + currentTableData.num;
+    }
+
+    function showToast(message, type) {
+      type = type || 'success';
+      var toast = document.getElementById('toast');
+      toast.textContent = message;
+      if (type === 'success') {
+        toast.style.borderColor = '#2D4A22'; toast.style.color = '#2D4A22'; toast.style.backgroundColor = '#FFFFFF';
+      } else {
+        toast.style.borderColor = '#3A5068'; toast.style.color = '#3A5068'; toast.style.backgroundColor = '#FFFFFF';
+      }
+      toast.classList.remove('hidden');
+      setTimeout(function() { toast.classList.add('hidden'); }, 2500);
+    }
+
+    renderTableCards(tables);
+  </script>
+</body>
+</html>

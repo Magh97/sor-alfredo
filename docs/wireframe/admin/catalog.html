@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOR — Catálogo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+  .toggle-switch { width: 44px; height: 24px; }
+  .toggle-switch input:checked ~ .dot { transform: translateX(20px); }
+  .toggle-switch input:checked ~ .track { background-color: #457a38; }
+  .modal-overlay { transition: opacity 0.2s ease; }
+</style>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary:   { DEFAULT: '#c2572e', light: '#e07a4d', dark: '#8c2b17', foreground: '#fdfaf5' },
+          secondary: { DEFAULT: '#527a34', light: '#7b9a4f', dark: '#3a4f24', foreground: '#fdfaf5' },
+          accent:    { DEFAULT: '#e8a020', foreground: '#2c1a10' },
+          success:   '#457a38',
+          error:     '#b5452e',
+          warning:   '#d49224',
+          info:      '#4e769e',
+          background:'#fdfaf5',
+          surface:   '#f8f0e2',
+          text:      { primary: '#2c1a10', secondary: '#665448', muted: '#8a7e72' },
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-background text-[#2c1a10] font-sans min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-64 min-h-screen bg-[#2c1a10] text-[#fdfaf5] flex flex-col shrink-0">
+  <div class="px-6 py-6">
+    <h1 class="font-display font-bold text-2xl tracking-tight text-[#e07a4d]">SOR</h1>
+    <p class="text-xs text-[#8a7e72] mt-1">Sistema de Órdenes Restaurante</p>
+  </div>
+  <nav class="flex-1 px-3 space-y-1">
+    <a href="catalog.html" class="flex items-center gap-3 px-4 py-2.5 rounded-[4px] bg-[#c2572e]/20 text-[#e07a4d] font-medium text-sm border-l-2 border-[#c2572e]"><svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M9 9h6"/></svg> Catálogo</a>
+    <a href="users.html" class="flex items-center gap-3 px-4 py-2.5 rounded-[4px] text-[#f8f0e2]/70 hover:bg-white/5 text-sm"><svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg> Usuarios</a>
+    <a href="reports.html" class="flex items-center gap-3 px-4 py-2.5 rounded-[4px] text-[#f8f0e2]/70 hover:bg-white/5 text-sm"><svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg> Reportes</a>
+  </nav>
+  <div class="px-6 py-4 border-t border-white/10">
+    <p class="text-xs text-[#8a7e72]">Admin &middot; Miguel</p>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="flex-1 flex flex-col min-h-screen bg-white">
+  <!-- Header -->
+  <header class="flex items-center justify-between px-8 py-4 border-b border-text-muted/20 bg-white">
+    <h2 class="font-display font-bold text-xl text-[#2c1a10]">Catálogo</h2>
+    <div class="flex items-center gap-3">
+      <span class="text-sm text-text-secondary">Admin</span>
+      <div class="size-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold font-display">A</div>
+    </div>
+  </header>
+
+  <!-- Filters Card -->
+  <div class="px-8 py-4">
+    <div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm">
+      <div class="flex items-center gap-3 p-4">
+        <div class="flex items-center gap-2 flex-1 overflow-x-auto" id="cat-filters">
+          <button class="cat-pill active px-4 py-2 rounded-[8px] text-sm font-medium bg-primary text-primary-foreground shadow-sm shrink-0 font-display" data-cat="all" onclick="filterByCategory(this,'all')">Todos</button>
+          <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="platos" onclick="filterByCategory(this,'platos')">Platos</button>
+          <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="bebidas" onclick="filterByCategory(this,'bebidas')">Bebidas</button>
+          <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="postres" onclick="filterByCategory(this,'postres')">Postres</button>
+          <button class="cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display" data-cat="entradas" onclick="filterByCategory(this,'entradas')">Entradas</button>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <input type="text" id="searchInput" placeholder="Buscar producto…" class="w-48 px-3 py-2 text-sm border border-text-muted/20 rounded-[4px] bg-white focus:outline-none focus:ring-2 focus:ring-primary/30" oninput="filterProducts()">
+          <button onclick="openModal('add')" class="font-display font-bold text-sm px-4 py-2 rounded-[4px] bg-primary text-primary-foreground hover:bg-primary-dark active:scale-95 transition-all shrink-0">+ Nuevo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Table — wrapped in a card -->
+  <div class="flex-1 px-8 py-4 overflow-auto">
+    <div class="bg-surface rounded-[16px] border border-text-muted/15 shadow-sm min-h-[300px]">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-left text-text-muted uppercase text-xs tracking-wider border-b border-text-muted/15">
+            <th class="py-3 pl-6 font-medium">Producto</th>
+            <th class="py-3 font-medium">Categoría</th>
+            <th class="py-3 font-medium">Precio</th>
+            <th class="py-3 font-medium">Disponible</th>
+            <th class="py-3 pr-6 font-medium">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div id="productModal" class="modal-overlay fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
+  <div class="bg-surface rounded-[8px] w-full max-w-md mx-4 shadow-xl">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-text-muted/20">
+      <h3 id="modalTitle" class="font-display font-bold text-lg text-[#2c1a10]">Nuevo Producto</h3>
+      <button onclick="closeModal()" class="text-[#8a7e72] hover:text-[#2c1a10] text-xl leading-none">&times;</button>
+    </div>
+    <form id="productForm" class="px-6 py-4 space-y-4" onsubmit="saveProduct(event)">
+      <input type="hidden" id="editIndex">
+      <div>
+        <label class="block text-xs font-medium text-[#665448] mb-1">Nombre del producto</label>
+        <input type="text" id="prodName" required class="w-full px-3 py-2 border border-text-muted/20 rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-[#665448] mb-1">Categoría</label>
+        <select id="prodCategory" class="w-full px-3 py-2 border border-text-muted/20 rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+          <option value="platos">Platos</option>
+          <option value="bebidas">Bebidas</option>
+          <option value="postres">Postres</option>
+          <option value="entradas">Entradas</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-[#665448] mb-1">Precio (MXN)</label>
+        <input type="number" id="prodPrice" required min="0" step="0.01" class="w-full px-3 py-2 border border-text-muted/20 rounded-[4px] text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+      </div>
+      <div class="flex items-center gap-3">
+        <label class="text-xs font-medium text-[#665448]">Disponible</label>
+        <label class="toggle-switch relative inline-block cursor-pointer">
+          <input type="checkbox" id="prodAvailable" checked class="sr-only peer">
+          <span class="track block w-11 h-6 rounded-full bg-gray-300 peer-checked:bg-[#457a38] transition-colors"></span>
+          <span class="dot absolute left-0.5 top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
+        </label>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="closeModal()" class="flex-1 py-2 text-sm border border-text-muted/20 rounded-[4px] text-[#665448] hover:bg-[#f8f0e2]">Cancelar</button>
+        <button type="submit" class="flex-1 py-2 text-sm bg-[#c2572e] text-[#fdfaf5] rounded-[4px] font-display font-bold hover:bg-[#8c2b17]">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const products = [
+    { name: 'Hamburguesa Clásica',  category: 'platos',   price: 120,  available: true  },
+    { name: 'Pizza Margherita',     category: 'platos',   price: 150,  available: true  },
+    { name: 'Tacos al Pastor',     category: 'entradas',  price: 85,   available: true  },
+    { name: 'Ensalada César',      category: 'entradas',  price: 95,   available: true  },
+    { name: 'Pasta Alfredo',       category: 'platos',    price: 110,  available: false },
+    { name: 'Coca-Cola 355ml',     category: 'bebidas',   price: 35,   available: true  },
+    { name: 'Agua de Horchata',    category: 'bebidas',   price: 40,   available: true  },
+    { name: 'Tiramisú',            category: 'postres',   price: 85,   available: true  },
+    { name: 'Flan de Caramelo',    category: 'postres',   price: 65,   available: true  },
+    { name: 'Limonada Mineral',    category: 'bebidas',   price: 45,   available: false },
+  ];
+  let activeFilter = 'all';
+  let editingIndex = null;
+
+  function renderTable(list) {
+    var tbody = document.getElementById('productTableBody');
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="py-16 text-center text-text-muted">Sin productos que mostrar</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(function(p) {
+      var idx = products.indexOf(p);
+      return '<tr class="border-b border-text-muted/10 hover:bg-white/50 transition-colors">' +
+        '<td class="py-3 pl-6 font-medium text-text-primary">' + p.name + '</td>' +
+        '<td class="py-3 text-text-secondary capitalize">' + p.category + '</td>' +
+        '<td class="py-3 text-text-secondary font-mono">$' + p.price.toFixed(2) + '</td>' +
+        '<td class="py-3"><span class="inline-block size-2.5 rounded-full ' + (p.available ? 'bg-success' : 'bg-error') + '"></span></td>' +
+        '<td class="py-3 pr-6 space-x-3">' +
+          '<button onclick="openModal(\'edit\',' + idx + ')" class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">Editar</button>' +
+          '<button onclick="toggleProduct(' + idx + ')" class="text-sm font-medium ' + (p.available ? 'text-error hover:text-error/80' : 'text-success hover:text-success/80') + ' transition-colors">' + (p.available ? 'Desactivar' : 'Activar') + '</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  function filterProducts() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = products.filter(p => {
+      const matchCat = activeFilter === 'all' || p.category === activeFilter;
+      const matchSearch = p.name.toLowerCase().includes(q);
+      return matchCat && matchSearch;
+    });
+    renderTable(filtered);
+  }
+
+  function filterByCategory(btn, cat) {
+    activeFilter = cat;
+    document.querySelectorAll('#cat-filters .cat-pill').forEach(function(b) {
+      b.classList.remove('active');
+      b.className = 'cat-pill px-4 py-2 rounded-[8px] text-sm font-medium bg-white text-text-primary border border-text-muted/15 shadow-sm shrink-0 hover:border-primary/30 transition-colors font-display';
+    });
+    btn.className = 'cat-pill active px-4 py-2 rounded-[8px] text-sm font-medium bg-primary text-primary-foreground shadow-sm shrink-0 font-display';
+    filterProducts();
+  }
+
+  function openModal(mode, idx) {
+    const modal = document.getElementById('productModal');
+    document.getElementById('modalTitle').textContent = mode === 'add' ? 'Nuevo Producto' : 'Editar Producto';
+    document.getElementById('editIndex').value = mode === 'add' ? '' : idx;
+    if (mode === 'edit' && idx != null) {
+      const p = products[idx];
+      document.getElementById('prodName').value = p.name;
+      document.getElementById('prodCategory').value = p.category;
+      document.getElementById('prodPrice').value = p.price;
+      document.getElementById('prodAvailable').checked = p.available;
+    } else {
+      document.getElementById('productForm').reset();
+      document.getElementById('prodAvailable').checked = true;
+    }
+    modal.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('productModal').classList.add('hidden');
+  }
+
+  function saveProduct(e) {
+    e.preventDefault();
+    const idx = document.getElementById('editIndex').value;
+    const data = {
+      name: document.getElementById('prodName').value,
+      category: document.getElementById('prodCategory').value,
+      price: parseFloat(document.getElementById('prodPrice').value),
+      available: document.getElementById('prodAvailable').checked,
+    };
+    if (idx !== '') {
+      products[parseInt(idx)] = data;
+    } else {
+      products.push(data);
+    }
+    closeModal();
+    filterProducts();
+  }
+
+  function toggleProduct(idx) {
+    products[idx].available = !products[idx].available;
+    filterProducts();
+  }
+
+  document.getElementById('productModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  renderTable(products);
+</script>
+
+</body>
+</html>

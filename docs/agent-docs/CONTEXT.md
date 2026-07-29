@@ -18,7 +18,9 @@ Digitaliza flujo mesa→orden→cocina→pago en restaurante de servicio a mesa.
 
 ## Stack
 
-Node 24, Express 5, TypeScript, React 19, Vite, Tailwind 4.3, PostgreSQL 18, Drizzle, Socket.io, shadcn/ui, lucide-react, JWT Bearer auth.
+Node 24, Express 5, TypeScript, React 19, Vite, Tailwind 4.3, PostgreSQL 18, Drizzle, Socket.io, shadcn/ui, lucide-react, Space Grotesk, JWT Bearer auth.
+
+Experimental variant: Playfair Display, JetBrains Mono, DM Sans, Caveat (4-font typography system).
 
 See `STACK.md` for full version table.
 

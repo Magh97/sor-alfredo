@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SOR — Nueva Orden</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:   { DEFAULT: '#c2572e', light: '#e07a4d', dark: '#8c2b17', foreground: '#fdfaf5' },
+            secondary: { DEFAULT: '#527a34', light: '#7b9a4f', dark: '#3a4f24', foreground: '#fdfaf5' },
+            accent:    { DEFAULT: '#e8a020', foreground: '#2c1a10' },
+            success:   '#457a38',
+            error:     '#b5452e',
+            warning:   '#d49224',
+            info:      '#4e769e',
+            background:'#fdfaf5',
+            surface:   '#f8f0e2',
+            text:      { primary: '#2c1a10', secondary: '#665448', muted: '#8a7e72' },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; }
+    .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+    .category-scroll::-webkit-scrollbar { display: none; }
+    .category-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="h-screen flex flex-col bg-background max-w-lg mx-auto relative">
+
+  <!-- Header -->
+  <header class="bg-surface border-b border-text-muted/20 px-4 py-3 shrink-0 flex items-center justify-between">
+    <a href="orders.html" class="flex items-center gap-2 text-text-primary active:scale-95 transition-transform">
+      <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span class="text-sm font-medium">Volver</span>
+    </a>
+    <span class="text-base font-semibold text-text-primary font-display">Mesa 5</span>
+    <div id="item-count-badge" class="size-7 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold">0</div>
+  </header>
+
+  <!-- Category Chips -->
+  <div class="px-4 pt-3 pb-2">
+    <div class="flex gap-2 category-scroll overflow-x-auto pb-1" id="categories">
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground shrink-0 active:scale-95 transition-transform min-h-[36px]" data-category="all">Todas</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-surface text-text-secondary shrink-0 active:scale-95 transition-transform min-h-[36px]" data-category="platos">Platos</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-surface text-text-secondary shrink-0 active:scale-95 transition-transform min-h-[36px]" data-category="bebidas">Bebidas</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-surface text-text-secondary shrink-0 active:scale-95 transition-transform min-h-[36px]" data-category="postres">Postres</button>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <main class="flex-1 overflow-y-auto px-4 pt-2 pb-4">
+    <div class="grid grid-cols-2 gap-3" id="product-grid">
+
+      <!-- Platos -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="hamburguesa" data-category="platos" data-name="Hamburguesa Clásica" data-price="120" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Hamburguesa Clásica</span>
+        <span class="text-sm font-bold text-primary">$120.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-hamburguesa">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Platos -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="pizza" data-category="platos" data-name="Pizza Margarita" data-price="150" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Pizza Margarita</span>
+        <span class="text-sm font-bold text-primary">$150.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-pizza">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Platos -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="tacos" data-category="platos" data-name="Tacos al Pastor" data-price="85" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Tacos al Pastor</span>
+        <span class="text-sm font-bold text-primary">$85.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-tacos">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Platos -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="ensalada" data-category="platos" data-name="Ensalada César" data-price="95" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Ensalada César</span>
+        <span class="text-sm font-bold text-primary">$95.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-ensalada">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Platos -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="pasta" data-category="platos" data-name="Pasta Alfredo" data-price="130" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Pasta Alfredo</span>
+        <span class="text-sm font-bold text-primary">$130.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-pasta">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Bebidas -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="coca-cola" data-category="bebidas" data-name="Coca-Cola 355ml" data-price="35" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Coca-Cola 355ml</span>
+        <span class="text-sm font-bold text-primary">$35.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-coca-cola">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Bebidas -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="agua" data-category="bebidas" data-name="Agua Mineral 500ml" data-price="25" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Agua Mineral 500ml</span>
+        <span class="text-sm font-bold text-primary">$25.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-agua">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Bebidas -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="limonada" data-category="bebidas" data-name="Limonada Natural" data-price="45" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Limonada Natural</span>
+        <span class="text-sm font-bold text-primary">$45.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-limonada">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Postres -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="flan" data-category="postres" data-name="Flan de Caramelo" data-price="65" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Flan de Caramelo</span>
+        <span class="text-sm font-bold text-primary">$65.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-flan">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Postres -->
+      <div class="bg-surface rounded-[16px] p-4 flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all min-h-[140px] justify-center gap-2 relative" data-product="helado" data-category="postres" data-name="Helado de Vainilla" data-price="55" onclick="addToCart(this)">
+        <span class="text-sm font-semibold text-text-primary leading-tight">Helado de Vainilla</span>
+        <span class="text-sm font-bold text-primary">$55.00</span>
+        <div class="absolute top-2 right-2 size-5 rounded-full bg-success text-white hidden items-center justify-center" id="check-helado">
+          <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom Tray / Cart -->
+  <div class="shrink-0 bg-surface border-t border-text-muted/20 max-h-[40vh] flex flex-col" id="cart-tray">
+    <div id="cart-empty" class="px-4 py-4 text-center text-sm text-text-muted">
+      🛒 Toca un producto para agregarlo
+    </div>
+    <div id="cart-items" class="overflow-y-auto px-4 pt-3 hidden flex-1">
+    </div>
+    <div id="cart-footer" class="hidden px-4 pb-3 pt-1">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-base font-bold text-text-primary font-display">Total</span>
+        <span class="text-lg font-bold text-text-primary font-display" id="cart-total">$0.00</span>
+      </div>
+      <button onclick="enviarACocina()" class="w-full bg-primary text-primary-foreground rounded-[16px] py-3.5 text-base font-bold active:scale-[0.98] transition-transform font-display min-h-[48px]">
+        ENVIAR A COCINA
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-success text-white px-5 py-3 rounded-[16px] text-sm font-bold shadow-lg z-50 hidden transition-all font-display">
+    ¡Orden enviada a cocina!
+  </div>
+
+  <script>
+    var cart = {};
+
+    function addToCart(el) {
+      var product = el.dataset.product;
+      var name = el.dataset.name;
+      var price = parseFloat(el.dataset.price);
+      var emoji = el.dataset.emoji;
+
+      if (cart[product]) {
+        cart[product].qty += 1;
+      } else {
+        cart[product] = { name: name, price: price, emoji: emoji, qty: 1 };
+      }
+
+      var check = document.getElementById('check-' + product);
+      if (check) {
+        check.classList.remove('hidden');
+        check.classList.add('flex');
+      }
+      el.classList.add('ring-2', 'ring-success');
+
+      renderCart();
+    }
+
+    function removeFromCart(product) {
+      var check = document.getElementById('check-' + product);
+      if (check) {
+        check.classList.add('hidden');
+        check.classList.remove('flex');
+      }
+      var card = document.querySelector('[data-product="' + product + '"]');
+      if (card) card.classList.remove('ring-2', 'ring-success');
+
+      delete cart[product];
+      renderCart();
+    }
+
+    function updateQty(product, delta) {
+      if (!cart[product]) return;
+      cart[product].qty += delta;
+      if (cart[product].qty <= 0) {
+        removeFromCart(product);
+        return;
+      }
+      renderCart();
+    }
+
+    function renderCart() {
+      var itemsEl = document.getElementById('cart-items');
+      var emptyEl = document.getElementById('cart-empty');
+      var footerEl = document.getElementById('cart-footer');
+      var badge = document.getElementById('item-count-badge');
+
+      var totalItems = 0;
+      var totalPrice = 0;
+      Object.values(cart).forEach(function(item) {
+        totalItems += item.qty;
+        totalPrice += item.price * item.qty;
+      });
+
+      badge.textContent = totalItems;
+
+      if (totalItems === 0) {
+        emptyEl.classList.remove('hidden');
+        itemsEl.classList.add('hidden');
+        footerEl.classList.add('hidden');
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+      itemsEl.classList.remove('hidden');
+      footerEl.classList.remove('hidden');
+
+      var html = '';
+      Object.keys(cart).forEach(function(key) {
+        var item = cart[key];
+        html += '<div class="flex items-center gap-3 py-2 border-b border-text-muted/10 last:border-0">';
+        html += '  <span class="text-xl shrink-0">' + item.emoji + '</span>';
+        html += '  <div class="flex-1 min-w-0">';
+        html += '    <p class="text-sm font-medium text-text-primary truncate">' + item.name + '</p>';
+        html += '    <p class="text-xs text-text-muted">$' + item.price.toFixed(2) + ' c/u</p>';
+        html += '  </div>';
+        html += '  <div class="flex items-center gap-1 shrink-0">';
+        html += '    <button onclick="updateQty(\'' + key + '\', -1)" class="size-8 rounded-full bg-surface border border-text-muted/20 flex items-center justify-center text-text-primary active:scale-90 transition-transform text-lg font-bold leading-none" style="min-width:32px;min-height:32px;">−</button>';
+        html += '    <span class="w-6 text-center text-sm font-bold text-text-primary">' + item.qty + '</span>';
+        html += '    <button onclick="updateQty(\'' + key + '\', 1)" class="size-8 rounded-full bg-surface border border-text-muted/20 flex items-center justify-center text-text-primary active:scale-90 transition-transform text-lg font-bold leading-none" style="min-width:32px;min-height:32px;">+</button>';
+        html += '  </div>';
+        html += '  <button onclick="removeFromCart(\'' + key + '\')" class="size-8 rounded-full flex items-center justify-center text-text-muted active:scale-90 transition-transform shrink-0" style="min-width:32px;min-height:32px;">';
+        html += '    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+        html += '  </button>';
+        html += '</div>';
+      });
+      itemsEl.innerHTML = html;
+
+      document.getElementById('cart-total').textContent = '$' + totalPrice.toFixed(2);
+    }
+
+    function enviarACocina() {
+      var totalItems = 0;
+      Object.values(cart).forEach(function(item) { totalItems += item.qty; });
+      if (totalItems === 0) return;
+
+      var toast = document.getElementById('toast');
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(function() {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 1800);
+
+      Object.keys(cart).forEach(function(product) {
+        var check = document.getElementById('check-' + product);
+        if (check) {
+          check.classList.add('hidden');
+          check.classList.remove('flex');
+        }
+        var card = document.querySelector('[data-product="' + product + '"]');
+        if (card) card.classList.remove('ring-2', 'ring-success');
+      });
+      cart = {};
+      renderCart();
+    }
+
+    document.querySelectorAll('#categories button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#categories button').forEach(function(b) {
+          b.className = 'px-4 py-2 rounded-full text-sm font-medium bg-surface text-text-secondary shrink-0 active:scale-95 transition-transform min-h-[36px]';
+        });
+        btn.className = 'px-4 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground shrink-0 active:scale-95 transition-transform min-h-[36px]';
+
+        var filter = btn.dataset.category;
+        document.querySelectorAll('#product-grid > div').forEach(function(card) {
+          card.style.display = (filter === 'all' || card.dataset.category === filter) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
