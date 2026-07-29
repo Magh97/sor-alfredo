@@ -1,0 +1,108 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #6B1A2A;
+  --color-primary-light: #8B2535;
+  --color-primary-dark: #4A0F1B;
+  --color-primary-foreground: #F0E6D3;
+
+  --color-secondary: #2D4A22;
+  --color-secondary-light: #3D6230;
+  --color-secondary-dark: #1C3015;
+
+  --color-background: #FFFFFF;
+  --color-surface: #EBDCC4;
+  --color-surface-elevated: #E5D4B8;
+
+  --color-text-primary: #2C1810;
+  --color-text-secondary: #5C4030;
+  --color-text-muted: #8B7355;
+
+  --color-accent: #C9A84C;
+  --color-accent-foreground: #2C1810;
+
+  --color-success: #2D4A22;
+  --color-error: #8B1A1A;
+  --color-warning: #C9A84C;
+  --color-info: #3A5068;
+
+  --color-kds-bg: #1A1410;
+  --color-kds-surface: #2A1F18;
+  --color-kds-text: #F0E6D3;
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+  --font-script: 'Caveat', cursive;
+
+  --animate-shimmer: shimmer 1.5s ease-in-out infinite;
+  --animate-typewriter: typewriter 3s steps(24) infinite;
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  @keyframes typewriter {
+    0%, 90%, 100% { width: 0; }
+    20%, 80% { width: 100%; }
+  }
+}
+
+@layer base {
+  *, *::before, *::after {
+    border-color: var(--color-text-muted);
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-accent) 37%, var(--color-surface) 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.card-brutal {
+  clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+}
+
+.border-torn {
+  border-top: 3px solid var(--color-primary);
+  position: relative;
+}
+
+.border-torn::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent, transparent 8px,
+    var(--color-surface) 8px, var(--color-surface) 12px,
+    transparent 12px, transparent 20px,
+    var(--color-surface) 20px, var(--color-surface) 22px,
+    transparent 22px, transparent 30px
+  );
+}
+
+.shadow-paper {
+  box-shadow: 0 1px 0 var(--color-accent), 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
+}
+
+.shadow-card {
+  box-shadow: 0 2px 8px rgba(44,24,16,0.08);
+}
+
+.shadow-card-hover {
+  box-shadow: 0 4px 16px rgba(44,24,16,0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
