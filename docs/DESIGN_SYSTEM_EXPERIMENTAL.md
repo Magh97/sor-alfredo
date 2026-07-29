@@ -27,7 +27,7 @@
 | `--color-secondary` | `#2D4A22` | Forest green — Precios, confirmaciones |
 | `--color-secondary-light` | `#3D6230` | Hover secondary |
 | `--color-secondary-dark` | `#1C3015` | Active secondary |
-| `--color-background` | `#F0E6D3` | Parchment — Fondo general |
+| `--color-background` | `#FFFFFF` | Clean white — Fondo general |
 | `--color-surface` | `#EBDCC4` | Paper surface — Tarjetas, paneles |
 | `--color-surface-elevated` | `#E5D4B8` | Paper elevated |
 | `--color-text-primary` | `#2C1810` | Dark espresso |

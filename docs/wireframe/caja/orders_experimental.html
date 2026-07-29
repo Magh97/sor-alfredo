@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-MX">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOR — Cajero · Ordenes [BRUTALIST]</title>
+  <title>SOR — Cajero · Órdenes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -15,67 +17,36 @@
             secondary: { DEFAULT:'#2D4A22', light:'#3D6230', dark:'#1C3015', foreground:'#F0E6D3' },
             accent:    { DEFAULT:'#C9A84C', foreground:'#2C1810' },
             success:'#2D4A22', error:'#8B1A1A', warning:'#C9A84C', info:'#3A5068',
-            background:'#F0E6D3', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
-            text:{ primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355' },
+            background:'#FFFFFF', surface:'#EBDCC4', 'surface-elevated':'#E5D4B8',
             espresso:'#2C1810',
+            text:{primary:'#2C1810', secondary:'#5C4030', muted:'#8B7355'},
           },
-        },
-      },
+          fontFamily: {
+            serif: ['"Playfair Display"','Georgia', 'serif'],
+            mono:  ['"JetBrains Mono"','"Courier New"', 'monospace'],
+            sans:  ['"DM Sans"','"Helvetica Neue"', 'sans-serif'],
+            script:['"Caveat"', 'cursive'],
+          },
+        }
+      }
     }
   </script>
   <style>
-    body { margin:0; overflow:hidden; }
-    .font-serif-display { font-family:'Playfair Display','Georgia',serif; }
-    .font-mono { font-family:'JetBrains Mono','Courier New',monospace; }
-    .font-sans-bold { font-family:'DM Sans','Helvetica Neue',sans-serif; font-weight:700; }
-    .font-script { font-family:'Caveat',cursive; }
-
     .bg-paper {
-      background-color:#F0E6D3;
-      background-image:url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    }
-    .bg-surface-paper {
-      background-color:#EBDCC4;
-      background-image:url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-color: #FFFFFF;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
     }
     .shadow-paper {
-      box-shadow:0 1px 0 #C9A84C, 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
+      box-shadow: 0 1px 0 #C9A84C, 0 2px 0 #A08030, 0 3px 4px rgba(44,24,16,0.15);
     }
     .card-brutal {
-      clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
     }
-    .border-torn {
-      border-top:3px solid #6B1A2A;
-      position:relative;
-    }
-    .border-torn::before {
-      content:'';
-      position:absolute;
-      top:-6px;left:0;
-      width:100%;height:6px;
-      background:repeating-linear-gradient(90deg,transparent,transparent 8px,#F0E6D3 8px,#F0E6D3 12px,transparent 12px,transparent 20px,#F0E6D3 20px,#F0E6D3 22px,transparent 22px,transparent 30px);
-    }
-
     .scrollbar-none::-webkit-scrollbar { width:6px; }
     .scrollbar-none::-webkit-scrollbar-track { background:transparent; }
     .scrollbar-none::-webkit-scrollbar-thumb { background:#C9A84C; }
     .scrollbar-none { scrollbar-width:thin; scrollbar-color:#C9A84C transparent; }
-
-    .ink-blot {
-      background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='35' fill='%238B1A1A' opacity='0.06'%3E%3Canimate attributeName='r' values='35;38;35' dur='4s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E");
-      background-position:center;
-      background-repeat:no-repeat;
-    }
-
-    .typewriter::after {
-      content:'|';
-      animation:blink 1s step-end infinite;
-    }
-    @keyframes blink { 50%{opacity:0;} }
-
-    .wax-seal {
-      position:relative;
-    }
+    .wax-seal { position:relative; }
     .wax-seal::after {
       content:'';position:absolute;
       top:-12px;right:-12px;
@@ -84,160 +55,146 @@
       clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);
       opacity:0.85;
     }
+    .chip-filter { border:2px solid #C9A84C; color:#2C1810; cursor:pointer; }
+    .chip-filter.active { background:#6B1A2A; color:#C9A84C; border-color:#6B1A2A; }
+    input:focus, select:focus { outline:none; }
   </style>
 </head>
-<body class="h-screen flex bg-paper">
+<body class="h-screen flex bg-paper font-sans text-text-primary">
 
-<!-- ==================== SIDEBAR ==================== -->
-<aside class="w-64 flex flex-col shrink-0" style="background-color:#2C1810;color:#F0E6D3;">
-  <div class="h-20 flex items-center justify-center border-b" style="border-color:#C9A84C;border-width:4px;">
-    <h1 class="font-serif-display text-4xl font-black tracking-tight" style="color:#C9A84C;letter-spacing:-0.02em;">SOR</h1>
+<!-- ===== SIDEBAR ===== -->
+<aside class="w-64 min-h-screen flex flex-col shrink-0" style="background:#2C1810; color:#F0E6D3;">
+  <div class="px-6 py-8 border-b-4 border-accent">
+    <h1 class="font-serif font-bold text-[28px] tracking-tight leading-none" style="color:#C9A84C;">SOR</h1>
+    <p class="font-mono text-[10px] uppercase tracking-[0.2em] mt-1" style="color:#8B7355;">Sistema Operativo de Restaurante</p>
   </div>
-  <nav class="flex-1 py-6 space-y-1">
-    <a href="orders_experimental.html" class="flex items-center gap-4 px-6 py-3.5 font-sans-bold text-sm tracking-widest uppercase border-l-[4px] border-[#6B1A2A] text-[#C9A84C]" style="letter-spacing:0.15em;">
-      <span class="font-mono text-xs" style="color:#C9A84C;">[ 01 ]</span>
-      Ordenes
+  <nav class="flex-1 px-0 py-4">
+    <a href="orders_experimental.html" class="flex items-center gap-3 px-6 py-3 border-l-[6px] border-primary text-accent font-sans font-bold text-[12px] uppercase tracking-[0.1em]" style="background:rgba(107,26,42,0.20);">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="1" width="14" height="16" stroke="#C9A84C" stroke-width="2"/><line x1="6" y1="5" x2="14" y2="5" stroke="#C9A84C" stroke-width="2"/><line x1="6" y1="9" x2="14" y2="9" stroke="#C9A84C" stroke-width="2"/><line x1="6" y1="13" x2="11" y2="13" stroke="#C9A84C" stroke-width="2"/></svg>
+      Órdenes
     </a>
-    <a href="register_experimental.html" class="flex items-center gap-4 px-6 py-3.5 font-sans-bold text-sm tracking-widest uppercase hover:border-l-[4px] hover:border-[#6B1A2A] hover:text-[#C9A84C] transition-colors" style="color:#8B7355;letter-spacing:0.15em;">
-      <span class="font-mono text-xs" style="color:#8B7355;">[ 02 ]</span>
+    <a href="register_experimental.html" class="flex items-center gap-3 px-6 py-3 border-l-[6px] border-transparent hover:border-primary/40 text-text-muted hover:text-[#F0E6D3] font-sans font-bold text-[12px] uppercase tracking-[0.1em] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="5" width="14" height="12" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="11" r="2.5" stroke="currentColor" stroke-width="2"/><path d="M4 5V2h10v3" stroke="currentColor" stroke-width="2"/></svg>
       Caja
     </a>
-    <div class="px-6 pt-8 pb-2">
-      <div class="border-t" style="border-color:#5C4030;border-width:1px;"></div>
-    </div>
-    <a href="#" class="flex items-center gap-4 px-6 py-3.5 font-sans-bold text-sm tracking-widest uppercase hover:border-l-[4px] hover:border-[#6B1A2A] hover:text-[#C9A84C] transition-colors" style="color:#8B7355;letter-spacing:0.15em;">
-      <span class="font-mono text-xs" style="color:#8B7355;">[ 03 ]</span>
-      Mesas
-    </a>
-    <a href="#" class="flex items-center gap-4 px-6 py-3.5 font-sans-bold text-sm tracking-widest uppercase hover:border-l-[4px] hover:border-[#6B1A2A] hover:text-[#C9A84C] transition-colors" style="color:#8B7355;letter-spacing:0.15em;">
-      <span class="font-mono text-xs" style="color:#8B7355;">[ 04 ]</span>
-      Cocina
-    </a>
-    <a href="#" class="flex items-center gap-4 px-6 py-3.5 font-sans-bold text-sm tracking-widest uppercase hover:border-l-[4px] hover:border-[#6B1A2A] hover:text-[#C9A84C] transition-colors" style="color:#8B7355;letter-spacing:0.15em;">
-      <span class="font-mono text-xs" style="color:#8B7355;">[ 05 ]</span>
-      Reportes
-    </a>
   </nav>
-  <div class="p-4 border-t" style="border-color:#5C4030;border-width:2px;">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 flex items-center justify-center font-sans-bold text-lg border-[3px] border-[#6B1A2A] select-none" style="color:#F0E6D3;background-color:#4A0F1B;min-width:40px;min-height:40px;">C</div>
-      <div>
-        <p class="font-sans-bold text-sm" style="color:#F0E6D3;letter-spacing:0.05em;">Carlos</p>
-        <p class="font-mono text-xs" style="color:#8B7355;">Cajero</p>
-      </div>
-    </div>
-    <p class="font-mono text-xs mt-3 tracking-wider" style="color:#5C4030;">SOR v0.1 EXPERIMENTAL</p>
+  <div class="px-6 py-4 border-t-4 border-accent">
+    <p class="font-mono text-[12px]" style="color:#C9A84C;">Carlos</p>
+    <p class="font-mono text-[10px] uppercase tracking-[0.1em]" style="color:#8B7355;">Cajero</p>
   </div>
 </aside>
 
-<!-- ==================== MAIN ==================== -->
-<div class="flex-1 flex flex-col overflow-hidden">
+<!-- ===== MAIN ===== -->
+<main class="flex-1 flex flex-col min-h-screen bg-white overflow-hidden">
 
-  <!-- Header -->
-  <header class="shrink-0 px-8 py-5 flex items-center justify-between bg-surface-paper" style="border-bottom:6px solid #6B1A2A;">
-    <h2 class="font-sans-bold uppercase tracking-tight" style="font-size:36px;color:#2C1810;letter-spacing:-0.03em;">Ordenes</h2>
-    <span class="font-mono text-sm font-bold uppercase tracking-widest" style="color:#5C4030;">Cajero &mdash; Turno Activo</span>
-  </header>
-
-  <!-- Filters Card -->
-  <div class="shrink-0 px-6 pt-5 pb-2">
-    <div class="bg-surface-paper border-[6px] border-[#6B1A2A] shadow-paper p-4 flex items-center gap-4 flex-wrap">
-      <div class="relative flex-1 min-w-[200px]">
-        <input type="search" id="filter-search" placeholder="Buscar por #orden o mesa..." class="w-full px-4 py-2.5 border-[2px] border-[#8B7355] bg-white font-mono text-sm focus:outline-none focus:border-[4px] focus:border-[#6B1A2A] transition-all" style="outline:none;box-shadow:none;" autocomplete="off">
+  <!-- HEADER -->
+  <div class="shrink-0 px-10 pt-8">
+    <div class="flex items-center justify-between pb-6 border-b-[6px] border-primary mb-10">
+      <h1 class="font-sans font-bold text-[36px] uppercase tracking-[-0.02em] text-espresso">Órdenes</h1>
+      <div class="flex items-center gap-3">
+        <span class="font-mono text-[14px] text-text-secondary">SOR-CAJ-001</span>
+        <div class="w-11 h-11 border-[4px] border-primary flex items-center justify-center font-serif font-bold text-[18px] text-primary">CA</div>
       </div>
-      <select id="filter-status" class="px-4 py-2.5 border-[2px] border-[#8B7355] bg-white font-mono text-sm focus:outline-none focus:border-[4px] focus:border-[#6B1A2A] transition-all" style="outline:none;">
-        <option value="all">TODOS LOS ESTADOS</option>
-        <option value="en-cocina">EN COCINA</option>
-        <option value="lista">LISTA</option>
-        <option value="entregada">ENTREGADA</option>
-        <option value="pagada">PAGADA</option>
-      </select>
-      <button onclick="openNewOrder()" class="px-6 py-2.5 font-sans-bold text-sm uppercase tracking-widest border-[4px] border-[#6B1A2A] text-[#6B1A2A] bg-surface-paper hover:bg-[#6B1A2A] hover:text-[#F0E6D3] active:scale-[0.98] transition-all shadow-paper shrink-0" style="letter-spacing:0.1em;">
-        [+] Nueva Orden
-      </button>
+    </div>
+
+    <!-- FILTERS CARD -->
+    <div class="mb-6 p-4 shadow-paper" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+      <div class="flex items-center gap-4 flex-wrap">
+        <div class="relative flex-1 min-w-[200px]">
+          <input type="search" id="filter-search" placeholder="BUSCAR POR #ORDEN O MESA..." class="w-full px-4 py-2.5 border-[2px] border-text-muted bg-white font-mono text-[13px] focus:border-[4px] focus:border-primary transition-all" style="outline:none; border-radius:0;" autocomplete="off">
+        </div>
+        <select id="filter-status" class="px-4 py-2.5 border-[2px] border-text-muted bg-white font-mono text-[13px] focus:border-[4px] focus:border-primary transition-all" style="outline:none; border-radius:0;">
+          <option value="all">TODOS LOS ESTADOS</option>
+          <option value="en-cocina">EN COCINA</option>
+          <option value="lista">LISTA</option>
+          <option value="entregada">ENTREGADA</option>
+          <option value="pagada">PAGADA</option>
+        </select>
+        <button onclick="openNewOrder()" class="px-6 py-2.5 border-[4px] border-primary bg-primary text-primary-foreground font-sans font-bold text-[12px] uppercase tracking-[0.1em] hover:bg-primary-light transition-colors shrink-0" style="border-radius:0;">+ NUEVA ORDEN</button>
+      </div>
     </div>
   </div>
 
-  <!-- Split Panel Content -->
-  <main class="flex-1 flex gap-4 px-6 pb-6 overflow-hidden pt-3">
+  <!-- SPLIT PANEL -->
+  <div class="flex-1 flex gap-4 px-10 pb-8 overflow-hidden">
 
     <!-- LEFT: Orders Table -->
     <div class="w-[42%] flex flex-col overflow-hidden">
-      <div class="bg-surface-paper border-[6px] border-l-[#6B1A2A] border-t-[#C9A84C] border-r-[#8B7355] border-b-[#8B7355] shadow-paper flex-1 flex flex-col overflow-hidden">
+      <div class="shadow-paper flex-1 flex flex-col overflow-hidden" style="background:#EBDCC4; border:6px solid #6B1A2A;">
         <div class="flex-1 overflow-y-auto scrollbar-none" id="orders-table-container">
           <table class="w-full" id="orders-table">
-            <thead class="sticky top-0 z-10" style="background-color:#EBDCC4;">
-              <tr class="font-sans-bold text-xs uppercase tracking-widest" style="color:#5C4030;letter-spacing:0.15em;">
-                <th class="px-4 py-3 text-left border-b-[2px] border-[#8B7355]"># ID</th>
-                <th class="px-4 py-3 text-left border-b-[2px] border-[#8B7355]">Mesa</th>
-                <th class="px-4 py-3 text-left border-b-[2px] border-[#8B7355]">Mesero</th>
-                <th class="px-4 py-3 text-right border-b-[2px] border-[#8B7355]">Total</th>
-                <th class="px-4 py-3 text-center border-b-[2px] border-[#8B7355]">Estado</th>
+            <thead class="sticky top-0 z-10" style="background:#EBDCC4;">
+              <tr class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-espresso">
+                <th class="px-4 py-3 text-left border-b-2 border-primary"># ID</th>
+                <th class="px-4 py-3 text-left border-b-2 border-primary">Mesa</th>
+                <th class="px-4 py-3 text-left border-b-2 border-primary">Mesero</th>
+                <th class="px-4 py-3 text-right border-b-2 border-primary">Total</th>
+                <th class="px-4 py-3 text-center border-b-2 border-primary">Estado</th>
               </tr>
             </thead>
-            <tbody class="divide-y" style="border-color:#8B7355;border-width:1px;">
+            <tbody class="divide-y" style="border-color:#8B7355;">
 
               <tr class="cursor-pointer transition-colors" data-order="42" data-table="Mesa 5" data-waiter="Miguel" data-total="450.00" data-status="en-cocina" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
-                <td class="px-4 py-3 font-mono font-bold text-base tracking-wide" style="color:#2C1810;">#42</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Mesa 5</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Miguel</td>
-                <td class="px-4 py-3 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$450.00</td>
-                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-[2px]" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span></td>
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#42</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 5</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Miguel</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$450.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span></td>
               </tr>
 
               <tr class="cursor-pointer transition-colors" data-order="44" data-table="Mesa 2" data-waiter="Miguel" data-total="680.50" data-status="en-cocina" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
-                <td class="px-4 py-3 font-mono font-bold text-base tracking-wide" style="color:#2C1810;">#44</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Mesa 2</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Miguel</td>
-                <td class="px-4 py-3 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$680.50</td>
-                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-[2px]" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span></td>
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#44</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 2</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Miguel</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$680.50</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span></td>
               </tr>
 
               <tr class="cursor-pointer transition-colors" data-order="40" data-table="Mesa 3" data-waiter="Ana" data-total="320.00" data-status="lista" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
-                <td class="px-4 py-3 font-mono font-bold text-base tracking-wide" style="color:#2C1810;">#40</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Mesa 3</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Ana</td>
-                <td class="px-4 py-3 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$320.00</td>
-                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-[2px]" style="color:#3A5068;border-color:#3A5068;background-color:rgba(58,80,104,0.08);">Lista</span></td>
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#40</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 3</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Ana</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$320.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#3A5068;border-color:#3A5068;background-color:rgba(58,80,104,0.08);">Lista</span></td>
               </tr>
 
               <tr class="cursor-pointer transition-colors" data-order="38" data-table="Mesa 7" data-waiter="Ana" data-total="185.00" data-status="entregada" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
-                <td class="px-4 py-3 font-mono font-bold text-base tracking-wide" style="color:#2C1810;">#38</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Mesa 7</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Ana</td>
-                <td class="px-4 py-3 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$185.00</td>
-                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-[2px]" style="color:#2D4A22;border-color:#2D4A22;background-color:rgba(45,74,34,0.08);">Entregada</span></td>
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#38</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 7</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Ana</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$185.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#2D4A22;border-color:#2D4A22;background-color:rgba(45,74,34,0.08);">Entregada</span></td>
               </tr>
 
               <tr class="cursor-pointer transition-colors" data-order="35" data-table="Mesa 4" data-waiter="Miguel" data-total="295.00" data-status="pagada" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
-                <td class="px-4 py-3 font-mono font-bold text-base tracking-wide" style="color:#2C1810;">#35</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Mesa 4</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Miguel</td>
-                <td class="px-4 py-3 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$295.00</td>
-                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-[2px]" style="color:#5C4030;border-color:#5C4030;background-color:rgba(92,64,48,0.08);">Pagada</span></td>
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#35</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 4</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Miguel</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$295.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#5C4030;border-color:#5C4030;background-color:rgba(92,64,48,0.08);">Pagada</span></td>
               </tr>
 
               <tr class="cursor-pointer transition-colors" data-order="39" data-table="Mesa 8" data-waiter="Miguel" data-total="510.00" data-status="entregada" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
-                <td class="px-4 py-3 font-mono font-bold text-base tracking-wide" style="color:#2C1810;">#39</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Mesa 8</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Miguel</td>
-                <td class="px-4 py-3 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$510.00</td>
-                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-[2px]" style="color:#2D4A22;border-color:#2D4A22;background-color:rgba(45,74,34,0.08);">Entregada</span></td>
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#39</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 8</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Miguel</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$510.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#2D4A22;border-color:#2D4A22;background-color:rgba(45,74,34,0.08);">Entregada</span></td>
               </tr>
 
               <tr class="cursor-pointer transition-colors" data-order="37" data-table="Mesa 10" data-waiter="Ana" data-total="920.00" data-status="lista" onclick="selectOrder(this)" style="border-bottom:2px solid #D4C4A8;">
-                <td class="px-4 py-3 font-mono font-bold text-base tracking-wide" style="color:#2C1810;">#37</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Mesa 10</td>
-                <td class="px-4 py-3 font-mono text-sm" style="color:#5C4030;">Ana</td>
-                <td class="px-4 py-3 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$920.00</td>
-                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-[2px]" style="color:#3A5068;border-color:#3A5068;background-color:rgba(58,80,104,0.08);">Lista</span></td>
+                <td class="px-4 py-3 font-mono font-bold text-[15px] tracking-wide text-espresso">#37</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Mesa 10</td>
+                <td class="px-4 py-3 font-mono text-[13px] text-text-secondary">Ana</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$920.00</td>
+                <td class="px-4 py-3 text-center"><span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" style="color:#3A5068;border-color:#3A5068;background-color:rgba(58,80,104,0.08);">Lista</span></td>
               </tr>
 
             </tbody>
           </table>
         </div>
-        <div class="px-4 py-2 font-mono text-xs" style="color:#8B7355;background-color:#E5D4B8;border-top:2px solid #8B7355;">
-          7 ordenes &mdash; <span id="visible-count">7</span> visibles
+        <div class="px-4 py-2 font-mono text-[12px] text-text-muted" style="background:#E5D4B8; border-top:2px solid #8B7355;">
+          7 órdenes &mdash; <span id="visible-count">7</span> visibles
         </div>
       </div>
     </div>
@@ -246,83 +203,83 @@
     <div class="flex-1 overflow-y-auto scrollbar-none" id="detail-panel">
       <div class="space-y-4">
 
-        <!-- Order Summary Card -->
-        <div class="card-brutal bg-surface-paper border-[4px] border-[#6B1A2A] shadow-paper p-5">
+        <!-- ORDER SUMMARY CARD -->
+        <div class="card-brutal shadow-paper p-5" style="background:#EBDCC4; border:6px solid #6B1A2A;">
           <div class="flex items-center justify-between mb-4 pb-3" style="border-bottom:3px solid #C9A84C;">
-            <span class="font-serif-display text-2xl font-bold" style="color:#2C1810;letter-spacing:-0.01em;" id="detail-title">Mesa 5 &mdash; #42</span>
-            <span class="inline-block px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider border-[2px]" id="detail-status" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span>
+            <span class="font-serif font-bold text-[24px] text-espresso tracking-[-0.01em]" id="detail-title">Mesa 5 &mdash; #42</span>
+            <span class="inline-block px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] border-[2px]" id="detail-status" style="color:#C9A84C;border-color:#C9A84C;background-color:rgba(201,168,76,0.08);">En Cocina</span>
           </div>
 
           <table class="w-full text-sm mb-3">
             <thead>
-              <tr class="font-sans-bold text-xs uppercase tracking-widest text-left" style="color:#5C4030;letter-spacing:0.1em;">
-                <th class="py-2 border-b-[2px] border-[#8B7355] font-bold">Platillo</th>
-                <th class="py-2 border-b-[2px] border-[#8B7355] text-center font-bold">Cant</th>
-                <th class="py-2 border-b-[2px] border-[#8B7355] text-right font-bold">P.Unit</th>
-                <th class="py-2 border-b-[2px] border-[#8B7355] text-right font-bold">Subtotal</th>
+              <tr class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary text-left">
+                <th class="py-2 border-b-2 border-primary">Platillo</th>
+                <th class="py-2 border-b-2 border-primary text-center">Cant</th>
+                <th class="py-2 border-b-2 border-primary text-right">P.Unit</th>
+                <th class="py-2 border-b-2 border-primary text-right">Subtotal</th>
               </tr>
             </thead>
             <tbody id="detail-items" class="divide-y" style="border-color:#D4C4A8;">
               <tr>
                 <td class="py-2.5">
-                  <span class="font-serif-display text-base font-semibold" style="color:#2C1810;">Hamburguesa Clasica</span>
-                  <span class="font-script text-base block ml-2" style="color:#8B7355;">&mdash; sin cebolla</span>
+                  <span class="font-serif font-bold text-[16px] text-espresso">Hamburguesa Clásica</span>
+                  <span class="font-script text-[15px] block ml-2 text-text-muted">&mdash; sin cebolla</span>
                 </td>
-                <td class="py-2.5 text-center font-mono font-bold text-sm" style="color:#2C1810;">2</td>
-                <td class="py-2.5 text-right font-mono text-sm" style="color:#2D4A22;">$120.00</td>
-                <td class="py-2.5 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$240.00</td>
+                <td class="py-2.5 text-center font-mono font-bold text-[13px] text-espresso">2</td>
+                <td class="py-2.5 text-right font-mono text-[13px]" style="color:#2D4A22;">$120.00</td>
+                <td class="py-2.5 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$240.00</td>
               </tr>
               <tr>
                 <td class="py-2.5">
-                  <span class="font-serif-display text-base font-semibold" style="color:#2C1810;">Coca-Cola</span>
+                  <span class="font-serif font-bold text-[16px] text-espresso">Coca-Cola</span>
                 </td>
-                <td class="py-2.5 text-center font-mono font-bold text-sm" style="color:#2C1810;">1</td>
-                <td class="py-2.5 text-right font-mono text-sm" style="color:#2D4A22;">$35.00</td>
-                <td class="py-2.5 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$35.00</td>
+                <td class="py-2.5 text-center font-mono font-bold text-[13px] text-espresso">1</td>
+                <td class="py-2.5 text-right font-mono text-[13px]" style="color:#2D4A22;">$35.00</td>
+                <td class="py-2.5 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$35.00</td>
               </tr>
               <tr>
                 <td class="py-2.5">
-                  <span class="font-serif-display text-base font-semibold" style="color:#2C1810;">Papas Fritas</span>
+                  <span class="font-serif font-bold text-[16px] text-espresso">Papas Fritas</span>
                 </td>
-                <td class="py-2.5 text-center font-mono font-bold text-sm" style="color:#2C1810;">1</td>
-                <td class="py-2.5 text-right font-mono text-sm" style="color:#2D4A22;">$65.00</td>
-                <td class="py-2.5 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$65.00</td>
+                <td class="py-2.5 text-center font-mono font-bold text-[13px] text-espresso">1</td>
+                <td class="py-2.5 text-right font-mono text-[13px]" style="color:#2D4A22;">$65.00</td>
+                <td class="py-2.5 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$65.00</td>
               </tr>
               <tr>
                 <td class="py-2.5">
-                  <span class="font-serif-display text-base font-semibold" style="color:#2C1810;">Pasta Alfredo</span>
-                  <span class="font-script text-base block ml-2" style="color:#8B7355;">&mdash; extra queso</span>
+                  <span class="font-serif font-bold text-[16px] text-espresso">Pasta Alfredo</span>
+                  <span class="font-script text-[15px] block ml-2 text-text-muted">&mdash; extra queso</span>
                 </td>
-                <td class="py-2.5 text-center font-mono font-bold text-sm" style="color:#2C1810;">1</td>
-                <td class="py-2.5 text-right font-mono text-sm" style="color:#2D4A22;">$110.00</td>
-                <td class="py-2.5 text-right font-mono font-bold text-sm" style="color:#2D4A22;">$110.00</td>
+                <td class="py-2.5 text-center font-mono font-bold text-[13px] text-espresso">1</td>
+                <td class="py-2.5 text-right font-mono text-[13px]" style="color:#2D4A22;">$110.00</td>
+                <td class="py-2.5 text-right font-mono font-bold text-[13px]" style="color:#2D4A22;">$110.00</td>
               </tr>
             </tbody>
           </table>
 
           <div class="flex justify-between items-center pt-3" style="border-top:3px solid #C9A84C;">
-            <span class="font-sans-bold text-lg uppercase tracking-widest" style="color:#2C1810;">Total</span>
+            <span class="font-sans font-bold text-[18px] uppercase tracking-[0.1em] text-espresso">Total</span>
             <span class="font-mono font-bold tracking-wide" style="font-size:32px;color:#2D4A22;" id="detail-total">$450.00</span>
           </div>
         </div>
 
-        <!-- Payment Form Card -->
-        <div class="bg-surface-paper border-[6px] border-[#6B1A2A] shadow-paper p-5 space-y-5">
-          <h3 class="font-sans-bold text-xl uppercase tracking-tight border-b-[3px] border-[#C9A84C] pb-2 mb-1" style="color:#2C1810;letter-spacing:-0.02em;">Registrar Pago</h3>
+        <!-- PAYMENT FORM CARD -->
+        <div class="shadow-paper p-5 space-y-5" style="background:#EBDCC4; border:6px solid #6B1A2A;">
+          <h3 class="font-sans font-bold text-[20px] uppercase tracking-[-0.02em] text-espresso border-b-[3px] border-accent pb-2 mb-1">Registrar Pago</h3>
 
           <!-- Payment Method -->
           <div>
-            <label class="block font-sans-bold text-sm uppercase tracking-widest mb-2" style="color:#5C4030;letter-spacing:0.1em;">Metodo de pago</label>
+            <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-2">Método de pago</label>
             <div class="grid grid-cols-3 gap-3" id="payment-methods">
-              <button class="flex flex-col items-center gap-2 p-4 font-sans-bold text-xs uppercase tracking-widest border-[4px] transition-all active:scale-[0.97]" data-method="cash" style="border-color:#6B1A2A;color:#6B1A2A;background-color:rgba(107,26,42,0.08);letter-spacing:0.1em;">
+              <button class="flex flex-col items-center gap-2 p-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] transition-all active:scale-[0.97]" data-method="cash" style="border-color:#6B1A2A;color:#6B1A2A;background-color:rgba(107,26,42,0.08); border-radius:0;">
                 <span class="font-mono text-xl font-bold">$</span>
                 EFECTIVO
               </button>
-              <button class="flex flex-col items-center gap-2 p-4 font-sans-bold text-xs uppercase tracking-widest border-[4px] transition-all active:scale-[0.97]" data-method="card" style="border-color:#8B7355;color:#8B7355;letter-spacing:0.1em;">
+              <button class="flex flex-col items-center gap-2 p-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] transition-all active:scale-[0.97]" data-method="card" style="border-color:#8B7355;color:#8B7355; border-radius:0;">
                 <span class="font-mono text-xl font-bold">&#9632;</span>
                 TARJETA
               </button>
-              <button class="flex flex-col items-center gap-2 p-4 font-sans-bold text-xs uppercase tracking-widest border-[4px] transition-all active:scale-[0.97]" data-method="transfer" style="border-color:#8B7355;color:#8B7355;letter-spacing:0.1em;">
+              <button class="flex flex-col items-center gap-2 p-4 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] transition-all active:scale-[0.97]" data-method="transfer" style="border-color:#8B7355;color:#8B7355; border-radius:0;">
                 <span class="font-mono text-xl font-bold">&#8646;</span>
                 TRANSF.
               </button>
@@ -331,37 +288,37 @@
 
           <!-- Amount -->
           <div>
-            <label for="payment-amount" class="block font-sans-bold text-sm uppercase tracking-widest mb-1" style="color:#5C4030;letter-spacing:0.1em;">Monto</label>
+            <label for="payment-amount" class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1">Monto</label>
             <div class="relative">
-              <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono font-bold text-xl" style="color:#5C4030;">$</span>
-              <input id="payment-amount" type="number" value="450.00" step="0.01" class="w-full pl-10 pr-4 py-3 font-mono font-bold border-[2px] border-[#8B7355] bg-white focus:outline-none focus:border-[4px] focus:border-[#6B1A2A] transition-all" style="font-size:28px;color:#2C1810;outline:none;">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono font-bold text-xl text-text-secondary">$</span>
+              <input id="payment-amount" type="number" value="450.00" step="0.01" class="w-full pl-10 pr-4 py-3 font-mono font-bold border-[2px] border-text-muted bg-white focus:border-[4px] focus:border-primary transition-all" style="font-size:28px;color:#2C1810;outline:none;border-radius:0;">
             </div>
           </div>
 
           <!-- Tip -->
           <div>
-            <label class="block font-sans-bold text-sm uppercase tracking-widest mb-2" style="color:#5C4030;letter-spacing:0.1em;">Propina</label>
+            <label class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-2">Propina</label>
             <div class="flex gap-2 mb-2" id="tip-buttons">
-              <button data-pct="10" class="px-4 py-2 font-sans-bold text-xs uppercase tracking-widest border-[4px] border-[#8B7355] text-[#8B7355] hover:border-[#6B1A2A] hover:text-[#6B1A2A] active:bg-[rgba(107,26,42,0.08)] transition-all" style="letter-spacing:0.1em;">10%</button>
-              <button data-pct="15" class="px-4 py-2 font-sans-bold text-xs uppercase tracking-widest border-[4px] transition-all active:scale-[0.97]" style="border-color:#6B1A2A;color:#6B1A2A;background-color:rgba(107,26,42,0.08);letter-spacing:0.1em;">15%</button>
-              <button data-pct="20" class="px-4 py-2 font-sans-bold text-xs uppercase tracking-widest border-[4px] border-[#8B7355] text-[#8B7355] hover:border-[#6B1A2A] hover:text-[#6B1A2A] active:bg-[rgba(107,26,42,0.08)] transition-all" style="letter-spacing:0.1em;">20%</button>
+              <button data-pct="10" class="px-4 py-2 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] border-text-muted text-text-muted hover:border-primary hover:text-primary active:bg-[rgba(107,26,42,0.08)] transition-all" style="border-radius:0;">10%</button>
+              <button data-pct="15" class="px-4 py-2 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] transition-all active:scale-[0.97]" style="border-color:#6B1A2A;color:#6B1A2A;background-color:rgba(107,26,42,0.08);border-radius:0;">15%</button>
+              <button data-pct="20" class="px-4 py-2 font-sans font-bold text-[11px] uppercase tracking-[0.1em] border-[4px] border-text-muted text-text-muted hover:border-primary hover:text-primary active:bg-[rgba(107,26,42,0.08)] transition-all" style="border-radius:0;">20%</button>
             </div>
             <div class="relative">
-              <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono font-bold text-lg" style="color:#5C4030;">$</span>
-              <input id="tip-amount" type="number" value="67.50" step="0.01" class="w-full pl-10 pr-4 py-2.5 font-mono font-bold text-lg border-[2px] border-[#8B7355] bg-white focus:outline-none focus:border-[4px] focus:border-[#6B1A2A] transition-all" style="outline:none;">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono font-bold text-lg text-text-secondary">$</span>
+              <input id="tip-amount" type="number" value="67.50" step="0.01" class="w-full pl-10 pr-4 py-2.5 font-mono font-bold text-lg border-[2px] border-text-muted bg-white focus:border-[4px] focus:border-primary transition-all" style="outline:none;border-radius:0;">
             </div>
           </div>
 
           <!-- Cash Change Section -->
           <div id="cash-change-section">
-            <div class="border-t-[3px] border-[#C9A84C] pt-4 mt-1">
-              <label for="amount-received" class="block font-sans-bold text-sm uppercase tracking-widest mb-1" style="color:#5C4030;letter-spacing:0.1em;">Recibido (efectivo)</label>
+            <div class="border-t-[3px] border-accent pt-4 mt-1">
+              <label for="amount-received" class="block font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary mb-1">Recibido (efectivo)</label>
               <div class="relative mb-3">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono font-bold text-lg" style="color:#2D4A22;">$</span>
-                <input id="amount-received" type="number" value="500.00" step="0.01" class="w-full pl-10 pr-4 py-2.5 font-mono font-bold text-lg border-[4px] border-[#2D4A22] bg-white focus:outline-none transition-all" style="outline:none;">
+                <input id="amount-received" type="number" value="500.00" step="0.01" class="w-full pl-10 pr-4 py-2.5 font-mono font-bold text-lg border-[4px] bg-white focus:outline-none transition-all" style="border-color:#2D4A22;outline:none;border-radius:0;">
               </div>
               <div id="change-display" class="flex items-center justify-between px-4 py-3" style="background-color:rgba(45,74,34,0.1);">
-                <span class="font-sans-bold text-sm uppercase tracking-widest" style="color:#5C4030;">Cambio</span>
+                <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Cambio</span>
                 <span class="font-mono font-bold text-lg" style="color:#2D4A22;" id="change-amount">$32.50</span>
               </div>
             </div>
@@ -370,39 +327,39 @@
           <!-- Split Payment -->
           <div>
             <div class="flex items-center justify-between mb-3">
-              <label class="font-sans-bold text-sm uppercase tracking-widest" style="color:#5C4030;letter-spacing:0.1em;">Pago Dividido</label>
-              <button id="add-split" class="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider hover:underline" style="color:#6B1A2A;">
+              <label class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Pago Dividido</label>
+              <button id="add-split" class="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.1em] hover:underline text-primary">
                 <span class="text-base leading-none">+</span> Agregar
               </button>
             </div>
             <div class="space-y-2" id="split-list">
-              <div class="flex items-center gap-3 px-4 py-3 border-[2px] border-[#8B7355] group" style="background-color:rgba(240,230,211,0.6);" data-split>
+              <div class="flex items-center gap-3 px-4 py-3 border-[2px] border-text-muted group" style="background-color:rgba(240,230,211,0.6);" data-split>
                 <span class="w-3 h-3 shrink-0" style="background-color:#2D4A22;border:1px solid #1C3015;" data-split-dot></span>
-                <span class="font-sans-bold text-sm w-20" style="color:#2C1810;">Efectivo</span>
-                <span class="font-mono text-xs" style="color:#8B7355;" data-split-method>cash</span>
+                <span class="font-sans font-bold text-[13px] w-20 text-espresso">Efectivo</span>
+                <span class="font-mono text-[11px] text-text-muted" data-split-method>cash</span>
                 <span class="flex-1"></span>
-                <span class="font-mono text-sm font-bold" style="color:#5C4030;">$</span>
-                <input type="number" value="200.00" step="0.01" class="w-24 text-right font-mono text-sm font-bold px-2 py-1 border-[2px] border-[#8B7355] bg-white focus:outline-none focus:border-[#6B1A2A]" data-split-amount style="outline:none;">
-                <button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity" style="color:#8B1A1A;" data-remove-split title="Eliminar">&times;</button>
+                <span class="font-mono text-[13px] font-bold text-text-secondary">$</span>
+                <input type="number" value="200.00" step="0.01" class="w-24 text-right font-mono text-[13px] font-bold px-2 py-1 border-[2px] border-text-muted bg-white focus:border-primary" data-split-amount style="outline:none;border-radius:0;">
+                <button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity text-error" data-remove-split title="Eliminar">&times;</button>
               </div>
-              <div class="flex items-center gap-3 px-4 py-3 border-[2px] border-[#8B7355] group" style="background-color:rgba(240,230,211,0.6);" data-split>
+              <div class="flex items-center gap-3 px-4 py-3 border-[2px] border-text-muted group" style="background-color:rgba(240,230,211,0.6);" data-split>
                 <span class="w-3 h-3 shrink-0" style="background-color:#3A5068;border:1px solid #2A3D50;" data-split-dot></span>
-                <span class="font-sans-bold text-sm w-20" style="color:#2C1810;">Tarjeta</span>
-                <span class="font-mono text-xs" style="color:#8B7355;" data-split-method>card</span>
+                <span class="font-sans font-bold text-[13px] w-20 text-espresso">Tarjeta</span>
+                <span class="font-mono text-[11px] text-text-muted" data-split-method>card</span>
                 <span class="flex-1"></span>
-                <span class="font-mono text-sm font-bold" style="color:#5C4030;">$</span>
-                <input type="number" value="250.00" step="0.01" class="w-24 text-right font-mono text-sm font-bold px-2 py-1 border-[2px] border-[#8B7355] bg-white focus:outline-none focus:border-[#6B1A2A]" data-split-amount style="outline:none;">
-                <button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity" style="color:#8B1A1A;" data-remove-split title="Eliminar">&times;</button>
+                <span class="font-mono text-[13px] font-bold text-text-secondary">$</span>
+                <input type="number" value="250.00" step="0.01" class="w-24 text-right font-mono text-[13px] font-bold px-2 py-1 border-[2px] border-text-muted bg-white focus:border-primary" data-split-amount style="outline:none;border-radius:0;">
+                <button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity text-error" data-remove-split title="Eliminar">&times;</button>
               </div>
             </div>
             <div class="flex items-center justify-between mt-3 pt-3" style="border-top:2px solid #C9A84C;">
-              <span class="font-sans-bold text-sm uppercase tracking-widest" style="color:#5C4030;">Pendiente</span>
-              <span class="font-mono font-bold text-xl" id="pending-amount" style="color:#2C1810;">$0.00</span>
+              <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Pendiente</span>
+              <span class="font-mono font-bold text-xl text-espresso" id="pending-amount">$0.00</span>
             </div>
           </div>
 
           <!-- Submit Button -->
-          <button id="register-payment" class="w-full py-4 font-sans-bold text-lg uppercase tracking-widest border-[6px] border-[#6B1A2A] bg-[#6B1A2A] text-[#F0E6D3] hover:bg-[#8B2535] active:scale-[0.98] transition-all shadow-paper" style="letter-spacing:0.12em;">
+          <button id="register-payment" class="w-full py-4 font-sans font-bold text-[16px] uppercase tracking-[0.12em] border-[6px] border-primary bg-primary text-primary-foreground hover:bg-primary-light active:scale-[0.98] transition-all shadow-paper" style="border-radius:0;">
             Registrar Pago
           </button>
         </div>
@@ -410,125 +367,126 @@
       </div>
     </div>
 
-  </main>
-</div>
+  </div>
 
-<!-- ==================== NUEVA ORDEN MODAL ==================== -->
+</main>
+
+<!-- ===== NUEVA ORDEN MODAL ===== -->
 <div id="new-order-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6" style="background-color:rgba(44,24,16,0.55);" onclick="if(event.target===this)closeNewOrder()">
-  <div class="bg-surface-paper border-[6px] border-[#6B1A2A] shadow-paper w-full max-w-4xl max-h-[88vh] flex flex-col overflow-hidden" style="box-shadow:0 4px 0 #4A0F1B,0 6px 0 #C9A84C,0 10px 20px rgba(44,24,16,0.3);">
+  <div class="shadow-paper w-full max-w-4xl max-h-[88vh] flex flex-col overflow-hidden" style="background:#EBDCC4; border:6px solid #6B1A2A; box-shadow:0 4px 0 #4A0F1B,0 6px 0 #C9A84C,0 10px 20px rgba(44,24,16,0.3);">
 
     <!-- Modal Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b-[4px] border-[#C9A84C]">
+    <div class="flex items-center justify-between px-6 py-4 border-b-[4px] border-accent">
       <div class="flex items-center gap-4">
-        <h3 class="font-sans-bold text-lg uppercase tracking-tight" style="color:#2C1810;letter-spacing:-0.02em;">Nueva Orden</h3>
-        <select class="px-3 py-2 font-mono text-sm border-[2px] border-[#8B7355] bg-white focus:outline-none focus:border-[#6B1A2A]" style="outline:none;" onchange="newOrderTable=this.value">
+        <h3 class="font-sans font-bold text-[20px] uppercase tracking-[-0.02em] text-espresso">Nueva Orden</h3>
+        <select class="px-3 py-2 font-mono text-[13px] border-[2px] border-text-muted bg-white focus:border-primary" style="outline:none;border-radius:0;" onchange="newOrderTable=this.value">
           <option>Mesa 1</option><option>Mesa 2</option><option>Mesa 3</option><option>Mesa 4</option><option selected>Mesa 5</option><option>Mesa 6</option><option>Mesa 7</option><option>Mesa 8</option><option>Mesa 9</option><option>Mesa 10</option>
         </select>
       </div>
-      <button onclick="closeNewOrder()" class="font-mono text-2xl font-bold hover:text-[#8B1A1A] transition-colors" style="color:#8B7355;line-height:1;">&times;</button>
+      <button onclick="closeNewOrder()" class="font-mono text-2xl font-bold hover:text-error transition-colors text-text-muted leading-none">&times;</button>
     </div>
 
     <!-- Category Filters -->
-    <div class="flex gap-2 px-6 py-3 border-b-[2px] border-[#8B7355] overflow-x-auto" id="product-filters">
-      <button class="px-4 py-1.5 font-sans-bold text-xs uppercase tracking-widest border-[4px] transition-all" style="border-color:#6B1A2A;color:#F0E6D3;background-color:#6B1A2A;letter-spacing:0.1em;" onclick="filterProducts(this,'all')">TODOS</button>
-      <button class="px-4 py-1.5 font-sans-bold text-xs uppercase tracking-widest border-[4px] border-[#8B7355] text-[#8B7355] hover:border-[#6B1A2A] hover:text-[#6B1A2A] transition-all" style="letter-spacing:0.1em;" onclick="filterProducts(this,'platos')">PLATOS</button>
-      <button class="px-4 py-1.5 font-sans-bold text-xs uppercase tracking-widest border-[4px] border-[#8B7355] text-[#8B7355] hover:border-[#6B1A2A] hover:text-[#6B1A2A] transition-all" style="letter-spacing:0.1em;" onclick="filterProducts(this,'bebidas')">BEBIDAS</button>
-      <button class="px-4 py-1.5 font-sans-bold text-xs uppercase tracking-widest border-[4px] border-[#8B7355] text-[#8B7355] hover:border-[#6B1A2A] hover:text-[#6B1A2A] transition-all" style="letter-spacing:0.1em;" onclick="filterProducts(this,'postres')">POSTRES</button>
-      <button class="px-4 py-1.5 font-sans-bold text-xs uppercase tracking-widest border-[4px] border-[#8B7355] text-[#8B7355] hover:border-[#6B1A2A] hover:text-[#6B1A2A] transition-all" style="letter-spacing:0.1em;" onclick="filterProducts(this,'entradas')">ENTRADAS</button>
+    <div class="flex gap-2 px-6 py-3 border-b-[2px] border-text-muted overflow-x-auto" id="product-filters">
+      <button class="chip-filter active px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'all')">TODOS</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'platos')">PLATOS</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'bebidas')">BEBIDAS</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'postres')">POSTRES</button>
+      <button class="chip-filter px-4 py-1.5 font-sans font-bold text-[11px] uppercase tracking-[0.1em]" onclick="filterProducts(this,'entradas')">ENTRADAS</button>
     </div>
 
     <!-- Product Grid -->
     <div class="flex-1 overflow-y-auto px-6 py-4 scrollbar-none">
       <div class="grid grid-cols-4 gap-3" id="product-grid">
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Hamburguesa Clasica" data-price="120" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Plato</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Hamburguesa Clasica</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$120.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Hamburguesa Clásica" data-price="120" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Plato</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Hamburguesa Clásica</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$120.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Pizza Margarita" data-price="150" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Plato</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Pizza Margarita</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$150.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Pizza Margarita" data-price="150" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Plato</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Pizza Margarita</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$150.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Tacos al Pastor" data-price="85" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Entrada</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Tacos al Pastor</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$85.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Tacos al Pastor" data-price="85" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Entrada</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Tacos al Pastor</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$85.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Ensalada Cesar" data-price="95" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Entrada</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Ensalada Cesar</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$95.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Ensalada César" data-price="95" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Entrada</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Ensalada César</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$95.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Pasta Alfredo" data-price="130" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Plato</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Pasta Alfredo</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$130.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Pasta Alfredo" data-price="130" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Plato</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Pasta Alfredo</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$130.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Coca-Cola 355ml" data-price="35" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Bebida</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Coca-Cola 355ml</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$35.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Coca-Cola 355ml" data-price="35" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Bebida</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Coca-Cola 355ml</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$35.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Limonada Mineral" data-price="45" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Bebida</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Limonada Mineral</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$45.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Limonada Mineral" data-price="45" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Bebida</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Limonada Mineral</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$45.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Agua de Horchata" data-price="40" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Bebida</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Agua de Horchata</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$40.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="bebidas" data-name="Agua de Horchata" data-price="40" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Bebida</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Agua de Horchata</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$40.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="postres" data-name="Flan de Caramelo" data-price="65" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Postre</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Flan de Caramelo</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$65.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="postres" data-name="Flan de Caramelo" data-price="65" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Postre</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Flan de Caramelo</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$65.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="postres" data-name="Tiramisu" data-price="85" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Postre</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Tiramisu</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$85.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="postres" data-name="Tiramisú" data-price="85" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Postre</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Tiramisú</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$85.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Guacamole" data-price="95" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Entrada</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Guacamole</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$95.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="entradas" data-name="Guacamole" data-price="95" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Entrada</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Guacamole</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$95.00</span>
         </div>
 
-        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-[#8B7355] hover:border-[#6B1A2A] active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Chiles en Nogada" data-price="180" onclick="addToCart(this)">
-          <span class="font-sans-bold text-xs uppercase tracking-widest mb-1" style="color:#8B7355;letter-spacing:0.15em;">Plato</span>
-          <span class="font-serif-display text-base font-semibold leading-tight" style="color:#2C1810;">Chiles en Nogada</span>
-          <span class="font-mono font-bold text-sm tracking-wide" style="color:#2D4A22;">$180.00</span>
+        <div class="p-4 flex flex-col items-center text-center cursor-pointer border-[2px] border-text-muted hover:border-primary active:scale-[0.97] transition-all gap-1 bg-white" data-category="platos" data-name="Chiles en Nogada" data-price="180" onclick="addToCart(this)">
+          <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-muted mb-1">Plato</span>
+          <span class="font-serif font-bold text-[16px] leading-tight text-espresso">Chiles en Nogada</span>
+          <span class="font-mono font-bold text-[13px] tracking-wide" style="color:#2D4A22;">$180.00</span>
         </div>
 
       </div>
     </div>
 
     <!-- Cart Tray -->
-    <div class="border-t-[4px] border-[#C9A84C] bg-white px-6 py-4 flex flex-col gap-3">
+    <div class="border-t-[4px] border-accent bg-white px-6 py-4 flex flex-col gap-3">
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center justify-center px-2.5 py-1 font-mono font-bold text-sm" style="background-color:rgba(107,26,42,0.1);color:#6B1A2A;" id="cart-count">0</span>
-        <span class="font-sans-bold text-sm uppercase tracking-widest" style="color:#5C4030;">Productos</span>
+        <span class="inline-flex items-center justify-center px-2.5 py-1 font-mono font-bold text-[13px]" style="background-color:rgba(107,26,42,0.1);color:#6B1A2A;" id="cart-count">0</span>
+        <span class="font-sans font-bold text-[11px] uppercase tracking-[0.1em] text-text-secondary">Productos</span>
         <span class="flex-1"></span>
-        <span class="font-mono text-sm" style="color:#5C4030;">Total:</span>
+        <span class="font-mono text-[13px] text-text-secondary">Total:</span>
         <span class="font-mono font-bold text-lg tracking-wide" style="color:#2D4A22;" id="cart-total">$0.00</span>
       </div>
       <div class="max-h-32 overflow-y-auto scrollbar-none" id="cart-items">
-        <p class="font-script text-base text-center py-4" style="color:#8B7355;">Selecciona productos para agregar a la orden</p>
+        <p class="font-script text-[15px] text-center py-4 text-text-muted">Selecciona productos para agregar a la orden</p>
       </div>
-      <button id="send-order-btn" onclick="sendOrder()" disabled class="w-full py-3 font-sans-bold text-sm uppercase tracking-widest border-[4px] border-[#6B1A2A] bg-[#6B1A2A] text-[#F0E6D3] hover:bg-[#8B2535] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-paper" style="letter-spacing:0.1em;">
+      <button id="send-order-btn" onclick="sendOrder()" disabled class="w-full py-3 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-primary bg-primary text-primary-foreground hover:bg-primary-light active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-paper" style="border-radius:0;">
         Enviar a Cocina
       </button>
     </div>
@@ -536,7 +494,7 @@
   </div>
 </div>
 
-<!-- ==================== SCRIPTS ==================== -->
+<!-- ===== SCRIPTS ===== -->
 <script>
 (function() {
   var currentOrderTotal = 450.00;
@@ -582,7 +540,6 @@
     $('detail-total').textContent = '$' + currentOrderTotal.toFixed(2);
     $('payment-amount').value = currentOrderTotal.toFixed(2);
 
-    // Update sample items (simplified -- keeps existing detail items static)
     updateTip();
     updatePending();
     toggleCashSection();
@@ -721,17 +678,17 @@
 
   function addSplit() {
     var div = document.createElement('div');
-    div.className = 'flex items-center gap-3 px-4 py-3 border-[2px] border-[#8B7355] group';
+    div.className = 'flex items-center gap-3 px-4 py-3 border-[2px] border-text-muted group';
     div.style.backgroundColor = 'rgba(240,230,211,0.6)';
     div.setAttribute('data-split', '');
     div.innerHTML =
       '<span class="w-3 h-3 shrink-0" style="background-color:' + (PAYMENT_COLORS[selectedMethod]||'#C9A84C') + ';border:1px solid #2C1810;" data-split-dot></span>' +
-      '<span class="font-sans-bold text-sm w-20" style="color:#2C1810;">' + (PAYMENT_LABELS[selectedMethod]||'Nuevo') + '</span>' +
-      '<span class="font-mono text-xs" style="color:#8B7355;" data-split-method>' + selectedMethod + '</span>' +
+      '<span class="font-sans font-bold text-[13px] w-20 text-espresso">' + (PAYMENT_LABELS[selectedMethod]||'Nuevo') + '</span>' +
+      '<span class="font-mono text-[11px] text-text-muted" data-split-method>' + selectedMethod + '</span>' +
       '<span class="flex-1"></span>' +
-      '<span class="font-mono text-sm font-bold" style="color:#5C4030;">$</span>' +
-      '<input type="number" value="0.00" step="0.01" class="w-24 text-right font-mono text-sm font-bold px-2 py-1 border-[2px] border-[#8B7355] bg-white focus:outline-none focus:border-[#6B1A2A]" data-split-amount style="outline:none;">' +
-      '<button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity" style="color:#8B1A1A;" data-remove-split title="Eliminar">&times;</button>';
+      '<span class="font-mono text-[13px] font-bold text-text-secondary">$</span>' +
+      '<input type="number" value="0.00" step="0.01" class="w-24 text-right font-mono text-[13px] font-bold px-2 py-1 border-[2px] border-text-muted bg-white focus:border-primary" data-split-amount style="outline:none;border-radius:0;">' +
+      '<button class="font-mono text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity text-error" data-remove-split title="Eliminar">&times;</button>';
 
     div.querySelector('[data-remove-split]').addEventListener('click', function() {
       div.remove();
@@ -755,11 +712,11 @@
   $('register-payment').addEventListener('click', function() {
     var pending = parseFloat($('pending-amount').textContent.replace(/[^0-9.\-]/g,''));
     if (pending > 0.01) {
-      alert('Aun hay un saldo pendiente de $' + pending.toFixed(2));
+      alert('Aún hay un saldo pendiente de $' + pending.toFixed(2));
       return;
     }
-    if (confirm('Confirmar el pago por un total de $' + getTotalWithTip().toFixed(2) + '?')) {
-      this.textContent = 'Pago Registrado -- Sellado.';
+    if (confirm('¿Confirmar el pago por un total de $' + getTotalWithTip().toFixed(2) + '?')) {
+      this.textContent = 'PAGO REGISTRADO — SELLADO.';
       this.style.backgroundColor = '#2D4A22';
       this.style.borderColor = '#2D4A22';
       this.style.color = '#F0E6D3';
@@ -786,13 +743,9 @@
 
   window.filterProducts = function(btn, cat) {
     document.querySelectorAll('#product-filters button').forEach(function(b) {
-      b.style.borderColor = '#8B7355';
-      b.style.color = '#8B7355';
-      b.style.backgroundColor = '';
+      b.classList.remove('active');
     });
-    btn.style.borderColor = '#6B1A2A';
-    btn.style.color = '#F0E6D3';
-    btn.style.backgroundColor = '#6B1A2A';
+    btn.classList.add('active');
 
     var filter = cat || 'all';
     document.querySelectorAll('#product-grid > div').forEach(function(card) {
@@ -830,7 +783,7 @@
     var total = getCartTotal();
     count.textContent = newOrderItems.reduce(function(s, i) { return s + i.qty; }, 0);
     if (!newOrderItems.length) {
-      list.innerHTML = '<p class="font-script text-base text-center py-4" style="color:#8B7355;">Selecciona productos para agregar a la orden</p>';
+      list.innerHTML = '<p class="font-script text-[15px] text-center py-4 text-text-muted">Selecciona productos para agregar a la orden</p>';
       $('cart-total').textContent = '$0.00';
       $('send-order-btn').disabled = true;
       return;
@@ -838,10 +791,10 @@
     list.innerHTML = newOrderItems.map(function(item) {
       return '<div class="flex items-center justify-between py-1.5 border-b-[1px] border-[#D4C4A8]">' +
         '<div class="flex items-center gap-3">' +
-          '<span class="font-serif-display text-sm font-semibold" style="color:#2C1810;">' + item.name + '</span>' +
-          '<span class="font-mono font-bold text-xs px-2 py-0.5" style="background-color:rgba(201,168,76,0.15);color:#2C1810;">x' + item.qty + '</span>' +
+          '<span class="font-serif font-bold text-[15px] text-espresso">' + item.name + '</span>' +
+          '<span class="font-mono font-bold text-[11px] px-2 py-0.5" style="background-color:rgba(201,168,76,0.15);color:#2C1810;">x' + item.qty + '</span>' +
         '</div>' +
-        '<span class="font-mono font-bold text-sm" style="color:#2D4A22;">$' + (item.price * item.qty).toFixed(2) + '</span>' +
+        '<span class="font-mono font-bold text-[13px]" style="color:#2D4A22;">$' + (item.price * item.qty).toFixed(2) + '</span>' +
       '</div>';
     }).join('');
     $('cart-total').textContent = '$' + total.toFixed(2);
@@ -852,7 +805,7 @@
     if (!newOrderItems.length) return;
     var total = getCartTotal();
     var count = newOrderItems.reduce(function(s,i){return s+i.qty;},0);
-    alert('Orden enviada a cocina!\n\nMesa: ' + window.newOrderTable + '\nItems: ' + count + '\nTotal: $' + total.toFixed(2));
+    alert('¡Orden enviada a cocina!\n\nMesa: ' + window.newOrderTable + '\nItems: ' + count + '\nTotal: $' + total.toFixed(2));
     resetNewOrder();
     closeNewOrder();
   };
@@ -861,20 +814,14 @@
     newOrderItems = [];
     renderCart();
     document.querySelectorAll('#product-filters button').forEach(function(b,i) {
-      if (i === 0) {
-        b.style.borderColor = '#6B1A2A';
-        b.style.color = '#F0E6D3';
-        b.style.backgroundColor = '#6B1A2A';
-      } else {
-        b.style.borderColor = '#8B7355';
-        b.style.color = '#8B7355';
-        b.style.backgroundColor = '';
-      }
+      if (i === 0) b.classList.add('active');
+      else b.classList.remove('active');
     });
     document.querySelectorAll('#product-grid > div').forEach(function(c) { c.style.display = ''; });
   }
 
 })();
 </script>
+
 </body>
 </html>
