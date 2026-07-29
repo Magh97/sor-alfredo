@@ -127,13 +127,38 @@
     </a>
   </nav>
 
+  <!-- TABLE ACTION MODAL -->
+  <div id="table-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onclick="if(event.target===this)closeTableModal()">
+    <div class="bg-surface border-[6px] border-primary shadow-paper w-full max-w-xs" style="border-radius:0;">
+      <div class="px-6 py-4 border-b-[3px] border-accent flex items-center justify-between">
+        <div>
+          <h3 class="font-sans font-bold text-[18px] uppercase tracking-[-0.02em] text-espresso">Mesa <span id="table-modal-num"></span></h3>
+          <span id="table-modal-status" class="inline-block mt-1 font-sans font-bold text-[11px] uppercase tracking-[0.1em] select-none"
+            style="padding:2px 10px; border:2px solid; border-radius:0;"></span>
+        </div>
+        <button onclick="closeTableModal()" class="text-text-muted hover:text-espresso text-2xl leading-none">&times;</button>
+      </div>
+      <div class="px-6 pb-1 space-y-1">
+        <p class="font-mono text-[13px] text-text-secondary"><span id="table-modal-seats"></span> personas</p>
+        <p id="table-modal-order" class="font-mono font-bold text-[14px] text-primary"></p>
+      </div>
+      <div class="px-6 py-4 space-y-2" id="table-modal-actions"></div>
+      <div class="px-6 py-4 border-t-[3px] border-text-muted/20">
+        <button onclick="closeTableModal()" class="w-full py-3 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] border-text-muted/30 text-text-secondary" style="border-radius:0;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 font-sans font-bold text-[12px] uppercase tracking-[0.1em] border-[4px] px-4 py-3 z-50 shadow-paper" style="border-radius:0;transition:all 0.3s ease;"></div>
+
   <script>
     var tables = [
       { num: 1,  seats: 4, status: 'libre',     order: null },
       { num: 2,  seats: 2, status: 'ocupada',   order: '#42' },
       { num: 3,  seats: 2, status: 'libre',     order: null },
       { num: 4,  seats: 6, status: 'limpieza',  order: null },
-      { num: 5,  seats: 4, status: 'ocupada',   order: '#43' },
+      { num: 5,  seats: 4, status: 'ocupada',   order: null },
       { num: 6,  seats: 8, status: 'reservada', order: null },
       { num: 7,  seats: 6, status: 'reservada', order: null },
       { num: 8,  seats: 2, status: 'libre',     order: null },
@@ -159,7 +184,7 @@
       }
       grid.innerHTML = '<div class="grid grid-cols-2 gap-3">' + list.map(function(t) {
         var c = statusColors[t.status];
-        return '<div class="table-card card-brutal shadow-paper p-4 cursor-pointer" data-status="' + t.status + '"' +
+        return '<div class="table-card card-brutal shadow-paper p-4 cursor-pointer" data-num="' + t.num + '" data-status="' + t.status + '" data-order="' + (t.order || '') + '" data-seats="' + t.seats + '" onclick="showTableActions(this)"' +
           ' style="background:#EBDCC4; border-left:4px solid ' + c.border + '; border-radius:0;">' +
           '<span class="block font-serif font-bold text-[48px] text-center leading-none text-text-primary">' + t.num + '</span>' +
           '<div class="flex justify-center mt-1">' +
@@ -203,8 +228,101 @@
         var filter = btn.dataset.status;
         var filtered = filter === 'all' ? tables : tables.filter(function(t) { return t.status === filter; });
         renderTableCards(filtered);
+        activeFilter = filter;
       });
     });
+
+    var activeFilter = 'all';
+    var currentTableData = null;
+
+    function showTableActions(card) {
+      var num = card.dataset.num;
+      var status = card.dataset.status;
+      var order = card.dataset.order;
+      var seats = card.dataset.seats;
+      currentTableData = { card: card, num: num, status: status, order: order, seats: seats };
+
+      document.getElementById('table-modal-num').textContent = num;
+      document.getElementById('table-modal-seats').textContent = seats;
+      document.getElementById('table-modal-order').textContent = order ? 'Orden ' + order : 'Sin orden activa';
+
+      var statusEl = document.getElementById('table-modal-status');
+      statusEl.textContent = statusLabels[status];
+      var sc = statusColors[status];
+      statusEl.style.background = sc.labelBg;
+      statusEl.style.color = sc.labelFg;
+      statusEl.style.borderColor = sc.labelBorder;
+
+      var actionsEl = document.getElementById('table-modal-actions');
+      var html = '';
+
+      if (status === 'libre') {
+        html += '<button onclick="changeTableStatus(\'ocupada\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#6B1A2A; border-color:#4A0F1B; border-radius:0;">Ocupar Mesa</button>';
+      }
+      if (status === 'ocupada' && !order) {
+        html += '<button onclick="createOrderForTable()" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] active:scale-95 transition-all" style="background:#C9A84C; color:#2C1810; border-color:#A08030; border-radius:0;">Crear Orden</button>';
+        html += '<button onclick="changeTableStatus(\'limpieza\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#3A5068; border-color:#2A3F50; border-radius:0;">Marcar Limpieza</button>';
+      }
+      if (status === 'ocupada' && order) {
+        html += '<a href="orders_experimental.html" class="block w-full py-3 text-center font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] active:scale-95 transition-all" style="background:#C9A84C; color:#2C1810; border-color:#A08030; border-radius:0;">Ver Orden ' + order + '</a>';
+        html += '<button onclick="changeTableStatus(\'limpieza\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#3A5068; border-color:#2A3F50; border-radius:0;">Marcar Limpieza</button>';
+      }
+      if (status === 'reservada') {
+        html += '<button onclick="changeTableStatus(\'ocupada\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#6B1A2A; border-color:#4A0F1B; border-radius:0;">Ocupar Mesa</button>';
+      }
+      if (status === 'limpieza') {
+        html += '<button onclick="changeTableStatus(\'libre\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] text-white active:scale-95 transition-all" style="background:#2D4A22; border-color:#1C3015; border-radius:0;">Marcar Libre</button>';
+      }
+      if (status !== 'reservada') {
+        html += '<button onclick="changeTableStatus(\'reservada\')" class="w-full py-3 font-sans font-bold text-[13px] uppercase tracking-[0.1em] border-[4px] active:scale-95 transition-all" style="background:transparent; color:#C9A84C; border-color:#C9A84C; border-radius:0;">Reservar Mesa</button>';
+      }
+
+      actionsEl.innerHTML = html;
+      document.getElementById('table-modal').classList.remove('hidden');
+    }
+
+    function closeTableModal() {
+      document.getElementById('table-modal').classList.add('hidden');
+      currentTableData = null;
+    }
+
+    function changeTableStatus(newStatus) {
+      if (!currentTableData) return;
+      var num = parseInt(currentTableData.num);
+      var table = tables.find(function(t) { return t.num === num; });
+      if (!table) return;
+
+      table.status = newStatus;
+      if (newStatus === 'libre') table.order = null;
+      if (newStatus === 'limpieza') table.order = null;
+      if (newStatus === 'reservada') table.order = null;
+
+      var messages = { libre:'Mesa ' + num + ' libre', ocupada:'Mesa ' + num + ' ocupada', limpieza:'Mesa ' + num + ' — Limpieza', reservada:'Mesa ' + num + ' reservada' };
+      showToast(messages[newStatus] || 'Estado actualizado', 'success');
+
+      closeTableModal();
+      var filtered = activeFilter === 'all' ? tables : tables.filter(function(t) { return t.status === activeFilter; });
+      renderTableCards(filtered);
+    }
+
+    function createOrderForTable() {
+      if (!currentTableData) return;
+      closeTableModal();
+      window.location.href = 'new-order_experimental.html?mesa=' + currentTableData.num;
+    }
+
+    function showToast(message, type) {
+      type = type || 'success';
+      var toast = document.getElementById('toast');
+      toast.textContent = message;
+      if (type === 'success') {
+        toast.style.borderColor = '#2D4A22'; toast.style.color = '#2D4A22'; toast.style.backgroundColor = '#FFFFFF';
+      } else {
+        toast.style.borderColor = '#3A5068'; toast.style.color = '#3A5068'; toast.style.backgroundColor = '#FFFFFF';
+      }
+      toast.classList.remove('hidden');
+      setTimeout(function() { toast.classList.add('hidden'); }, 2500);
+    }
 
     renderTableCards(tables);
   </script>
