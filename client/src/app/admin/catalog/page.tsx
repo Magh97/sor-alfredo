@@ -18,6 +18,7 @@ interface Product {
   basePrice: string;
   imageUrl: string | null;
   isAvailable: boolean;
+  modifierIds: number[];
 }
 
 interface Modifier {
@@ -169,7 +170,7 @@ function ProductsTab({
     setEditing(p);
     setForm({
       name: p.name, description: p.description ?? '', basePrice: p.basePrice,
-      categoryId: p.categoryId ? String(p.categoryId) : '', modifierIds: [], isAvailable: p.isAvailable,
+      categoryId: p.categoryId ? String(p.categoryId) : '', modifierIds: p.modifierIds ?? [], isAvailable: p.isAvailable,
     });
   }
 
@@ -222,6 +223,37 @@ function ProductsTab({
             </label>
           </div>
 
+          {modifiers.length > 0 && (
+            <div className="mt-4">
+              <p className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#5C4030] mb-2">Modificadores</p>
+              <div className="grid grid-cols-2 gap-2">
+                {modifiers.map((m) => (
+                  <label key={m.id} className="flex items-center gap-2 bg-white border-2 border-[#8B7355] p-2 cursor-pointer hover:border-[#6B1A2A] transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={form.modifierIds.includes(m.id)}
+                      onChange={() => {
+                        setForm({
+                          ...form,
+                          modifierIds: form.modifierIds.includes(m.id)
+                            ? form.modifierIds.filter((id) => id !== m.id)
+                            : [...form.modifierIds, m.id],
+                        });
+                      }}
+                      className="w-4 h-4 accent-[#6B1A2A]"
+                    />
+                    <span className="font-['JetBrains_Mono'] text-xs text-[#2C1810]">{m.name}</span>
+                    {parseFloat(m.priceAdjustment) !== 0 && (
+                      <span className="font-['JetBrains_Mono'] text-xs text-[#2D4A22] ml-auto">
+                        +{formatPrice(m.priceAdjustment)}
+                      </span>
+                    )}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
           {error && <p className="mt-3 font-['DM_Sans'] font-bold text-sm text-[#8B1A1A]">{error}</p>}
 
           <div className="flex gap-3 mt-4">
@@ -262,6 +294,18 @@ function ProductsTab({
                   <td className="p-4">
                     <span className="font-['Playfair_Display'] font-bold text-lg text-[#2C1810]">{p.name}</span>
                     {p.description && <p className="font-['JetBrains_Mono'] text-xs text-[#8B7355] mt-1">{p.description}</p>}
+                    {p.modifierIds?.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {p.modifierIds.map((mId) => {
+                          const mod = modifiers.find((m) => m.id === mId);
+                          return mod ? (
+                            <span key={mId} className="font-['Caveat'] text-sm text-[#8B7355] italic">
+                              • {mod.name}
+                            </span>
+                          ) : null;
+                        })}
+                      </div>
+                    )}
                   </td>
                   <td className="p-4 font-['JetBrains_Mono'] text-sm text-[#5C4030]">
                     {categories.find((c) => c.id === p.categoryId)?.name ?? '—'}

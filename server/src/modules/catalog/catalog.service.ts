@@ -22,7 +22,14 @@ export class CatalogService {
   }
 
   static async listProducts(restaurantId: number, filters?: { categoryId?: number; search?: string; availableOnly?: boolean }) {
-    return CatalogRepository.findAllProducts(restaurantId, filters);
+    const products = await CatalogRepository.findAllProducts(restaurantId, filters);
+    const enriched = await Promise.all(
+      products.map(async (product) => {
+        const modifierIds = await CatalogRepository.findProductModifierIds(product.id);
+        return { ...product, modifierIds };
+      }),
+    );
+    return enriched;
   }
 
   static async createProduct(restaurantId: number, input: CreateProductInput) {

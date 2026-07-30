@@ -75,10 +75,16 @@ export class CatalogRepository {
   static async updateProduct(id: number, restaurantId: number, input: UpdateProductInput) {
     const { modifierIds, ...data } = input;
 
-    const [product] = await db.update(schema.products)
-      .set(data)
-      .where(and(eq(schema.products.id, id), eq(schema.products.restaurantId, restaurantId)))
-      .returning();
+    let product = null;
+    if (Object.keys(data).length > 0) {
+      const [updated] = await db.update(schema.products)
+        .set(data)
+        .where(and(eq(schema.products.id, id), eq(schema.products.restaurantId, restaurantId)))
+        .returning();
+      product = updated;
+    } else {
+      product = await this.findProductById(id, restaurantId);
+    }
 
     if (modifierIds !== undefined) {
       await db.delete(schema.productModifiers)
@@ -103,6 +109,13 @@ export class CatalogRepository {
     return db.query.modifiers.findFirst({
       where: and(eq(schema.modifiers.id, id), eq(schema.modifiers.restaurantId, restaurantId)),
     });
+  }
+
+  static async findProductModifierIds(productId: number) {
+    const rows = await db.select({ modifierId: schema.productModifiers.modifierId })
+      .from(schema.productModifiers)
+      .where(eq(schema.productModifiers.productId, productId));
+    return rows.map((r) => r.modifierId);
   }
 
   static async createModifier(restaurantId: number, input: CreateModifierInput) {
