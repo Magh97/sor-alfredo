@@ -20,7 +20,6 @@ server.listen(port, () => {
 function shutdown(signal: string) {
   console.info(`Received ${signal}. Starting graceful shutdown...`);
   server.close(() => { console.info('HTTP server closed'); });
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   io.close(() => { console.info('Socket.io server closed'); });
   process.exit(0);
 }

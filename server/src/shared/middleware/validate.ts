@@ -5,7 +5,6 @@ import { AppError } from '../errors.js';
 export function validate(schema: ZodSchema) {
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       req.body = schema.parse(req.body);
       next();
     } catch (error) {
