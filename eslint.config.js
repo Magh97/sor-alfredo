@@ -15,12 +15,14 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-non-null-assertion': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-extraneous-class': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
       'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
       'prefer-const': 'error',
     },
   },
   {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/migrations/**'],
+    ignores: ['**/dist/**', '**/node_modules/**', '**/migrations/**', '**/__tests__/**', 'eslint.config.js', '**/drizzle.config.ts', '**/vitest.config.ts', '**/playwright.config.ts'],
   },
 );

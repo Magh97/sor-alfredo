@@ -93,7 +93,7 @@ router.put('/:id/invoice', requireAuth, async (req, res, next) => {
 router.put('/:id/status', requireAuth, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id!, 10);
-    const { status } = req.body;
+    const { status } = req.body as { status: string };
     const order = await OrdersService.changeStatus(id, req.user!.restaurantId, status);
     res.json({ data: order });
   } catch (err) {

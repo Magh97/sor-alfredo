@@ -25,7 +25,7 @@ async function seed() {
     Array.from({ length: 10 }, (_, i) => ({
       restaurantId: restaurant.id,
       number: i + 1,
-      name: `Mesa ${i + 1}`,
+      name: `Mesa ${String(i + 1)}`,
       capacity: i < 2 ? 2 : i < 5 ? 4 : 6,
     })),
   );
@@ -66,10 +66,10 @@ async function seed() {
     { restaurantId: restaurant.id, name: 'Con aguacate extra', priceAdjustment: '20.0000' },
   ]);
 
-  console.log('Seed completed successfully');
+  console.info('Seed completed successfully');
 }
 
-seed().catch((err) => {
+seed().catch((err: unknown) => {
   console.error('Seed failed:', err);
   process.exit(1);
 });

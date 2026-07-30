@@ -30,9 +30,9 @@ export const users = pgTable('users', {
   role: userRoleEnum('role').notNull().default('waiter'),
   isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-}, (table) => ({
+}, (table) => [{
   idxUsersRestaurantRole: index('idx_users_restaurant_role').on(table.restaurantId, table.role),
-}));
+}]);
 
 export const tables = pgTable('tables', {
   id: serial('id').primaryKey(),
@@ -43,9 +43,9 @@ export const tables = pgTable('tables', {
   positionX: integer('position_x').default(0),
   positionY: integer('position_y').default(0),
   status: tableStatusEnum('status').notNull().default('free'),
-}, (table) => ({
+}, (table) => [{
   unqRestaurantNumber: unique('unq_restaurant_table_number').on(table.restaurantId, table.number),
-}));
+}]);
 
 export const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
@@ -58,14 +58,14 @@ export const orders = pgTable('orders', {
   tipDistribution: tipDistributionTypeEnum('tip_distribution').default('equal'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   closedAt: timestamp('closed_at', { withTimezone: true }),
-}, (table) => ({
+}, (table) => [{
   idxOrdersRestaurantStatus: index('idx_orders_restaurant_status').on(table.restaurantId, table.status),
   idxOrdersTable: index('idx_orders_table').on(table.tableId),
   idxOrdersUserCreated: index('idx_orders_user_created').on(table.userId, table.createdAt.desc()),
   idxOrdersStatusKitchen: index('idx_orders_status_kitchen')
     .on(table.status, table.createdAt)
     .where(sql`${table.status} = 'in_kitchen'`),
-}));
+}]);
 
 export const orderItems = pgTable('order_items', {
   id: serial('id').primaryKey(),
@@ -76,9 +76,9 @@ export const orderItems = pgTable('order_items', {
   subtotal: numeric('subtotal', { precision: 19, scale: 4 }).notNull(),
   modifications: text('modifications'),
   status: orderItemStatusEnum('status').notNull().default('pending'),
-}, (table) => ({
+}, (table) => [{
   idxOrderItemsOrder: index('idx_order_items_order').on(table.orderId),
-}));
+}]);
 
 export const orderItemModifiers = pgTable('order_item_modifiers', {
   id: serial('id').primaryKey(),
@@ -104,10 +104,10 @@ export const products = pgTable('products', {
   basePrice: numeric('base_price', { precision: 19, scale: 4 }).notNull(),
   imageUrl: varchar('image_url', { length: 500 }),
   isAvailable: boolean('is_available').notNull().default(true),
-}, (table) => ({
+}, (table) => [{
   idxProductsRestaurantAvailable: index('idx_products_restaurant_available').on(table.restaurantId, table.isAvailable),
   idxProductsNameSearch: index('idx_products_name_search').using('gin', sql`to_tsvector('spanish', ${table.name})`),
-}));
+}]);
 
 export const modifiers = pgTable('modifiers', {
   id: serial('id').primaryKey(),
@@ -121,9 +121,9 @@ export const productModifiers = pgTable('product_modifiers', {
   id: serial('id').primaryKey(),
   productId: integer('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
   modifierId: integer('modifier_id').notNull().references(() => modifiers.id, { onDelete: 'cascade' }),
-}, (table) => ({
+}, (table) => [{
   unqProductModifier: unique('unq_product_modifier').on(table.productId, table.modifierId),
-}));
+}]);
 
 export const cashRegisters = pgTable('cash_registers', {
   id: serial('id').primaryKey(),
@@ -146,10 +146,10 @@ export const payments = pgTable('payments', {
   paymentMethod: paymentMethodEnum('payment_method').notNull(),
   tipAmount: numeric('tip_amount', { precision: 19, scale: 4 }).notNull().default('0'),
   paidAt: timestamp('paid_at', { withTimezone: true }).notNull().defaultNow(),
-}, (table) => ({
+}, (table) => [{
   idxPaymentsCashRegister: index('idx_payments_cash_register').on(table.cashRegisterId),
   idxPaymentsPaidAt: index('idx_payments_paid_at').on(table.paidAt),
-}));
+}]);
 
 export const tipDistributions = pgTable('tip_distributions', {
   id: serial('id').primaryKey(),
@@ -157,9 +157,9 @@ export const tipDistributions = pgTable('tip_distributions', {
   userId: integer('user_id').notNull().references(() => users.id),
   amount: numeric('amount', { precision: 19, scale: 4 }).notNull(),
   distributionType: tipDistributionTypeEnum('distribution_type').notNull(),
-}, (table) => ({
+}, (table) => [{
   idxTipsUser: index('idx_tips_user').on(table.userId, table.distributionType),
-}));
+}]);
 
 export const auditLogs = pgTable('audit_logs', {
   id: serial('id').primaryKey(),
@@ -171,7 +171,7 @@ export const auditLogs = pgTable('audit_logs', {
   oldValues: text('old_values'),
   newValues: text('new_values'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-}, (table) => ({
+}, (table) => [{
   idxAuditEntity: index('idx_audit_entity').on(table.entityType, table.entityId),
   idxAuditCreated: index('idx_audit_created').on(table.createdAt.desc()),
-}));
+}]);

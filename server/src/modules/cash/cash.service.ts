@@ -71,7 +71,7 @@ export class CashService {
     const orderTotal = parseFloat(order.totalAmount);
     const newStatus = paidAmount >= orderTotal ? 'paid' : 'partially_paid';
 
-    await OrdersRepository.updateStatus(orderId, restaurantId, newStatus as typeof order.status);
+    await OrdersRepository.updateStatus(orderId, restaurantId, newStatus);
     if (newStatus === 'paid') {
       await TablesRepository.updateStatus(order.tableId, 'free');
     }

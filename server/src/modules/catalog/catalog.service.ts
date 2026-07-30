@@ -42,7 +42,7 @@ export class CatalogService {
       const modifiers = await CatalogRepository.findAllModifiers(restaurantId);
       const modifierIdSet = new Set(modifiers.map((m) => m.id));
       for (const id of input.modifierIds) {
-        if (!modifierIdSet.has(id)) throw new AppError('NOT_FOUND', `Modificador ${id} no encontrado`, 404);
+        if (!modifierIdSet.has(id)) throw new AppError('NOT_FOUND', `Modificador ${String(id)} no encontrado`, 404);
       }
     }
 
@@ -62,7 +62,7 @@ export class CatalogService {
       const modifiers = await CatalogRepository.findAllModifiers(restaurantId);
       const modifierIdSet = new Set(modifiers.map((m) => m.id));
       for (const id of input.modifierIds) {
-        if (!modifierIdSet.has(id)) throw new AppError('NOT_FOUND', `Modificador ${id} no encontrado`, 404);
+        if (!modifierIdSet.has(id)) throw new AppError('NOT_FOUND', `Modificador ${String(id)} no encontrado`, 404);
       }
     }
 

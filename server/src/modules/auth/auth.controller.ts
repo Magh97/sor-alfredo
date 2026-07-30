@@ -18,7 +18,7 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-router.post('/refresh', async (req, res, next) => {
+router.post('/refresh', (req, res, next) => {
   try {
     const { refreshToken } = RefreshSchema.parse(req.body);
     const result = AuthService.refresh(refreshToken);

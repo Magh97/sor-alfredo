@@ -1,4 +1,4 @@
-import { eq, and, sql, inArray } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import { db, schema } from '../../db/index.js';
 import type { CreateOrderInput, AddItemsInput } from './orders.schema.js';
 
@@ -38,7 +38,7 @@ export class OrdersRepository {
         .where(and(...conditions)),
     ]);
 
-    return { data: ordersResult, total: Number(countResult[0]?.count ?? 0), page, pageSize };
+    return { data: ordersResult, total: countResult[0]?.count ?? 0, page, pageSize };
   }
 
   static async findById(id: number, restaurantId: number) {
@@ -95,7 +95,7 @@ export class OrdersRepository {
       const product = await db.query.products.findFirst({
         where: and(eq(schema.products.id, itemInput.productId), eq(schema.products.restaurantId, restaurantId)),
       });
-      if (!product) throw Object.assign(new Error(`Producto ${itemInput.productId} no encontrado`), { productId: itemInput.productId });
+      if (!product) throw Object.assign(new Error(`Producto ${String(itemInput.productId)} no encontrado`), { productId: itemInput.productId });
 
       let modifiersTotal = '0';
       for (const modifierId of itemInput.modifierIds) {

@@ -54,7 +54,9 @@ describe('KDS Handler', () => {
     registerKdsHandlers(mockIo as never);
 
     const readyHandler = mockSocket.on.mock.calls.find(([event]: [string]) => event === 'order:ready')?.[1];
-    await readyHandler({ orderId: 1, restaurantId: 1 });
+    readyHandler({ orderId: 1, restaurantId: 1 });
+
+    await new Promise<void>((resolve) => { setTimeout(resolve, 0); });
 
     expect(OrdersService.changeStatus).toHaveBeenCalledWith(1, 1, 'ready');
     expect(mockIo.to).toHaveBeenCalledWith('1');
@@ -66,7 +68,9 @@ describe('KDS Handler', () => {
     registerKdsHandlers(mockIo as never);
 
     const cancelHandler = mockSocket.on.mock.calls.find(([event]: [string]) => event === 'order:cancelled')?.[1];
-    await cancelHandler({ orderId: 1, restaurantId: 1 });
+    cancelHandler({ orderId: 1, restaurantId: 1 });
+
+    await new Promise<void>((resolve) => { setTimeout(resolve, 0); });
 
     expect(OrdersService.changeStatus).toHaveBeenCalledWith(1, 1, 'closed');
   });
@@ -77,7 +81,9 @@ describe('KDS Handler', () => {
     registerKdsHandlers(mockIo as never);
 
     const readyHandler = mockSocket.on.mock.calls.find(([event]: [string]) => event === 'order:ready')?.[1];
-    await readyHandler({ orderId: 1, restaurantId: 1 });
+    readyHandler({ orderId: 1, restaurantId: 1 });
+
+    await new Promise<void>((resolve) => { setTimeout(resolve, 0); });
 
     expect(mockSocket.emit).toHaveBeenCalledWith('error', expect.objectContaining({ message: expect.any(String) }));
   });

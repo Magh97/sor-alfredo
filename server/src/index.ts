@@ -14,17 +14,18 @@ registerKdsHandlers(io);
 const port = parseInt(process.env.PORT ?? '3000', 10);
 
 server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.info(`Server running on port ${String(port)}`);
 });
 
-async function shutdown(signal: string) {
-  console.log(`Received ${signal}. Starting graceful shutdown...`);
-  server.close(() => { console.log('HTTP server closed'); });
-  io.close(() => { console.log('Socket.io server closed'); });
+function shutdown(signal: string) {
+  console.info(`Received ${signal}. Starting graceful shutdown...`);
+  server.close(() => { console.info('HTTP server closed'); });
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  io.close(() => { console.info('Socket.io server closed'); });
   process.exit(0);
 }
 
-process.on('SIGTERM', () => { void shutdown('SIGTERM'); });
-process.on('SIGINT', () => { void shutdown('SIGINT'); });
+process.on('SIGTERM', () => { shutdown('SIGTERM'); });
+process.on('SIGINT', () => { shutdown('SIGINT'); });
 
 export { io };

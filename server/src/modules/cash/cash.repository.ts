@@ -1,6 +1,6 @@
 import { eq, and, desc } from 'drizzle-orm';
 import { db, schema } from '../../db/index.js';
-import type { OpenRegisterInput, PaymentInput } from './cash.schema.js';
+import type { OpenRegisterInput } from './cash.schema.js';
 
 export class CashRepository {
   static async findActiveRegister(restaurantId: number) {

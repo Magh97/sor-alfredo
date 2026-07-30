@@ -9,7 +9,7 @@ COPY client/package.json client/
 
 RUN pnpm install --frozen-lockfile
 
-COPY tsconfig.base.json ./
+COPY tsconfig.base.json eslint.config.js ./
 COPY client/tsconfig.json client/vite.config.ts client/vitest.config.ts client/index.html client/
 
 WORKDIR /app/client
