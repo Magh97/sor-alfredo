@@ -90,4 +90,16 @@ router.put('/:id/invoice', requireAuth, async (req, res, next) => {
   }
 });
 
+router.put('/:id/status', requireAuth, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id!, 10);
+    const { status } = req.body;
+    const order = await OrdersService.changeStatus(id, req.user!.restaurantId, status);
+    res.json({ data: order });
+  } catch (err) {
+    if (err instanceof AppError) return res.status(err.statusCode).json({ error: err.toJSON() });
+    next(err);
+  }
+});
+
 export const ordersRouter = router;

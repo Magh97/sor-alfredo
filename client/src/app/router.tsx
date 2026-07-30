@@ -7,6 +7,8 @@ import { AdminCatalogPage } from '@/app/admin/catalog/page';
 import { MeseroTablesPage } from '@/app/mesero/tables/page';
 import { MeseroOrdersPage } from '@/app/mesero/orders/page';
 import { KdsPage } from '@/app/kds/page';
+import { CajeroOrdersPage } from '@/app/caja/orders/page';
+import { CajeroRegisterPage } from '@/app/caja/register/page';
 import { CajeroSidebar } from '@/components/layout/SidebarLayout';
 import { BottomNavLayout } from '@/components/layout/BottomNavLayout';
 import { KDSLayout } from '@/components/layout/KDSLayout';
@@ -61,10 +63,10 @@ export function Router() {
 
         <Route path="/caja" element={<Navigate to="/caja/orders" replace />} />
         <Route path="/caja/orders" element={<ProtectedRoute roles={CASHIER_ROLES}>
-          <CajeroSidebar><Placeholder text="Órdenes" /></CajeroSidebar>
+          <CajeroSidebar><CajeroOrdersPage /></CajeroSidebar>
         </ProtectedRoute>} />
         <Route path="/caja/register" element={<ProtectedRoute roles={CASHIER_ROLES}>
-          <CajeroSidebar><Placeholder text="Caja" /></CajeroSidebar>
+          <CajeroSidebar><CajeroRegisterPage /></CajeroSidebar>
         </ProtectedRoute>} />
         <Route path="/caja/reports" element={<ProtectedRoute roles={CASHIER_ROLES}>
           <CajeroSidebar><Placeholder text="Reportes" /></CajeroSidebar>
