@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: sor
+      POSTGRES_USER: sor_user
+      POSTGRES_PASSWORD: sor_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sor_user -d sor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://sor_user:sor_pass@postgres:5432/sor
+      JWT_SECRET: dev-secret-change-in-production
+      JWT_REFRESH_SECRET: dev-refresh-secret-change-in-production
+      CORS_ORIGIN: http://localhost:5173
+      NODE_ENV: development
+    volumes:
+      - ./server/src:/app/server/src
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: pnpm dev
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client/src:/app/client/src
+    depends_on:
+      - server
+    command: pnpm dev
+
+volumes:
+  pgdata:

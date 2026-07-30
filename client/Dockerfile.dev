@@ -1,0 +1,17 @@
+FROM node:24.14.0-alpine
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+WORKDIR /app
+
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json ./
+COPY server/package.json server/
+COPY client/package.json client/
+
+RUN pnpm install --frozen-lockfile
+
+COPY tsconfig.base.json eslint.config.js ./
+COPY client/tsconfig.json client/vite.config.ts client/vitest.config.ts client/index.html client/
+
+WORKDIR /app/client
+EXPOSE 5173
+CMD ["pnpm", "dev"]
