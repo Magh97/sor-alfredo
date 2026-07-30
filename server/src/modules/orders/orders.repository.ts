@@ -50,13 +50,18 @@ export class OrdersRepository {
   static async findOrderWithItems(id: number, restaurantId: number) {
     const order = await db.query.orders.findFirst({
       where: and(eq(schema.orders.id, id), eq(schema.orders.restaurantId, restaurantId)),
-      with: {
-        table: true,
-        user: { columns: { id: true, name: true } },
-      },
     });
 
     if (!order) return null;
+
+    const table = await db.query.tables.findFirst({
+      where: eq(schema.tables.id, order.tableId),
+    });
+
+    const user = await db.query.users.findFirst({
+      where: eq(schema.users.id, order.userId),
+      columns: { id: true, name: true },
+    });
 
     const items = await db.select()
       .from(schema.orderItems)
@@ -72,7 +77,7 @@ export class OrdersRepository {
       }),
     );
 
-    return { ...order, items: itemsWithModifiers };
+    return { ...order, table, user, items: itemsWithModifiers };
   }
 
   static async create(restaurantId: number, userId: number, input: CreateOrderInput) {
