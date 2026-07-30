@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { Users, Package, BarChart3, Settings } from 'lucide-react';
@@ -21,9 +22,9 @@ export function SidebarLayout({ children, title, navItems }: SidebarLayoutProps)
 
         <nav className="flex-1 py-4 space-y-1 px-3">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.href}
-              href={item.href}
+              to={item.href}
               className={cn(
                 'flex items-center gap-3 px-3 py-3 font-[\'DM_Sans\'] font-bold text-sm uppercase tracking-widest transition-colors duration-150',
                 item.active
@@ -35,7 +36,7 @@ export function SidebarLayout({ children, title, navItems }: SidebarLayoutProps)
                 {item.icon}
               </span>
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

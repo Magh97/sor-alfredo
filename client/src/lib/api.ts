@@ -1,16 +1,23 @@
 const BASE_URL = '/api';
 
-let accessToken: string | null = null;
-let refreshToken: string | null = null;
+const TOKEN_KEY = 'alfredos_access_token';
+const REFRESH_KEY = 'alfredos_refresh_token';
+
+let accessToken: string | null = sessionStorage.getItem(TOKEN_KEY) ?? null;
+let refreshToken: string | null = sessionStorage.getItem(REFRESH_KEY) ?? null;
 
 export function setTokens(access: string, refresh: string) {
   accessToken = access;
   refreshToken = refresh;
+  sessionStorage.setItem(TOKEN_KEY, access);
+  sessionStorage.setItem(REFRESH_KEY, refresh);
 }
 
 export function clearTokens() {
   accessToken = null;
   refreshToken = null;
+  sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem(REFRESH_KEY);
 }
 
 export function getAccessToken() {
