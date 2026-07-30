@@ -32,7 +32,6 @@ interface Order {
 
 export function CajeroOrdersPage() {
   const user = getStoredUser();
-  const queryClient = useQueryClient();
   const [payingOrder, setPayingOrder] = useState<Order | null>(null);
   const [statusFilter, setStatusFilter] = useState('');
   useSocket(user?.restaurantId);
@@ -64,7 +63,7 @@ export function CajeroOrdersPage() {
           {orders.length} Órdenes
         </h2>
         <div className="flex gap-2">
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
+          <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); }}
             className="border-2 border-[#8B7355] bg-white px-3 py-2 font-['JetBrains_Mono'] text-sm text-[#2C1810]">
             <option value="">Todos los estados</option>
             {Object.entries(ORDER_STATUS_LABELS).map(([k, v]) => (
@@ -86,7 +85,7 @@ export function CajeroOrdersPage() {
         <PaymentForm
           order={payingOrder}
           tableNumber={tables.find((t) => t.id === payingOrder.tableId)?.number ?? payingOrder.tableId}
-          onClose={() => setPayingOrder(null)}
+          onClose={() => { setPayingOrder(null); }}
         />
       )}
 
@@ -121,7 +120,7 @@ export function CajeroOrdersPage() {
                   <td className="p-4 font-['JetBrains_Mono'] font-bold text-sm text-[#2D4A22]">{formatPrice(order.totalAmount)}</td>
                   <td className="p-4 text-right">
                     {(order.status === 'delivered' || order.status === 'partially_paid') && hasOpenRegister && (
-                      <button onClick={() => setPayingOrder(order)}
+                      <button onClick={() => { setPayingOrder(order); }}
                         className="bg-[#2D4A22] text-[#F0E6D3] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-3 py-2 hover:bg-[#3D6230]">
                         <CreditCard size={14} className="inline mr-1" /> Pagar
                       </button>
@@ -155,7 +154,7 @@ function PaymentForm({ order, tableNumber, onClose }: { order: Order; tableNumbe
       queryClient.invalidateQueries({ queryKey: ['cash-register'] });
       onClose();
     },
-    onError: (err: { message?: string }) => setError(err.message ?? 'Error al procesar pago'),
+    onError: (err: { message?: string }) => { setError(err.message ?? 'Error al procesar pago'); },
   });
 
   const change = parseFloat(amount) - parseFloat(order.totalAmount);
@@ -179,7 +178,7 @@ function PaymentForm({ order, tableNumber, onClose }: { order: Order; tableNumbe
         <div className="space-y-4">
           <div>
             <label className="font-['DM_Sans'] font-bold text-xs uppercase text-[#5C4030]">Monto recibido</label>
-            <input type="text" value={amount} onChange={(e) => setAmount(e.target.value)}
+            <input type="text" value={amount} onChange={(e) => { setAmount(e.target.value); }}
               className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-lg text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
           </div>
 
@@ -187,7 +186,7 @@ function PaymentForm({ order, tableNumber, onClose }: { order: Order; tableNumbe
             <label className="font-['DM_Sans'] font-bold text-xs uppercase text-[#5C4030]">Método de pago</label>
             <div className="flex gap-2 mt-1">
               {[{ id: 'cash', label: 'Efectivo' }, { id: 'card', label: 'Tarjeta' }, { id: 'transfer', label: 'Transferencia' }].map((m) => (
-                <button key={m.id} onClick={() => setMethod(m.id)}
+                <button key={m.id} onClick={() => { setMethod(m.id); }}
                   className={`flex-1 py-2 font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] border-2 transition-colors ${
                     method === m.id ? 'bg-[#6B1A2A] text-[#F0E6D3] border-[#6B1A2A]' : 'bg-white text-[#5C4030] border-[#8B7355]'
                   }`}>{m.label}</button>
@@ -197,7 +196,7 @@ function PaymentForm({ order, tableNumber, onClose }: { order: Order; tableNumbe
 
           <div>
             <label className="font-['DM_Sans'] font-bold text-xs uppercase text-[#5C4030]">Propina</label>
-            <input type="text" value={tip} onChange={(e) => setTip(e.target.value)}
+            <input type="text" value={tip} onChange={(e) => { setTip(e.target.value); }}
               className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-lg text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
           </div>
 
@@ -206,7 +205,7 @@ function PaymentForm({ order, tableNumber, onClose }: { order: Order; tableNumbe
               <label className="font-['DM_Sans'] font-bold text-xs uppercase text-[#5C4030]">Distribución</label>
               <div className="flex gap-2 mt-1">
                 {[{ id: 'equal', label: 'Equitativa' }, { id: 'individual', label: 'Mesero' }].map((d) => (
-                  <button key={d.id} onClick={() => setDistribution(d.id)}
+                  <button key={d.id} onClick={() => { setDistribution(d.id); }}
                     className={`flex-1 py-2 font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] border-2 transition-colors ${
                       distribution === d.id ? 'bg-[#6B1A2A] text-[#F0E6D3] border-[#6B1A2A]' : 'bg-white text-[#5C4030] border-[#8B7355]'
                     }`}>{d.label}</button>
@@ -226,7 +225,7 @@ function PaymentForm({ order, tableNumber, onClose }: { order: Order; tableNumbe
             <p className="font-['DM_Sans'] font-bold text-sm text-[#8B1A1A]">{error}</p>
           )}
 
-          <button onClick={() => paymentMutation.mutate()} disabled={paymentMutation.isPending}
+          <button onClick={() => { paymentMutation.mutate(); }} disabled={paymentMutation.isPending}
             className="w-full bg-[#2D4A22] text-[#F0E6D3] font-['DM_Sans'] font-bold text-sm uppercase tracking-[0.1em] p-4 hover:bg-[#3D6230] disabled:opacity-50">
             <Check size={16} className="inline mr-1" />
             {paymentMutation.isPending ? 'Procesando...' : 'Cobrar'}

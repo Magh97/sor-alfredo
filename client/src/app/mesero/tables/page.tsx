@@ -1,22 +1,10 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { api, getStoredUser } from '@/lib/api';
 import { Skeleton } from '@/components/shared/Skeleton';
-import { StatusBadge } from '@/components/shared/StatusBadge';
 import { useSocket } from '@/hooks/useSocket';
 import { cn } from '@/lib/utils';
-import { Plus, ShoppingBag, ArrowRight, X, Check } from 'lucide-react';
-
-const ORDER_STATUS_LABELS: Record<string, string> = {
-  draft: 'Borrador',
-  in_kitchen: 'En Cocina',
-  ready: 'Listo',
-  delivered: 'Entregado',
-  partially_paid: 'Pago Parcial',
-  paid: 'Pagado',
-  closed: 'Cerrado',
-};
+import { ShoppingBag } from 'lucide-react';
 
 const TABLE_STATUS_LABELS: Record<string, string> = {
   free: 'Libre',
@@ -24,10 +12,6 @@ const TABLE_STATUS_LABELS: Record<string, string> = {
   reserved: 'Reservada',
   cleaning: 'Limpieza',
 };
-
-function formatPrice(price: string) {
-  return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(parseFloat(price));
-}
 
 export function MeseroTablesPage() {
   const user = getStoredUser();

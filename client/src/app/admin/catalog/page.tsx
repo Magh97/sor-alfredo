@@ -35,7 +35,6 @@ function formatPrice(price: string) {
 }
 
 export function AdminCatalogPage() {
-  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<Tab>('products');
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<number | null>(null);
@@ -83,7 +82,7 @@ export function AdminCatalogPage() {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => { setActiveTab(tab.id); }}
             className={`px-5 py-3 font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] transition-colors duration-150 ${
               activeTab === tab.id
                 ? 'bg-[#6B1A2A] text-[#F0E6D3]'
@@ -142,7 +141,7 @@ function ProductsTab({
       body: JSON.stringify({ ...input, categoryId: input.categoryId ? parseInt(input.categoryId) : null }),
     }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['catalog', 'products'] }); resetForm(); },
-    onError: (err: { message?: string }) => setError(err.message ?? 'Error al crear'),
+    onError: (err: { message?: string }) => { setError(err.message ?? 'Error al crear'); },
   });
 
   const updateMutation = useMutation({
@@ -151,7 +150,7 @@ function ProductsTab({
       body: JSON.stringify({ ...input, categoryId: input.categoryId ? parseInt(input.categoryId) : null }),
     }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['catalog', 'products'] }); resetForm(); },
-    onError: (err: { message?: string }) => setError(err.message ?? 'Error al guardar'),
+    onError: (err: { message?: string }) => { setError(err.message ?? 'Error al guardar'); },
   });
 
   const toggleMutation = useMutation({
@@ -186,7 +185,7 @@ function ProductsTab({
         </div>
         <select
           value={categoryFilter ?? ''}
-          onChange={(e) => onCategoryFilterChange(e.target.value ? parseInt(e.target.value) : null)}
+          onChange={(e) => { onCategoryFilterChange(e.target.value ? parseInt(e.target.value) : null); }}
           className="border-2 border-[#8B7355] bg-white px-3 py-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
         >
           <option value="">Todas las categorías</option>
@@ -205,21 +204,21 @@ function ProductsTab({
             {editing ? 'Editar Producto' : 'Nuevo Producto'}
           </h3>
           <div className="grid grid-cols-2 gap-4">
-            <input type="text" placeholder="Nombre" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
+            <input type="text" placeholder="Nombre" value={form.name} onChange={(e) => { setForm({ ...form, name: e.target.value }); }}
               className="border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
-            <input type="text" placeholder="Precio base" value={form.basePrice} onChange={(e) => setForm({ ...form, basePrice: e.target.value })}
+            <input type="text" placeholder="Precio base" value={form.basePrice} onChange={(e) => { setForm({ ...form, basePrice: e.target.value }); }}
               className="border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
             <div className="col-span-2">
-              <input type="text" placeholder="Descripción" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
+              <input type="text" placeholder="Descripción" value={form.description} onChange={(e) => { setForm({ ...form, description: e.target.value }); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
             </div>
-            <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+            <select value={form.categoryId} onChange={(e) => { setForm({ ...form, categoryId: e.target.value }); }}
               className="border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none">
               <option value="">Sin categoría</option>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
             <label className="flex items-center gap-2 font-['DM_Sans'] font-bold text-xs uppercase text-[#5C4030]">
-              <input type="checkbox" checked={form.isAvailable} onChange={(e) => setForm({ ...form, isAvailable: e.target.checked })}
+              <input type="checkbox" checked={form.isAvailable} onChange={(e) => { setForm({ ...form, isAvailable: e.target.checked }); }}
                 className="w-4 h-4 accent-[#6B1A2A]" />
               Disponible
             </label>
@@ -234,7 +233,7 @@ function ProductsTab({
                 type="text"
                 placeholder="Filtrar modificadores..."
                 value={modifierFilter}
-                onChange={(e) => setModifierFilter(e.target.value)}
+                onChange={(e) => { setModifierFilter(e.target.value); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-2 font-['JetBrains_Mono'] text-xs text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none mb-2"
               />
               <div className="max-h-48 overflow-y-auto grid grid-cols-2 gap-1">
@@ -284,7 +283,7 @@ function ProductsTab({
               className="flex items-center gap-1 border-2 border-[#6B1A2A] text-[#6B1A2A] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-4 py-2 hover:bg-white">
               <X size={14} /> Cancelar
             </button>
-            <button onClick={() => editing ? updateMutation.mutate({ id: editing.id, input: form }) : createMutation.mutate(form)}
+            <button onClick={() => { editing ? updateMutation.mutate({ id: editing.id, input: form }) : createMutation.mutate(form); }}
               disabled={createMutation.isPending || updateMutation.isPending}
               className="flex items-center gap-1 bg-[#6B1A2A] text-[#F0E6D3] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-4 py-2 hover:bg-[#8B2535] disabled:opacity-50">
               <Check size={14} /> {editing ? 'Actualizar' : 'Crear'}
@@ -335,7 +334,7 @@ function ProductsTab({
                   </td>
                   <td className="p-4 font-['JetBrains_Mono'] font-bold text-sm text-[#2D4A22]">{formatPrice(p.basePrice)}</td>
                   <td className="p-4 text-center">
-                    <button onClick={() => toggleMutation.mutate({ id: p.id, isAvailable: !p.isAvailable })}
+                    <button onClick={() => { toggleMutation.mutate({ id: p.id, isAvailable: !p.isAvailable }); }}
                       className={`font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-3 py-1 ${
                         p.isAvailable ? 'text-[#2D4A22]' : 'text-[#8B7355]'
                       }`}>
@@ -343,7 +342,7 @@ function ProductsTab({
                     </button>
                   </td>
                   <td className="p-4 text-right">
-                    <button onClick={() => openEdit(p)}
+                    <button onClick={() => { openEdit(p); }}
                       className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#8B7355] hover:text-[#6B1A2A] px-3 py-2">
                       Editar
                     </button>
@@ -369,14 +368,14 @@ function CategoriesTab({ categories }: { categories: Category[] }) {
     mutationFn: (input: { name: string; sortOrder: number }) =>
       api('/catalog/categories', { method: 'POST', body: JSON.stringify(input) }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['catalog', 'categories'] }); resetForm(); },
-    onError: (err: { message?: string }) => setError(err.message ?? 'Error'),
+    onError: (err: { message?: string }) => { setError(err.message ?? 'Error'); },
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, input }: { id: number; input: { name: string; sortOrder: number } }) =>
       api(`/catalog/categories/${id}`, { method: 'PUT', body: JSON.stringify(input) }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['catalog', 'categories'] }); resetForm(); },
-    onError: (err: { message?: string }) => setError(err.message ?? 'Error'),
+    onError: (err: { message?: string }) => { setError(err.message ?? 'Error'); },
   });
 
   function resetForm() { setEditing(null); setName(''); setSortOrder(0); setError(null); }
@@ -402,11 +401,11 @@ function CategoriesTab({ categories }: { categories: Category[] }) {
           </h3>
           <div className="flex gap-4">
             <div className="flex-1">
-              <input type="text" placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)}
+              <input type="text" placeholder="Nombre" value={name} onChange={(e) => { setName(e.target.value); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
             </div>
             <div className="w-24">
-              <input type="number" placeholder="Orden" value={sortOrder} onChange={(e) => setSortOrder(parseInt(e.target.value) || 0)}
+              <input type="number" placeholder="Orden" value={sortOrder} onChange={(e) => { setSortOrder(parseInt(e.target.value) || 0); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
             </div>
           </div>
@@ -416,7 +415,7 @@ function CategoriesTab({ categories }: { categories: Category[] }) {
               className="flex items-center gap-1 border-2 border-[#6B1A2A] text-[#6B1A2A] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-4 py-2 hover:bg-white">
               <X size={14} /> Cancelar
             </button>
-            <button onClick={() => editing ? updateMutation.mutate({ id: editing.id, input: { name, sortOrder } }) : createMutation.mutate({ name, sortOrder })}
+            <button onClick={() => { editing ? updateMutation.mutate({ id: editing.id, input: { name, sortOrder } }) : createMutation.mutate({ name, sortOrder }); }}
               className="flex items-center gap-1 bg-[#6B1A2A] text-[#F0E6D3] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-4 py-2 hover:bg-[#8B2535]">
               <Check size={14} /> {editing ? 'Actualizar' : 'Crear'}
             </button>
@@ -447,7 +446,7 @@ function CategoriesTab({ categories }: { categories: Category[] }) {
                   <td className="p-4 font-['Playfair_Display'] font-bold text-lg text-[#2C1810]">{c.name}</td>
                   <td className="p-4 text-center font-['JetBrains_Mono'] text-sm text-[#5C4030]">{c.sortOrder}</td>
                   <td className="p-4 text-right">
-                    <button onClick={() => openEdit(c)}
+                    <button onClick={() => { openEdit(c); }}
                       className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#8B7355] hover:text-[#6B1A2A] px-3 py-2">
                       <Pencil size={14} className="inline mr-1" /> Editar
                     </button>
@@ -474,14 +473,14 @@ function ModifiersTab({ modifiers }: { modifiers: Modifier[] }) {
     mutationFn: (input: { name: string; priceAdjustment: string; isAvailable: boolean }) =>
       api('/catalog/modifiers', { method: 'POST', body: JSON.stringify(input) }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['catalog', 'modifiers'] }); resetForm(); },
-    onError: (err: { message?: string }) => setError(err.message ?? 'Error'),
+    onError: (err: { message?: string }) => { setError(err.message ?? 'Error'); },
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, input }: { id: number; input: { name: string; priceAdjustment: string; isAvailable: boolean } }) =>
       api(`/catalog/modifiers/${id}`, { method: 'PUT', body: JSON.stringify(input) }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['catalog', 'modifiers'] }); resetForm(); },
-    onError: (err: { message?: string }) => setError(err.message ?? 'Error'),
+    onError: (err: { message?: string }) => { setError(err.message ?? 'Error'); },
   });
 
   function resetForm() { setEditing(null); setName(''); setPriceAdjustment('0'); setIsAvailable(true); setError(null); }
@@ -507,15 +506,15 @@ function ModifiersTab({ modifiers }: { modifiers: Modifier[] }) {
           </h3>
           <div className="flex gap-4">
             <div className="flex-1">
-              <input type="text" placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)}
+              <input type="text" placeholder="Nombre" value={name} onChange={(e) => { setName(e.target.value); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
             </div>
             <div className="w-32">
-              <input type="text" placeholder="Ajuste" value={priceAdjustment} onChange={(e) => setPriceAdjustment(e.target.value)}
+              <input type="text" placeholder="Ajuste" value={priceAdjustment} onChange={(e) => { setPriceAdjustment(e.target.value); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none" />
             </div>
             <label className="flex items-center gap-2 font-['DM_Sans'] font-bold text-xs uppercase text-[#5C4030]">
-              <input type="checkbox" checked={isAvailable} onChange={(e) => setIsAvailable(e.target.checked)}
+              <input type="checkbox" checked={isAvailable} onChange={(e) => { setIsAvailable(e.target.checked); }}
                 className="w-4 h-4 accent-[#6B1A2A]" />
               Disponible
             </label>
@@ -526,7 +525,7 @@ function ModifiersTab({ modifiers }: { modifiers: Modifier[] }) {
               className="flex items-center gap-1 border-2 border-[#6B1A2A] text-[#6B1A2A] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-4 py-2 hover:bg-white">
               <X size={14} /> Cancelar
             </button>
-            <button onClick={() => editing ? updateMutation.mutate({ id: editing.id, input: { name, priceAdjustment, isAvailable } }) : createMutation.mutate({ name, priceAdjustment, isAvailable })}
+            <button onClick={() => { editing ? updateMutation.mutate({ id: editing.id, input: { name, priceAdjustment, isAvailable } }) : createMutation.mutate({ name, priceAdjustment, isAvailable }); }}
               className="flex items-center gap-1 bg-[#6B1A2A] text-[#F0E6D3] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-4 py-2 hover:bg-[#8B2535]">
               <Check size={14} /> {editing ? 'Actualizar' : 'Crear'}
             </button>
@@ -563,7 +562,7 @@ function ModifiersTab({ modifiers }: { modifiers: Modifier[] }) {
                     </span>
                   </td>
                   <td className="p-4 text-right">
-                    <button onClick={() => openEdit(m)}
+                    <button onClick={() => { openEdit(m); }}
                       className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#8B7355] hover:text-[#6B1A2A] px-3 py-2">
                       <Pencil size={14} className="inline mr-1" /> Editar
                     </button>

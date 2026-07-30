@@ -17,7 +17,7 @@ export function KDSLayout({ children }: KDSLayoutProps) {
     void document.documentElement.requestFullscreen?.().catch(() => {});
     void navigator.wakeLock?.request('screen').catch(() => {});
 
-    return () => clearInterval(id);
+    return () => { clearInterval(id); };
   }, []);
 
   return (

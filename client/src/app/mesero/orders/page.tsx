@@ -6,7 +6,7 @@ import { StatusBadge } from '@/components/shared/StatusBadge';
 import { SearchBar } from '@/components/shared/SearchBar';
 import { useSocket } from '@/hooks/useSocket';
 import { cn } from '@/lib/utils';
-import { Plus, Send, Search, X, Check, Clock, ShoppingCart } from 'lucide-react';
+import { Plus, Send, X } from 'lucide-react';
 
 const ORDER_STATUS_LABELS: Record<string, string> = {
   draft: 'Borrador',
@@ -47,7 +47,6 @@ export function MeseroOrdersPage() {
   const tableIdParam = useQueryParam('tableId');
   const [showNewOrder, setShowNewOrder] = useState(!!tableIdParam);
   const [selectedTableId, setSelectedTableId] = useState<number | null>(tableIdParam ? parseInt(tableIdParam) : null);
-  const [search, setSearch] = useState('');
 
   useSocket(user?.restaurantId);
 
@@ -82,7 +81,7 @@ export function MeseroOrdersPage() {
         <NewOrderSheet
           tables={tables}
           defaultTableId={selectedTableId}
-          onClose={() => setShowNewOrder(false)}
+          onClose={() => { setShowNewOrder(false); }}
         />
       )}
 
@@ -190,10 +189,7 @@ function NewOrderSheet({
   });
 
   const products = productsData?.data ?? [];
-  const modifiers = modifiersData?.data ?? [];
-  const filteredProducts = search
-    ? products.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
-    : products;
+  const filteredProducts = products;
 
   const freeTables = tables.filter((t) => t.status === 'free' || t.id === defaultTableId);
   const total = items.reduce((sum, i) => sum + parseFloat(i.basePrice) * i.quantity, 0);
@@ -210,7 +206,7 @@ function NewOrderSheet({
 
       <div className="flex border-b-4 border-[#6B1A2A]">
         {[1, 2, 3].map((s) => (
-          <button key={s} onClick={() => setStep(s as 1 | 2 | 3)}
+          <button key={s} onClick={() => { setStep(s as 1 | 2 | 3); }}
             className={cn('flex-1 py-3 font-[\'DM_Sans\'] font-bold text-xs uppercase tracking-[0.1em] text-center transition-colors',
               step === s ? 'bg-[#6B1A2A] text-[#F0E6D3]' : 'text-[#5C4030] hover:bg-[#E5D4B8]')}>
             {s === 1 ? '1. Mesa' : s === 2 ? `2. Productos (${items.length})` : `3. Revisar (${formatPrice(total.toFixed(4))})`}
@@ -270,17 +266,17 @@ function NewOrderSheet({
                         else setItems(items.map((i) => i.productId === item.productId ? { ...i, quantity: i.quantity - 1 } : i));
                       }}
                         className="text-[#8B1A1A] font-bold px-2">−</button>
-                      <button onClick={() => setItems(items.map((i) => i.productId === item.productId ? { ...i, quantity: i.quantity + 1 } : i))}
+                      <button onClick={() => { setItems(items.map((i) => i.productId === item.productId ? { ...i, quantity: i.quantity + 1 } : i)); }}
                         className="text-[#2D4A22] font-bold px-2">+</button>
                       <span className="font-['JetBrains_Mono'] text-sm text-[#2D4A22]">{formatPrice((parseFloat(item.basePrice) * item.quantity).toFixed(4))}</span>
                     </div>
                   </div>
                 ))}
                 <div className="flex justify-between mt-3">
-                  <button onClick={() => setStep(1)} className="font-['DM_Sans'] font-bold text-xs uppercase text-[#8B7355]">
+                  <button onClick={() => { setStep(1); }} className="font-['DM_Sans'] font-bold text-xs uppercase text-[#8B7355]">
                     ← Mesa
                   </button>
-                  <button onClick={() => setStep(3)}
+                  <button onClick={() => { setStep(3); }}
                     className="bg-[#6B1A2A] text-[#F0E6D3] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-4 py-2">
                     Revisar → {formatPrice(total.toFixed(4))}
                   </button>
@@ -323,11 +319,11 @@ function NewOrderSheet({
             )}
 
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(2)}
+              <button onClick={() => { setStep(2); }}
                 className="flex-1 border-2 border-[#6B1A2A] text-[#6B1A2A] font-['DM_Sans'] font-bold text-sm uppercase tracking-[0.1em] p-3">
                 ← Productos
               </button>
-              <button onClick={() => createMutation.mutate()} disabled={createMutation.isPending}
+              <button onClick={() => { createMutation.mutate(); }} disabled={createMutation.isPending}
                 className="flex-1 bg-[#6B1A2A] text-[#F0E6D3] font-['DM_Sans'] font-bold text-sm uppercase tracking-[0.1em] p-3 hover:bg-[#8B2535] disabled:opacity-50 flex items-center justify-center gap-2">
                 <Send size={16} />
                 {createMutation.isPending ? 'Creando...' : 'Crear y Enviar'}

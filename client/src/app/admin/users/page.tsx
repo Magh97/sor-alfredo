@@ -153,14 +153,14 @@ export function AdminUsersPage() {
                   </td>
                   <td className="p-4 text-right">
                     <button
-                      onClick={() => openEdit(user)}
+                      onClick={() => { openEdit(user); }}
                       className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#8B7355] hover:text-[#6B1A2A] px-3 py-2"
                     >
                       Editar
                     </button>
                     {user.isActive && (
                       <button
-                        onClick={() => deactivateMutation.mutate(user.id)}
+                        onClick={() => { deactivateMutation.mutate(user.id); }}
                         className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#8B1A1A] hover:text-[#6B1A2A] px-3 py-2"
                       >
                         Desactivar
@@ -185,26 +185,26 @@ export function AdminUsersPage() {
                 type="text"
                 placeholder="Nombre"
                 value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                onChange={(e) => { setForm({ ...form, name: e.target.value }); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-lg text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
               />
               <input
                 type="email"
                 placeholder="Email"
                 value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                onChange={(e) => { setForm({ ...form, email: e.target.value }); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-lg text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
               />
               <input
                 type="password"
                 placeholder={editingUser ? 'Nueva contraseña (opcional)' : 'Contraseña'}
                 value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) => { setForm({ ...form, password: e.target.value }); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-lg text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
               />
               <select
                 value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value as Role })}
+                onChange={(e) => { setForm({ ...form, role: e.target.value as Role }); }}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-lg text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
               >
                 <option value="waiter">Mesero</option>

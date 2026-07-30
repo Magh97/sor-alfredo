@@ -41,7 +41,7 @@ export function AdminConfigPage() {
       setPasswordSuccess(true);
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
       setPasswordError(null);
-      setTimeout(() => setPasswordSuccess(false), 3000);
+      setTimeout(() => { setPasswordSuccess(false); }, 3000);
     },
     onError: (err: { message?: string }) => {
       setPasswordError(err.message ?? 'Error al cambiar contraseña');
@@ -94,7 +94,7 @@ export function AdminConfigPage() {
           <h3 className="font-['DM_Sans'] font-bold text-sm uppercase tracking-[0.1em] text-[#5C4030]">Información del Restaurante</h3>
           {!editing && restaurant && (
             <button
-              onClick={() => startEditing(restaurant)}
+              onClick={() => { startEditing(restaurant); }}
               className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#8B7355] hover:text-[#6B1A2A] flex items-center gap-1"
             >
               <Pencil size={14} /> Editar
@@ -114,7 +114,7 @@ export function AdminConfigPage() {
               type="text"
               placeholder="Nombre del restaurante"
               value={restaurantForm.name}
-              onChange={(e) => setRestaurantForm({ ...restaurantForm, name: e.target.value })}
+              onChange={(e) => { setRestaurantForm({ ...restaurantForm, name: e.target.value }); }}
               className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
               required
             />
@@ -122,14 +122,14 @@ export function AdminConfigPage() {
               type="text"
               placeholder="Dirección"
               value={restaurantForm.address}
-              onChange={(e) => setRestaurantForm({ ...restaurantForm, address: e.target.value })}
+              onChange={(e) => { setRestaurantForm({ ...restaurantForm, address: e.target.value }); }}
               className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
             />
             <input
               type="text"
               placeholder="Teléfono"
               value={restaurantForm.phone}
-              onChange={(e) => setRestaurantForm({ ...restaurantForm, phone: e.target.value })}
+              onChange={(e) => { setRestaurantForm({ ...restaurantForm, phone: e.target.value }); }}
               className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
             />
 
@@ -142,7 +142,7 @@ export function AdminConfigPage() {
             <div className="flex gap-3">
               <button
                 type="button"
-                onClick={() => setEditing(false)}
+                onClick={() => { setEditing(false); }}
                 className="flex items-center gap-1 border-2 border-[#6B1A2A] text-[#6B1A2A] font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] px-4 py-2 hover:bg-white"
               >
                 <X size={14} /> Cancelar
@@ -199,7 +199,7 @@ export function AdminConfigPage() {
             type="password"
             placeholder="Contraseña actual"
             value={passwordForm.currentPassword}
-            onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+            onChange={(e) => { setPasswordForm({ ...passwordForm, currentPassword: e.target.value }); }}
             className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
             required
           />
@@ -207,7 +207,7 @@ export function AdminConfigPage() {
             type="password"
             placeholder="Nueva contraseña"
             value={passwordForm.newPassword}
-            onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+            onChange={(e) => { setPasswordForm({ ...passwordForm, newPassword: e.target.value }); }}
             className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
             required
             minLength={6}
@@ -216,7 +216,7 @@ export function AdminConfigPage() {
             type="password"
             placeholder="Confirmar nueva contraseña"
             value={passwordForm.confirmPassword}
-            onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+            onChange={(e) => { setPasswordForm({ ...passwordForm, confirmPassword: e.target.value }); }}
             className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-sm text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
             required
           />

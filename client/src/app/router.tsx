@@ -12,7 +12,6 @@ import { CajeroRegisterPage } from '@/app/caja/register/page';
 import { AdminReportsPage } from '@/app/admin/reports/page';
 import { CajeroSidebar } from '@/components/layout/SidebarLayout';
 import { BottomNavLayout } from '@/components/layout/BottomNavLayout';
-import { KDSLayout } from '@/components/layout/KDSLayout';
 import { getAccessToken, getStoredUser } from '@/lib/api';
 
 type Role = 'waiter' | 'cashier' | 'admin' | 'superadmin';

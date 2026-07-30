@@ -19,8 +19,8 @@ export function useOrderAge(createdAt: string): { minutes: number; level: AgeLev
   const level = getAgeLevel(minutes);
 
   useEffect(() => {
-    const id = setInterval(() => setMinutes(calc), 10000);
-    return () => clearInterval(id);
+    const id = setInterval(() => { setMinutes(calc); }, 10000);
+    return () => { clearInterval(id); };
   }, [createdAt]);
 
   return { minutes, level };

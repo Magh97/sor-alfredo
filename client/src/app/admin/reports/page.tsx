@@ -55,13 +55,13 @@ export function AdminReportsPage() {
 
       {activeTab !== 'caja' && (
         <div className="flex items-center gap-3 mb-4">
-          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)}
+          <input type="date" value={from} onChange={(e) => { setFrom(e.target.value); }}
             className="border-2 border-[#8B7355] bg-white p-2 font-['JetBrains_Mono'] text-sm text-[#2C1810]" />
           <span className="font-['DM_Sans'] text-[#5C4030]">hasta</span>
-          <input type="date" value={to} onChange={(e) => setTo(e.target.value)}
+          <input type="date" value={to} onChange={(e) => { setTo(e.target.value); }}
             className="border-2 border-[#8B7355] bg-white p-2 font-['JetBrains_Mono'] text-sm text-[#2C1810]" />
           {activeTab === 'sales' && (
-            <select value={groupBy} onChange={(e) => setGroupBy(e.target.value as 'day' | 'week' | 'month')}
+            <select value={groupBy} onChange={(e) => { setGroupBy(e.target.value as 'day' | 'week' | 'month'); }}
               className="border-2 border-[#8B7355] bg-white p-2 font-['JetBrains_Mono'] text-sm text-[#2C1810]">
               <option value="day">Diario</option>
               <option value="week">Semanal</option>
@@ -73,7 +73,7 @@ export function AdminReportsPage() {
 
       <div className="flex gap-1 mb-6">
         {tabs.map((tab) => (
-          <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+          <button key={tab.id} onClick={() => { setActiveTab(tab.id); }}
             className={`px-5 py-3 font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] ${
               activeTab === tab.id ? 'bg-[#6B1A2A] text-[#F0E6D3]' : 'border-2 border-[#8B7355] text-[#5C4030] hover:bg-[#EBDCC4]'
             }`}>{tab.label}</button>

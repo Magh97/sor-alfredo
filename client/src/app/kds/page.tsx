@@ -170,7 +170,7 @@ function KdsOrderCard({ order, onReady }: { order: Order; onReady: (id: number) 
       </div>
 
       <button
-        onClick={() => onReady(order.id)}
+        onClick={() => { onReady(order.id); }}
         className="w-full bg-[#2D4A22] text-[#F0E6D3] font-['JetBrains_Mono'] font-bold text-2xl uppercase tracking-[0.1em] py-4 hover:bg-[#3D6230] active:bg-[#1D3A16] transition-colors duration-150"
       >
         LISTA
