@@ -133,6 +133,7 @@ function ProductsTab({
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState({ name: '', description: '', basePrice: '', categoryId: '', modifierIds: [] as number[], isAvailable: true });
+  const [modifierFilter, setModifierFilter] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const createMutation = useMutation({
@@ -162,6 +163,7 @@ function ProductsTab({
   function resetForm() {
     setEditing(null);
     setForm({ name: '', description: '', basePrice: '', categoryId: '', modifierIds: [], isAvailable: true });
+    setModifierFilter('');
     setError(null);
   }
 
@@ -225,31 +227,52 @@ function ProductsTab({
 
           {modifiers.length > 0 && (
             <div className="mt-4">
-              <p className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#5C4030] mb-2">Modificadores</p>
-              <div className="grid grid-cols-2 gap-2">
-                {modifiers.map((m) => (
-                  <label key={m.id} className="flex items-center gap-2 bg-white border-2 border-[#8B7355] p-2 cursor-pointer hover:border-[#6B1A2A] transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={form.modifierIds.includes(m.id)}
-                      onChange={() => {
-                        setForm({
-                          ...form,
-                          modifierIds: form.modifierIds.includes(m.id)
-                            ? form.modifierIds.filter((id) => id !== m.id)
-                            : [...form.modifierIds, m.id],
-                        });
-                      }}
-                      className="w-4 h-4 accent-[#6B1A2A]"
-                    />
-                    <span className="font-['JetBrains_Mono'] text-xs text-[#2C1810]">{m.name}</span>
-                    {parseFloat(m.priceAdjustment) !== 0 && (
-                      <span className="font-['JetBrains_Mono'] text-xs text-[#2D4A22] ml-auto">
-                        +{formatPrice(m.priceAdjustment)}
-                      </span>
-                    )}
-                  </label>
-                ))}
+              <p className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#5C4030] mb-2">
+                Modificadores ({form.modifierIds.length} seleccionados)
+              </p>
+              <input
+                type="text"
+                placeholder="Filtrar modificadores..."
+                value={modifierFilter}
+                onChange={(e) => setModifierFilter(e.target.value)}
+                className="w-full border-2 border-[#8B7355] bg-white p-2 font-['JetBrains_Mono'] text-xs text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none mb-2"
+              />
+              <div className="max-h-48 overflow-y-auto grid grid-cols-2 gap-1">
+                {modifiers
+                  .filter((m) => {
+                    if (!modifierFilter) return true;
+                    return m.name.toLowerCase().includes(modifierFilter.toLowerCase());
+                  })
+                  .map((m) => (
+                    <label key={m.id} className={`flex items-center gap-2 p-2 cursor-pointer border-2 transition-colors text-xs ${
+                      form.modifierIds.includes(m.id)
+                        ? 'bg-[#6B1A2A]/10 border-[#6B1A2A]'
+                        : 'bg-white border-[#EBDCC4] hover:border-[#8B7355]'
+                    }`}>
+                      <input
+                        type="checkbox"
+                        checked={form.modifierIds.includes(m.id)}
+                        onChange={() => {
+                          setForm({
+                            ...form,
+                            modifierIds: form.modifierIds.includes(m.id)
+                              ? form.modifierIds.filter((id) => id !== m.id)
+                              : [...form.modifierIds, m.id],
+                          });
+                        }}
+                        className="w-3.5 h-3.5 accent-[#6B1A2A] shrink-0"
+                      />
+                      <span className="font-['JetBrains_Mono'] text-[#2C1810] truncate">{m.name}</span>
+                      {parseFloat(m.priceAdjustment) !== 0 && (
+                        <span className="font-['JetBrains_Mono'] text-[#2D4A22] ml-auto shrink-0">
+                          +{formatPrice(m.priceAdjustment)}
+                        </span>
+                      )}
+                    </label>
+                  ))}
+                {modifierFilter && modifiers.filter((m) => m.name.toLowerCase().includes(modifierFilter.toLowerCase())).length === 0 && (
+                  <p className="col-span-2 text-center font-['Caveat'] text-lg text-[#8B7355] py-4">Sin resultados</p>
+                )}
               </div>
             </div>
           )}
