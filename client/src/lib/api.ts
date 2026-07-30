@@ -13,26 +13,40 @@ interface StoredUser {
   restaurantId: number;
 }
 
-let accessToken: string | null = sessionStorage.getItem(TOKEN_KEY) ?? null;
-let refreshToken: string | null = sessionStorage.getItem(REFRESH_KEY) ?? null;
-let storedUser: StoredUser | null = JSON.parse(sessionStorage.getItem(USER_KEY) ?? 'null');
+const storage = typeof sessionStorage !== 'undefined' ? sessionStorage : null;
+
+function storageGet(key: string): string | null {
+  return storage?.getItem(key) ?? null;
+}
+
+function storageSet(key: string, value: string) {
+  storage?.setItem(key, value);
+}
+
+function storageRemove(key: string) {
+  storage?.removeItem(key);
+}
+
+let accessToken: string | null = storageGet(TOKEN_KEY);
+let refreshToken: string | null = storageGet(REFRESH_KEY);
+let storedUser: StoredUser | null = JSON.parse(storageGet(USER_KEY) ?? 'null');
 
 export function setAuth(access: string, refresh: string, user: StoredUser) {
   accessToken = access;
   refreshToken = refresh;
   storedUser = user;
-  sessionStorage.setItem(TOKEN_KEY, access);
-  sessionStorage.setItem(REFRESH_KEY, refresh);
-  sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+  storageSet(TOKEN_KEY, access);
+  storageSet(REFRESH_KEY, refresh);
+  storageSet(USER_KEY, JSON.stringify(user));
 }
 
 export function clearAuth() {
   accessToken = null;
   refreshToken = null;
   storedUser = null;
-  sessionStorage.removeItem(TOKEN_KEY);
-  sessionStorage.removeItem(REFRESH_KEY);
-  sessionStorage.removeItem(USER_KEY);
+  storageRemove(TOKEN_KEY);
+  storageRemove(REFRESH_KEY);
+  storageRemove(USER_KEY);
 }
 
 export function getAccessToken() {

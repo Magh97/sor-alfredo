@@ -4,6 +4,8 @@ import { AdminSidebar } from '@/components/layout/SidebarLayout';
 import { AdminUsersPage } from '@/app/admin/users/page';
 import { AdminConfigPage } from '@/app/admin/config/page';
 import { AdminCatalogPage } from '@/app/admin/catalog/page';
+import { MeseroTablesPage } from '@/app/mesero/tables/page';
+import { MeseroOrdersPage } from '@/app/mesero/orders/page';
 import { CajeroSidebar } from '@/components/layout/SidebarLayout';
 import { BottomNavLayout } from '@/components/layout/BottomNavLayout';
 import { KDSLayout } from '@/components/layout/KDSLayout';
@@ -70,12 +72,12 @@ export function Router() {
         <Route path="/mesero" element={<Navigate to="/mesero/orders" replace />} />
         <Route path="/mesero/orders" element={<ProtectedRoute roles={WAITER_ROLES}>
           <BottomNavLayout title="Órdenes" activeNav="orders">
-            <Placeholder text="Órdenes" />
+            <MeseroOrdersPage />
           </BottomNavLayout>
         </ProtectedRoute>} />
         <Route path="/mesero/tables" element={<ProtectedRoute roles={WAITER_ROLES}>
           <BottomNavLayout title="Mesas" activeNav="tables">
-            <Placeholder text="Mesas" />
+            <MeseroTablesPage />
           </BottomNavLayout>
         </ProtectedRoute>} />
 
