@@ -3,25 +3,44 @@ const BASE_URL = '/api';
 const TOKEN_KEY = 'alfredos_access_token';
 const REFRESH_KEY = 'alfredos_refresh_token';
 
-let accessToken: string | null = sessionStorage.getItem(TOKEN_KEY) ?? null;
-let refreshToken: string | null = sessionStorage.getItem(REFRESH_KEY) ?? null;
+const USER_KEY = 'alfredos_user';
 
-export function setTokens(access: string, refresh: string) {
-  accessToken = access;
-  refreshToken = refresh;
-  sessionStorage.setItem(TOKEN_KEY, access);
-  sessionStorage.setItem(REFRESH_KEY, refresh);
+interface StoredUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  restaurantId: number;
 }
 
-export function clearTokens() {
+let accessToken: string | null = sessionStorage.getItem(TOKEN_KEY) ?? null;
+let refreshToken: string | null = sessionStorage.getItem(REFRESH_KEY) ?? null;
+let storedUser: StoredUser | null = JSON.parse(sessionStorage.getItem(USER_KEY) ?? 'null');
+
+export function setAuth(access: string, refresh: string, user: StoredUser) {
+  accessToken = access;
+  refreshToken = refresh;
+  storedUser = user;
+  sessionStorage.setItem(TOKEN_KEY, access);
+  sessionStorage.setItem(REFRESH_KEY, refresh);
+  sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+}
+
+export function clearAuth() {
   accessToken = null;
   refreshToken = null;
+  storedUser = null;
   sessionStorage.removeItem(TOKEN_KEY);
   sessionStorage.removeItem(REFRESH_KEY);
+  sessionStorage.removeItem(USER_KEY);
 }
 
 export function getAccessToken() {
   return accessToken;
+}
+
+export function getStoredUser() {
+  return storedUser;
 }
 
 async function refreshAccessToken(): Promise<string | null> {
@@ -33,14 +52,14 @@ async function refreshAccessToken(): Promise<string | null> {
       body: JSON.stringify({ refreshToken }),
     });
     if (!res.ok) {
-      clearTokens();
+      clearAuth();
       return null;
     }
     const json = await res.json();
     accessToken = json.data.token;
     return accessToken;
   } catch {
-    clearTokens();
+    clearAuth();
     return null;
   }
 }
