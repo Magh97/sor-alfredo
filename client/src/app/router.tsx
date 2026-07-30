@@ -6,6 +6,7 @@ import { AdminConfigPage } from '@/app/admin/config/page';
 import { AdminCatalogPage } from '@/app/admin/catalog/page';
 import { MeseroTablesPage } from '@/app/mesero/tables/page';
 import { MeseroOrdersPage } from '@/app/mesero/orders/page';
+import { KdsPage } from '@/app/kds/page';
 import { CajeroSidebar } from '@/components/layout/SidebarLayout';
 import { BottomNavLayout } from '@/components/layout/BottomNavLayout';
 import { KDSLayout } from '@/components/layout/KDSLayout';
@@ -82,11 +83,7 @@ export function Router() {
         </ProtectedRoute>} />
 
         <Route path="/kds" element={<ProtectedRoute roles={ALL_ROLES}>
-          <KDSLayout>
-            <div className="flex items-center justify-center h-full">
-              <p className="font-['JetBrains_Mono'] font-bold text-5xl text-[#F0E6D3] opacity-30">Esperando órdenes...</p>
-            </div>
-          </KDSLayout>
+          <KdsPage />
         </ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
