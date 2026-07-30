@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { errorHandler } from './shared/middleware/error-handler.js';
 import { authRouter } from './modules/auth/auth.controller.js';
 import { usersRouter } from './modules/users/users.controller.js';
+import { restaurantRouter } from './modules/restaurant/restaurant.controller.js';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/restaurant', restaurantRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString(), uptime: process.uptime() });

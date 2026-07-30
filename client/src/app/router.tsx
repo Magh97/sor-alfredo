@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from '@/app/login/page';
 import { AdminSidebar } from '@/components/layout/SidebarLayout';
 import { AdminUsersPage } from '@/app/admin/users/page';
+import { AdminConfigPage } from '@/app/admin/config/page';
 import { CajeroSidebar } from '@/components/layout/SidebarLayout';
 import { BottomNavLayout } from '@/components/layout/BottomNavLayout';
 import { KDSLayout } from '@/components/layout/KDSLayout';
@@ -51,7 +52,7 @@ export function Router() {
           <AdminSidebar><Placeholder text="Reportes" /></AdminSidebar>
         </ProtectedRoute>} />
         <Route path="/admin/config" element={<ProtectedRoute roles={ADMIN_ROLES}>
-          <AdminSidebar><Placeholder text="Configuración" /></AdminSidebar>
+          <AdminSidebar><AdminConfigPage /></AdminSidebar>
         </ProtectedRoute>} />
 
         <Route path="/caja" element={<Navigate to="/caja/orders" replace />} />

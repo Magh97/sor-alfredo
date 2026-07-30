@@ -43,6 +43,21 @@ export class UsersService {
     return updated;
   }
 
+  static async changePassword(userId: number, restaurantId: number, currentPassword: string, newPassword: string) {
+    const user = await UsersRepository.findById(userId, restaurantId);
+    if (!user) {
+      throw new AppError('NOT_FOUND', 'Usuario no encontrado', 404);
+    }
+
+    const valid = await bcryptjs.compare(currentPassword, user.passwordHash);
+    if (!valid) {
+      throw new AppError('UNAUTHORIZED', 'Contraseña actual incorrecta', 401);
+    }
+
+    const passwordHash = await bcryptjs.hash(newPassword, 10);
+    await UsersRepository.update(userId, restaurantId, { passwordHash });
+  }
+
   static async deactivate(id: number, restaurantId: number) {
     const user = await UsersRepository.findById(id, restaurantId);
     if (!user) {
