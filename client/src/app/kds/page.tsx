@@ -87,17 +87,17 @@ export function KdsPage() {
   return (
     <KDSLayout>
       <div className="flex items-center justify-between mb-4">
-        <span className="font-['JetBrains_Mono'] font-bold text-lg text-[#8B7355]">
+        <span className="font-['JetBrains_Mono'] font-bold text-lg text-[#8B7355]" aria-live="polite">
           {orders.length} {orders.length === 1 ? 'activa' : 'activas'}
         </span>
       </div>
 
       {orders.length === 0 ? (
         <div className="flex items-center justify-center h-full">
-          <p className="font-['JetBrains_Mono'] font-bold text-5xl text-[#F0E6D3] opacity-30">Esperando órdenes...</p>
+          <p className="font-['JetBrains_Mono'] font-bold text-5xl text-[#F0E6D3] opacity-30" role="status">Esperando órdenes...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-4 gap-4 auto-rows-min h-full overflow-y-auto">
+        <div className="grid grid-cols-4 gap-4 auto-rows-min h-full overflow-y-auto" aria-live="assertive" aria-label="Órdenes activas en cocina">
           {orders.map((order: Record<string, unknown>) => (
             <KdsOrderCard
               key={order.id as number}

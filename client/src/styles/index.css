@@ -138,6 +138,56 @@
   100% { background-position: -200% 0; }
 }
 
+/* --- Button animations --- */
+.btn-press {
+  transition: transform 150ms ease-out;
+}
+.btn-press:hover {
+  transform: scale(1.02);
+}
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* --- Modal overshoot --- */
+@keyframes modal-overshoot {
+  0% { transform: scale(0.92); opacity: 0; }
+  70% { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-modal {
+  animation: modal-overshoot 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* --- Card stagger --- */
+@keyframes card-enter {
+  0% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.animate-card-enter {
+  animation: card-enter 200ms ease-out forwards;
+  opacity: 0;
+}
+
+/* --- Focus ring --- */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* --- aria-live regions --- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
