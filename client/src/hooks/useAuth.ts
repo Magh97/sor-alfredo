@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { api, setTokens, clearTokens, getAccessToken } from '@/lib/api';
+import { api, setAuth, clearAuth, getAccessToken } from '@/lib/api';
 import { useCallback } from 'react';
 
 interface User {
@@ -28,18 +28,18 @@ function useAuth() {
         body: JSON.stringify(credentials),
       }),
     onSuccess: (response) => {
-      setTokens(response.data.token, response.data.refreshToken);
+      setAuth(response.data.token, response.data.refreshToken, response.data.user);
       queryClient.setQueryData(['auth', 'user'], response.data.user);
 
       const role = response.data.user.role;
-      if (role === 'admin' || role === 'superadmin') navigate('/admin');
-      else if (role === 'cashier') navigate('/caja');
-      else navigate('/mesero');
+      if (role === 'admin' || role === 'superadmin') navigate('/admin/users');
+      else if (role === 'cashier') navigate('/caja/orders');
+      else navigate('/mesero/orders');
     },
   });
 
   const logout = useCallback(() => {
-    clearTokens();
+    clearAuth();
     queryClient.removeQueries();
     navigate('/login');
   }, [queryClient, navigate]);

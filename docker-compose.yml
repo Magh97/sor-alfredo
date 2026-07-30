@@ -8,7 +8,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U sor_user -d sor"]
       interval: 10s
@@ -17,8 +17,8 @@ services:
 
   server:
     build:
-      context: ./server
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: server/Dockerfile.dev
     ports:
       - "3000:3000"
     environment:
@@ -28,24 +28,23 @@ services:
       CORS_ORIGIN: http://localhost:5173
       NODE_ENV: development
     volumes:
-      - ./server/src:/app/src
-      - ./package.json:/app/package.json
+      - ./server/src:/app/server/src
     depends_on:
       postgres:
         condition: service_healthy
-    command: npm run dev
+    command: pnpm dev
 
   client:
     build:
-      context: ./client
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: client/Dockerfile.dev
     ports:
       - "5173:5173"
     volumes:
-      - ./client/src:/app/src
+      - ./client/src:/app/client/src
     depends_on:
       - server
-    command: npm run dev
+    command: pnpm dev
 
 volumes:
   pgdata:

@@ -13,10 +13,20 @@ interface User {
   isActive: boolean;
 }
 
+interface UserForm {
+  name: string;
+  email: string;
+  password: string;
+  role: Role;
+}
+
+const EMPTY_FORM: UserForm = { name: '', email: '', password: '', role: 'waiter' };
+
 export function AdminUsersPage() {
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'waiter' as Role });
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [form, setForm] = useState<UserForm>(EMPTY_FORM);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['users'],
@@ -24,12 +34,22 @@ export function AdminUsersPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (input: typeof form) =>
+    mutationFn: (input: UserForm) =>
       api('/users', { method: 'POST', body: JSON.stringify(input) }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setShowCreate(false);
-      setForm({ name: '', email: '', password: '', role: 'waiter' });
+      setForm(EMPTY_FORM);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, input }: { id: number; input: Partial<UserForm> }) =>
+      api(`/users/${id}`, { method: 'PUT', body: JSON.stringify(input) }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setEditingUser(null);
+      setForm(EMPTY_FORM);
     },
   });
 
@@ -37,6 +57,26 @@ export function AdminUsersPage() {
     mutationFn: (id: number) => api(`/users/${id}`, { method: 'DELETE' }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
   });
+
+  function openCreate() {
+    setForm(EMPTY_FORM);
+    setShowCreate(true);
+  }
+
+  function openEdit(user: User) {
+    setForm({ name: user.name, email: user.email, password: '', role: user.role as Role });
+    setEditingUser(user);
+  }
+
+  function closeModal() {
+    setShowCreate(false);
+    setEditingUser(null);
+    setForm(EMPTY_FORM);
+  }
+
+  const isModalOpen = showCreate || editingUser !== null;
+  const activeMutation = editingUser ? updateMutation : createMutation;
+  const modalTitle = editingUser ? 'Editar Usuario' : 'Nuevo Usuario';
 
   if (isLoading) {
     return (
@@ -69,7 +109,7 @@ export function AdminUsersPage() {
           {users.length} Usuarios
         </h2>
         <button
-          onClick={() => setShowCreate(true)}
+          onClick={openCreate}
           className="bg-[#6B1A2A] text-[#F0E6D3] font-['DM_Sans'] font-bold text-sm uppercase tracking-[0.1em] px-6 py-3 hover:bg-[#8B2535] active:bg-[#4A0F1B] transition-colors duration-150"
         >
           + Nuevo Usuario
@@ -112,6 +152,12 @@ export function AdminUsersPage() {
                     />
                   </td>
                   <td className="p-4 text-right">
+                    <button
+                      onClick={() => openEdit(user)}
+                      className="font-['DM_Sans'] font-bold text-xs uppercase tracking-[0.1em] text-[#8B7355] hover:text-[#6B1A2A] px-3 py-2"
+                    >
+                      Editar
+                    </button>
                     {user.isActive && (
                       <button
                         onClick={() => deactivateMutation.mutate(user.id)}
@@ -128,11 +174,11 @@ export function AdminUsersPage() {
         </div>
       )}
 
-      {showCreate && (
+      {isModalOpen && (
         <div className="fixed inset-0 bg-[#2C1810]/50 flex items-center justify-center z-50 p-6">
           <div className="bg-[#EBDCC4] border-4 border-[#6B1A2A] p-8 w-full max-w-md"
             style={{ clipPath: 'polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px)' }}>
-            <h3 className="font-['Playfair_Display'] font-bold text-3xl text-[#6B1A2A]">Nuevo Usuario</h3>
+            <h3 className="font-['Playfair_Display'] font-bold text-3xl text-[#6B1A2A]">{modalTitle}</h3>
 
             <div className="mt-6 space-y-4">
               <input
@@ -151,7 +197,7 @@ export function AdminUsersPage() {
               />
               <input
                 type="password"
-                placeholder="Contraseña"
+                placeholder={editingUser ? 'Nueva contraseña (opcional)' : 'Contraseña'}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full border-2 border-[#8B7355] bg-white p-3 font-['JetBrains_Mono'] text-lg text-[#2C1810] focus:border-[#6B1A2A] focus:border-4 outline-none"
@@ -168,25 +214,34 @@ export function AdminUsersPage() {
               </select>
             </div>
 
-            {createMutation.error && (
+            {activeMutation.error && (
               <p className="mt-4 font-['DM_Sans'] font-bold text-sm text-[#8B1A1A]">
-                {(createMutation.error as { message?: string }).message ?? 'Error al crear usuario'}
+                {(activeMutation.error as { message?: string }).message ?? 'Error al guardar'}
               </p>
             )}
 
             <div className="mt-6 flex gap-3">
               <button
-                onClick={() => setShowCreate(false)}
+                onClick={closeModal}
                 className="flex-1 border-2 border-[#6B1A2A] text-[#6B1A2A] font-['DM_Sans'] font-bold text-sm uppercase tracking-[0.1em] p-3 hover:bg-[#EBDCC4]"
               >
                 Cancelar
               </button>
               <button
-                onClick={() => createMutation.mutate(form)}
-                disabled={createMutation.isPending}
+                onClick={() => {
+                  const payload = editingUser
+                    ? Object.fromEntries(Object.entries(form).filter(([, v]) => v !== ''))
+                    : form;
+                  if (editingUser) {
+                    updateMutation.mutate({ id: editingUser.id, input: payload });
+                  } else {
+                    createMutation.mutate(form);
+                  }
+                }}
+                disabled={activeMutation.isPending}
                 className="flex-1 bg-[#6B1A2A] text-[#F0E6D3] font-['DM_Sans'] font-bold text-sm uppercase tracking-[0.1em] p-3 hover:bg-[#8B2535] disabled:opacity-50"
               >
-                {createMutation.isPending ? 'Creando...' : 'Crear'}
+                {activeMutation.isPending ? 'Guardando...' : editingUser ? 'Actualizar' : 'Crear'}
               </button>
             </div>
           </div>

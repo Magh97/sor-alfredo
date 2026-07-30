@@ -1,11 +1,17 @@
 FROM node:24.14.0-alpine
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json ./
+COPY server/package.json server/
+COPY client/package.json client/
 
-COPY tsconfig.json drizzle.config.ts ./
-COPY src/ src/
+RUN pnpm install --frozen-lockfile
 
+COPY tsconfig.base.json ./
+COPY server/tsconfig.json server/drizzle.config.ts server/
+
+WORKDIR /app/server
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "dev"]

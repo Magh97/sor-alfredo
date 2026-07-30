@@ -15,6 +15,11 @@ export const UpdateUserSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+export const ChangePasswordSchema = z.object({
+  currentPassword: z.string().min(1, 'Contraseña actual requerida'),
+  newPassword: z.string().min(6, 'Contraseña debe tener al menos 6 caracteres'),
+});
+
 export const UserResponseSchema = z.object({
   id: z.number(),
   restaurantId: z.number(),
