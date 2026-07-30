@@ -8,6 +8,7 @@ import { restaurantRouter } from './modules/restaurant/restaurant.controller.js'
 import { catalogRouter } from './modules/catalog/catalog.controller.js';
 import { tablesRouter } from './modules/tables/tables.controller.js';
 import { ordersRouter } from './modules/orders/orders.controller.js';
+import { cashRouter } from './modules/cash/cash.controller.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/restaurant', restaurantRouter);
 app.use('/api/catalog', catalogRouter);
 app.use('/api/tables', tablesRouter);
 app.use('/api/orders', ordersRouter);
+app.use('/api', cashRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString(), uptime: process.uptime() });
