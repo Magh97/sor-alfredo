@@ -168,11 +168,6 @@ function NewOrderSheet({
     queryFn: () => api<{ data: Array<{ id: number; name: string; basePrice: string; categoryId: number | null; modifierIds: number[] }> }>('/catalog/products'),
   });
 
-  const { data: modifiersData } = useQuery({
-    queryKey: ['catalog', 'modifiers'],
-    queryFn: () => api<{ data: Array<{ id: number; name: string; priceAdjustment: string }> }>('/catalog/modifiers'),
-  });
-
   const createMutation = useMutation({
     mutationFn: () => api('/orders', {
       method: 'POST',
