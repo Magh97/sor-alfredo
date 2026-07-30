@@ -25,22 +25,23 @@ export function SidebarLayout({ children, title, navItems }: SidebarLayoutProps)
           {navItems.map((item) => {
             const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/');
             return (
-            <Link
-              key={item.href}
-              to={item.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-3 font-[\'DM_Sans\'] font-bold text-sm uppercase tracking-widest transition-colors duration-150',
-                isActive
-                  ? 'bg-[#6B1A2A] text-[#F0E6D3]'
-                  : 'text-[#5C4030] hover:bg-[#E5D4B8]',
-              )}
-            >
-              <span className={isActive ? 'text-[#F0E6D3]' : 'text-[#6B1A2A]'}>
-                {item.icon}
-              </span>
-              {item.label}
-            </Link>
-          )})}
+              <Link
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-3 font-[\'DM_Sans\'] font-bold text-sm uppercase tracking-widest transition-colors duration-150',
+                  isActive
+                    ? 'bg-[#6B1A2A] text-[#F0E6D3]'
+                    : 'text-[#5C4030] hover:bg-[#E5D4B8]',
+                )}
+              >
+                <span className={isActive ? 'text-[#F0E6D3]' : 'text-[#6B1A2A]'}>
+                  {item.icon}
+                </span>
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="p-4 border-t-4 border-[#6B1A2A]">
