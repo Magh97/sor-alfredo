@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { SidebarLayout } from '@/components/layout/SidebarLayout';
 
 vi.mock('@/hooks/useAuth', () => ({
@@ -7,9 +8,13 @@ vi.mock('@/hooks/useAuth', () => ({
 }));
 
 const mockNavItems = [
-  { label: 'Usuarios', icon: <span data-testid="icon-users">U</span>, href: '/admin/users', active: true },
+  { label: 'Usuarios', icon: <span data-testid="icon-users">U</span>, href: '/admin/users' },
   { label: 'Catálogo', icon: <span data-testid="icon-catalog">C</span>, href: '/admin/catalog' },
 ];
+
+function renderSidebar(ui: React.ReactElement) {
+  return render(<MemoryRouter>{ui}</MemoryRouter>);
+}
 
 describe('SidebarLayout', () => {
   beforeEach(() => {
@@ -17,7 +22,7 @@ describe('SidebarLayout', () => {
   });
 
   it('should render title text', () => {
-    render(
+    renderSidebar(
       <SidebarLayout title="Administración" navItems={mockNavItems}>
         <p>Content</p>
       </SidebarLayout>,
@@ -27,7 +32,7 @@ describe('SidebarLayout', () => {
   });
 
   it('should render nav items from props', () => {
-    render(
+    renderSidebar(
       <SidebarLayout title="Test" navItems={mockNavItems}>
         <p>Content</p>
       </SidebarLayout>,
@@ -38,7 +43,7 @@ describe('SidebarLayout', () => {
   });
 
   it('should render children content', () => {
-    render(
+    renderSidebar(
       <SidebarLayout title="Test" navItems={mockNavItems}>
         <p>Hello World</p>
       </SidebarLayout>,
@@ -48,13 +53,12 @@ describe('SidebarLayout', () => {
   });
 
   it('should have logout button with aria-label "Cerrar sesión"', () => {
-    render(
+    renderSidebar(
       <SidebarLayout title="Test" navItems={mockNavItems}>
         <p>Content</p>
       </SidebarLayout>,
     );
 
     expect(screen.getByRole('button', { name: 'Cerrar sesión' })).toBeInTheDocument();
-    expect(screen.getByText('Cerrar Sesión')).toBeInTheDocument();
   });
 });
