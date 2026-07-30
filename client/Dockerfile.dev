@@ -9,6 +9,7 @@ COPY client/package.json client/
 
 RUN pnpm install --frozen-lockfile
 
+COPY tsconfig.base.json ./
 COPY client/tsconfig.json client/vite.config.ts client/index.html client/
 
 WORKDIR /app/client

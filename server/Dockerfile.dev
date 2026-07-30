@@ -9,6 +9,7 @@ COPY client/package.json client/
 
 RUN pnpm install --frozen-lockfile
 
+COPY tsconfig.base.json ./
 COPY server/tsconfig.json server/drizzle.config.ts server/
 
 WORKDIR /app/server
