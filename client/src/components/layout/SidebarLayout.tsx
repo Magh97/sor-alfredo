@@ -65,7 +65,7 @@ export function SidebarLayout({ children, title, navItems }: SidebarLayoutProps)
   );
 }
 
-export function AdminSidebar() {
+export function AdminSidebar({ children }: { children?: ReactNode }) {
   const navItems = [
     { label: 'Usuarios', icon: <Users size={18} />, href: '/admin/users' },
     { label: 'Catálogo', icon: <Package size={18} />, href: '/admin/catalog' },
@@ -74,15 +74,17 @@ export function AdminSidebar() {
   ];
 
   return <SidebarLayout title="Administración" navItems={navItems}>
-    <div className="bg-[#EBDCC4] border-4 border-[#6B1A2A] p-12 text-center"
-      style={{ clipPath: 'polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px)' }}>
-      <h2 className="font-['Playfair_Display'] font-bold text-4xl text-[#6B1A2A]">Panel de Administración</h2>
-      <p className="font-['Caveat'] text-xl text-[#8B7355] mt-2">Selecciona una sección para comenzar</p>
-    </div>
+    {children ?? (
+      <div className="bg-[#EBDCC4] border-4 border-[#6B1A2A] p-12 text-center"
+        style={{ clipPath: 'polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px)' }}>
+        <h2 className="font-['Playfair_Display'] font-bold text-4xl text-[#6B1A2A]">Panel de Administración</h2>
+        <p className="font-['Caveat'] text-xl text-[#8B7355] mt-2">Selecciona una sección para comenzar</p>
+      </div>
+    )}
   </SidebarLayout>;
 }
 
-export function CajeroSidebar() {
+export function CajeroSidebar({ children }: { children?: ReactNode }) {
   const navItems = [
     { label: 'Órdenes', icon: <Package size={18} />, href: '/caja/orders' },
     { label: 'Caja', icon: <BarChart3 size={18} />, href: '/caja/register' },
@@ -90,10 +92,12 @@ export function CajeroSidebar() {
   ];
 
   return <SidebarLayout title="Caja" navItems={navItems}>
-    <div className="bg-[#EBDCC4] border-4 border-[#6B1A2A] p-12 text-center"
-      style={{ clipPath: 'polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px)' }}>
-      <h2 className="font-['Playfair_Display'] font-bold text-4xl text-[#6B1A2A]">Panel de Caja</h2>
-      <p className="font-['Caveat'] text-xl text-[#8B7355] mt-2">Selecciona una sección para comenzar</p>
-    </div>
+    {children ?? (
+      <div className="bg-[#EBDCC4] border-4 border-[#6B1A2A] p-12 text-center"
+        style={{ clipPath: 'polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px)' }}>
+        <h2 className="font-['Playfair_Display'] font-bold text-4xl text-[#6B1A2A]">Panel de Caja</h2>
+        <p className="font-['Caveat'] text-xl text-[#8B7355] mt-2">Selecciona una sección para comenzar</p>
+      </div>
+    )}
   </SidebarLayout>;
 }
