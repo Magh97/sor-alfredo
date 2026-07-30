@@ -32,9 +32,9 @@ function useAuth() {
       queryClient.setQueryData(['auth', 'user'], response.data.user);
 
       const role = response.data.user.role;
-      if (role === 'admin' || role === 'superadmin') navigate('/admin');
-      else if (role === 'cashier') navigate('/caja');
-      else navigate('/mesero');
+      if (role === 'admin' || role === 'superadmin') navigate('/admin/users');
+      else if (role === 'cashier') navigate('/caja/orders');
+      else navigate('/mesero/orders');
     },
   });
 

@@ -40,7 +40,7 @@ export function Router() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
 
-        <Route path="/admin" element={<ProtectedRoute roles={ADMIN_ROLES}><AdminSidebar /></ProtectedRoute>} />
+        <Route path="/admin" element={<Navigate to="/admin/users" replace />} />
         <Route path="/admin/users" element={<ProtectedRoute roles={ADMIN_ROLES}>
           <AdminSidebar><AdminUsersPage /></AdminSidebar>
         </ProtectedRoute>} />
@@ -54,7 +54,7 @@ export function Router() {
           <AdminSidebar><Placeholder text="Configuración" /></AdminSidebar>
         </ProtectedRoute>} />
 
-        <Route path="/caja" element={<ProtectedRoute roles={CASHIER_ROLES}><CajeroSidebar /></ProtectedRoute>} />
+        <Route path="/caja" element={<Navigate to="/caja/orders" replace />} />
         <Route path="/caja/orders" element={<ProtectedRoute roles={CASHIER_ROLES}>
           <CajeroSidebar><Placeholder text="Órdenes" /></CajeroSidebar>
         </ProtectedRoute>} />
@@ -65,11 +65,7 @@ export function Router() {
           <CajeroSidebar><Placeholder text="Reportes" /></CajeroSidebar>
         </ProtectedRoute>} />
 
-        <Route path="/mesero" element={<ProtectedRoute roles={WAITER_ROLES}>
-          <BottomNavLayout title="Mesero" activeNav="orders">
-            <Placeholder text="Órdenes" />
-          </BottomNavLayout>
-        </ProtectedRoute>} />
+        <Route path="/mesero" element={<Navigate to="/mesero/orders" replace />} />
         <Route path="/mesero/orders" element={<ProtectedRoute roles={WAITER_ROLES}>
           <BottomNavLayout title="Órdenes" activeNav="orders">
             <Placeholder text="Órdenes" />
