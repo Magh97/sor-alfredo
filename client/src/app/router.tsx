@@ -3,6 +3,7 @@ import { LoginPage } from '@/app/login/page';
 import { AdminSidebar } from '@/components/layout/SidebarLayout';
 import { AdminUsersPage } from '@/app/admin/users/page';
 import { AdminConfigPage } from '@/app/admin/config/page';
+import { AdminCatalogPage } from '@/app/admin/catalog/page';
 import { CajeroSidebar } from '@/components/layout/SidebarLayout';
 import { BottomNavLayout } from '@/components/layout/BottomNavLayout';
 import { KDSLayout } from '@/components/layout/KDSLayout';
@@ -46,7 +47,7 @@ export function Router() {
           <AdminSidebar><AdminUsersPage /></AdminSidebar>
         </ProtectedRoute>} />
         <Route path="/admin/catalog" element={<ProtectedRoute roles={ADMIN_ROLES}>
-          <AdminSidebar><Placeholder text="Catálogo" /></AdminSidebar>
+          <AdminSidebar><AdminCatalogPage /></AdminSidebar>
         </ProtectedRoute>} />
         <Route path="/admin/reports" element={<ProtectedRoute roles={ADMIN_ROLES}>
           <AdminSidebar><Placeholder text="Reportes" /></AdminSidebar>
